@@ -148,8 +148,6 @@ model MedicalProfile {
   weightKg          Decimal? @map("weight_kg") @db.Decimal(5, 2)
   organDonor        Boolean  @default(false) @map("organ_donor")
   insuranceProvider String?  @map("insurance_provider")
-  insuranceNumber   String?  @map("insurance_number")
-  preferredHospital String?  @map("preferred_hospital")
   additionalNotes   String?  @map("additional_notes") @db.Text
   createdAt         DateTime @default(now()) @map("created_at")
   updatedAt         DateTime @updatedAt @map("updated_at")
@@ -233,7 +231,6 @@ model UserMedication {
   dosage               String?
   frequency            String?
   route                MedicationRoute @default(ORAL)
-  prescribingDoctor    String?         @map("prescribing_doctor")
   startDate            DateTime?       @map("start_date") @db.Date
   endDate              DateTime?       @map("end_date") @db.Date
   isCurrent            Boolean         @default(true) @map("is_current")
