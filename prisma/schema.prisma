@@ -352,3 +352,4 @@ model PrivacySettings {
 
   @@map("privacy_settings")
 }
+
