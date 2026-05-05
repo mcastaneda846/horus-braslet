@@ -32,11 +32,13 @@ export function middleware(request: NextRequest) {
         }
     }
 
-    // Sin token válido → redirige a login
+    // Sin token válido → intenta renovar usando refresh cookie.
+    // El refresh cookie está restringido a `/api/auth/refresh`, por eso redirigimos allí.
     if (isProtected && !isAuthenticated) {
-        const loginUrl = new URL("/login", request.url);
-        loginUrl.searchParams.set("from", pathname); // recuerda a dónde iba
-        return NextResponse.redirect(loginUrl);
+        const next = request.nextUrl.pathname + request.nextUrl.search;
+        const refreshUrl = new URL("/api/auth/refresh", request.url);
+        refreshUrl.searchParams.set("next", next);
+        return NextResponse.redirect(refreshUrl);
     }
 
     // Ya autenticado → no puede volver a login/register

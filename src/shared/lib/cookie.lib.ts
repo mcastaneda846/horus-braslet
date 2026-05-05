@@ -36,8 +36,25 @@ export function setAuthCookies(
 }
 
 export function clearAuthCookies(response: NextResponse): NextResponse {
-    response.cookies.delete(COOKIE_NAMES.accessToken);
-    response.cookies.delete(COOKIE_NAMES.refreshToken);
+    const isProduction = process.env.NODE_ENV === "production";
+
+    // Important: refresh cookie is scoped to `/api/auth/refresh`, so we must clear it
+    // with the same path. Using `delete(name)` alone defaults to `/` and may leave it behind.
+    response.cookies.set(COOKIE_NAMES.accessToken, "", {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: "lax",
+        maxAge: 0,
+        path: "/",
+    });
+
+    response.cookies.set(COOKIE_NAMES.refreshToken, "", {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: "lax",
+        maxAge: 0,
+        path: "/api/auth/refresh",
+    });
     return response;
 }
 
