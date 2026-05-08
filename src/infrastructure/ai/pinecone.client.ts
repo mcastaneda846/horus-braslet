@@ -59,7 +59,7 @@ export async function upsertDocuments(docs: Document[]) {
             },
         }));
 
-        await index.upsert({ records });
+        await index.upsert(records);
 
         console.log(
             `[Pinecone] Batch ${Math.floor(i / BATCH) + 1}/${Math.ceil(docs.length / BATCH)} — ${records.length} vectores subidos`

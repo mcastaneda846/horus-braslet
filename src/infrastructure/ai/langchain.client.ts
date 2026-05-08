@@ -8,6 +8,52 @@ import { ollamaLLM } from "./ollama.client";
 import { searchChunks, upsertDocuments } from "./pinecone.client";
 import { KnowledgeChunk, ChatMessage, AssistantResponse } from "@/src/domain/ai/ai.entity";
 
+const FALLBACK_EMERGENCY = "No tengo información suficiente del manual para responder con precisión. Llama al 123 si es una emergencia.\n\nEsta información es orientativa. Ante cualquier emergencia llama al 123.";
+const FALLBACK_OUT_OF_SCOPE = "Solo puedo ayudar con primeros auxilios y emergencias médicas. Si tienes una emergencia real, llama al 123.\n\nEsta información es orientativa. Ante cualquier emergencia llama al 123.";
+const FALLBACK_MEDICATION_BLOCKED = "No puedo recomendar medicamentos ni dosis.\n1. Llama al 123 si hay dolor intenso, dificultad para respirar o empeora\n2. Mantén a la persona en reposo y en una posición cómoda\n3. Afloja ropa ajustada y vigila respiración y consciencia\n\nEsta información es orientativa. Ante cualquier emergencia llama al 123.";
+
+const FORBIDDEN_RECOMMENDATION_PATTERNS = [
+    /\baspirina\b/i,
+    /\bibuprofeno\b/i,
+    /\bparacetamol\b/i,
+    /\bacetaminofen\b/i,
+    /\bnaproxeno\b/i,
+    /\bdiclofenaco\b/i,
+    /\bamoxicilina\b/i,
+    /\bmg\b/i,
+    /\bmiligramos?\b/i,
+    /\bdosis\b/i,
+    /\bmedicamentos?\b/i,
+    /\btabletas?\b/i,
+    /\bcapsulas?\b/i,
+];
+
+const FIRST_AID_KEYWORDS = [
+    "primeros auxilios", "emergencia", "urgencia", "accidente", "inconsciente", "desmayo",
+    "convulsion", "sangrado", "hemorrag", "quemadura", "fractura", "herida", "caida",
+    "atragant", "ahog", "respira", "respiracion", "rcp", "reanimacion", "pulso",
+    "paro", "pecho", "dolor", "alerg", "anafil", "picadura", "intoxic", "electroc",
+    "golpe", "trauma", "fiebre", "vomito", "diarrea", "mareo", "botiquin",
+    "cayo", "cae", "caerse", "brazo", "chuec", "deform", "hincha", "llora",
+    "nino", "nina", "bebe", "menor"
+];
+
+function normalizeText(value: string): string {
+    return value
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+}
+
+function isLikelyFirstAidText(value: string): boolean {
+    const normalized = normalizeText(value);
+    return FIRST_AID_KEYWORDS.some((keyword) => normalized.includes(keyword));
+}
+
+function containsForbiddenRecommendation(value: string): boolean {
+    return FORBIDDEN_RECOMMENDATION_PATTERNS.some((pattern) => pattern.test(value));
+}
+
 // Prompt
 //
 // Diseño del prompt:
@@ -25,6 +71,9 @@ REGLAS:
 - Lenguaje simple — como si le hablaras a alguien asustado
 - Si es grave, el primer paso siempre es "Llama al 123"
 - No menciones síntomas ni diagnósticos, solo acciones
+- No recomiendes medicamentos, dosis, productos, marcas ni tratamientos
+- Si la pregunta NO es de primeros auxilios o emergencia médica, responde exactamente: "Solo puedo ayudar con primeros auxilios y emergencias médicas. Si tienes una emergencia real, llama al 123."
+- Usa el historial solo para continuidad de primeros auxilios; ignora turnos fuera de tema
 - No menciones de dónde sacas la información
 - Termina siempre con la línea del aviso
 
@@ -89,15 +138,34 @@ export async function chat(
     history: ChatMessage[],
     context: KnowledgeChunk[]
 ): Promise<AssistantResponse> {
-    // Si no hay contexto relevante del manual, igual responde — el modelo
-    // conoce primeros auxilios de su entrenamiento base
+    if (!isLikelyFirstAidText(message)) {
+        return new AssistantResponse(
+            FALLBACK_OUT_OF_SCOPE,
+            context,
+            process.env.OLLAMA_MODEL ?? "llama3.1:8b"
+        );
+    }
+
+    // Si no hay contexto relevante del manual, evita recomendaciones sin respaldo
+    if (context.length === 0) {
+        return new AssistantResponse(
+            FALLBACK_EMERGENCY,
+            context,
+            process.env.OLLAMA_MODEL ?? "llama3.1:8b"
+        );
+    }
+
     const contextText = context.length > 0
         ? context.map((c) => c.content).join("\n\n---\n\n")
         : "";
 
     // Historial solo si existe, para no contaminar el prompt con texto vacío
-    const historyText = history.length > 0
-        ? history
+    const relevantHistory = history
+        .filter((m) => isLikelyFirstAidText(m.content))
+        .slice(-6);
+
+    const historyText = relevantHistory.length > 0
+        ? relevantHistory
         .map((m) => `${m.role === "human" ? "Usuario" : "Asistente"}: ${m.content}`)
         .join("\n") + "\n\n"
         : "";
@@ -114,8 +182,12 @@ export async function chat(
         question: message,
     });
 
+    const safeAnswer = containsForbiddenRecommendation(answer)
+        ? FALLBACK_MEDICATION_BLOCKED
+        : answer.trim();
+
     return new AssistantResponse(
-        answer.trim(),
+        safeAnswer,
         context,
         process.env.OLLAMA_MODEL ?? "llama3.1:8b"
     );
