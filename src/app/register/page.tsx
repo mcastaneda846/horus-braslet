@@ -9,41 +9,50 @@ export const metadata = {
     description: "Únete a la red de protección inteligente con tecnología NFC.",
 };
 
-
-const panelGradient = {
-    background: `
-        radial-gradient(ellipse at 50% 38%, rgba(141,153,174,0.18) 0%, transparent 55%),
-        radial-gradient(ellipse at 15% 90%, rgba(239,35,60,0.12) 0%, transparent 40%),
-        linear-gradient(165deg, #14151f 0%, #2B2D42 55%, #14151f 100%)
-    `,
-} as React.CSSProperties;
-
 export default function RegisterPage() {
     return (
-        <div className="min-h-screen flex">
+        <div className="min-h-screen relative overflow-hidden bg-[#07080e]">
             <VoiceGreeting message="Bienvenido a Horus Braslet. Crea tu cuenta y protege a los que más quieres." />
 
-            {/* ── Left panel ─────────────────────────────────────────────────── */}
-            <div className="flex flex-1 items-center justify-center bg-white px-8 py-12 lg:px-16">
-                <div className="w-full max-w-md">
-                    {/* Logo */}
-                    <div className="flex items-center gap-3 mb-10">
-                        <EyeOfHorusIcon className="w-10 h-8" />
-                        <span className="text-lg font-bold tracking-widest text-gray-900 uppercase">
-                            Horus Braslet
-                        </span>
-                    </div>
+            {/* ── Animación de fondo completa ───────────────────────────────── */}
+            <div className="absolute inset-0 z-0">
+                <SplineScene />
+            </div>
 
-                    <h1 className="text-3xl font-bold text-gray-900 mb-1">
-                        Crea tu cuenta
+            {/* ── Overlay oscuro de izquierda a derecha ─────────────────────── */}
+            <div
+                className="absolute inset-0 z-[1] pointer-events-none"
+                style={{
+                    background: "linear-gradient(to right, rgba(7,8,14,0.58) 0%, rgba(7,8,14,0.38) 40%, rgba(7,8,14,0.08) 65%, rgba(7,8,14,0.0) 100%)",
+                }}
+            />
+
+            {/* ── Header ───────────────────────────────────────────────────── */}
+            <header className="relative z-10 flex items-center px-8 lg:px-14 py-6">
+                <div className="flex items-center gap-3">
+                    <EyeOfHorusIcon className="w-8 h-6" />
+                    <span className="text-white font-bold tracking-widest text-sm uppercase">
+                        Horus Braslet
+                    </span>
+                </div>
+            </header>
+
+            {/* ── Formulario ────────────────────────────────────────────────── */}
+            <div className="relative z-10 flex items-center min-h-[calc(100vh-80px)]">
+                <div className="w-full lg:w-[46%] px-8 lg:px-14 xl:px-20 py-8 flex flex-col justify-center">
+                    <p className="text-[#EF233C] text-xs font-semibold uppercase tracking-[0.22em] mb-5">
+                        Registro
+                    </p>
+                    <h1 className="text-4xl lg:text-[3.25rem] font-bold text-white leading-[1.15] mb-3">
+                        Crea tu<br className="hidden sm:block" /> cuenta
                     </h1>
-                    <p className="text-gray-500 text-sm mb-8">
-                        Únete a la red de protección inteligente
+                    <p className="text-[#8D99AE] text-sm mb-9 leading-relaxed max-w-sm">
+                        Únete a la red de protección inteligente con tecnología NFC y GPS.
                     </p>
 
                     <RegisterForm />
 
-                    <p className="text-center text-sm text-gray-500 mt-6">
+                    <p className="text-center text-sm text-[#8D99AE] mt-7">
                         ¿Ya tienes cuenta?{" "}
                         <Link
                             href="/login"
@@ -51,35 +60,6 @@ export default function RegisterPage() {
                         >
                             Inicia Sesión
                         </Link>
-                    </p>
-                </div>
-            </div>
-
-            {/* ── Right panel ────────────────────────────────────────────────── */}
-            <div
-                className="hidden lg:flex flex-1 relative flex-col overflow-hidden"
-                style={panelGradient}
-            >
-                {/* Ojo de Horus decorativo — marca de agua grande */}
-                <div className="absolute top-8 right-8 opacity-8">
-                    <EyeOfHorusIcon className="w-20 h-20 opacity-10" />
-                </div>
-
-                {/* Robot — centrado en la mitad superior */}
-                <div className="absolute inset-0 flex items-center justify-center -translate-y-8">
-                    <div className="w-105 h-105">
-                        <SplineScene />
-                    </div>
-                </div>
-
-                {/* Texto al fondo */}
-                <div className="relative z-10 mt-auto px-12 pb-10 text-center">
-                    <h2 className="text-2xl font-bold text-white mb-2">
-                        Siempre Conectado
-                    </h2>
-                    <p className="text-[#8D99AE] text-xs leading-relaxed max-w-xs mx-auto">
-                        Registra tu manilla y mantén a tus seres queridos siempre
-                        informados con tecnología NFC y GPS.
                     </p>
                 </div>
             </div>
