@@ -99,3 +99,41 @@ The first iterations of the product are focused on:
 - Accessible emergency page
 - Basic AI assistance
 - Core security implementation
+
+## Fuentes externas (RAG)
+
+Este proyecto puede ingestar fuentes externas en formato web (HTML) y convertirlas a Markdown antes de indexarlas.
+
+1) Edita `docs/external-sources.json` con tus URLs.
+2) Levanta el servidor y ejecuta el script:
+
+```powershell
+npm run dev
+```
+
+```powershell
+node scripts/ingest-urls.mjs
+```
+
+Si necesitas apuntar a otro endpoint, usa `INGEST_API_URL`:
+
+```powershell
+$env:INGEST_API_URL = "http://localhost:3000/api/ai/ingest"
+node scripts/ingest-urls.mjs
+```
+
+## Pinecone: ¿borrar todo o reindexar?
+
+- **Cambiaste solo el prompt o lógica:** no reindexes.
+- **Cambiaste contenido del manual o fuentes:** reindexa.
+- **No quieres duplicados:** borra los vectores del índice o recrea el índice.
+
+Para reset total, borra el índice en Pinecone y créalo de nuevo con el nombre `horus-first-aid`.
+Luego reingesta:
+
+```powershell
+node scripts/ingest.mjs docs/primeros-auxilios.md
+node scripts/ingest-urls.mjs
+```
+
+
