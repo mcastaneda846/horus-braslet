@@ -41,7 +41,7 @@ export default function SplineRobot() {
                     // El robot está al borde izquierdo del frame de Spline.
                     // scale(0.72) aleja la cámara, translateX(28%) compensa el offset
                     // para centrarlo dentro del panel.
-                    transform: "translateX(28%) scale(0.72)",
+                    transform: "translateX(-20%) scale(0.55) scaleX(-1)",
                     transformOrigin: "center center",
                 },
             })}

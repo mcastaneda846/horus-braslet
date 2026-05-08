@@ -4,6 +4,22 @@ import SplineRobot from "./SplineRobot";
 
 type Message = { role: "user" | "assistant"; content: string };
 
+interface SR {
+    lang: string;
+    continuous: boolean;
+    interimResults: boolean;
+    onresult: ((e: SpeechRecognitionEvent) => void) | null;
+    onend:   (() => void) | null;
+    onerror: (() => void) | null;
+    start(): void;
+    stop():  void;
+}
+
+interface SpeechWindow extends Window {
+    SpeechRecognition?:       new () => SR;
+    webkitSpeechRecognition?: new () => SR;
+}
+
 export default function ChatModal({ onClose }: { onClose: () => void }) {
     const [messages, setMessages] = useState<Message[]>([
         {
@@ -18,7 +34,7 @@ export default function ChatModal({ onClose }: { onClose: () => void }) {
 
     const bottomRef      = useRef<HTMLDivElement>(null);
     const inputRef       = useRef<HTMLInputElement>(null);
-    const recognitionRef = useRef<any>(null);
+    const recognitionRef = useRef<SR | null>(null);
     const audioRef       = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
@@ -92,7 +108,8 @@ export default function ChatModal({ onClose }: { onClose: () => void }) {
     }, [loading, messages, speakText]);
 
     const toggleVoiceInput = () => {
-        const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+        const w  = window as SpeechWindow;
+        const SR = w.SpeechRecognition || w.webkitSpeechRecognition;
         if (!SR) return;
         if (listening) {
             recognitionRef.current?.stop();
@@ -103,7 +120,7 @@ export default function ChatModal({ onClose }: { onClose: () => void }) {
         rec.lang = "es-CO";
         rec.continuous = false;
         rec.interimResults = false;
-        rec.onresult = (e: any) => sendMessage(e.results[0][0].transcript);
+        rec.onresult = (e: SpeechRecognitionEvent) => sendMessage(e.results[0][0].transcript);
         rec.onend    = () => setListening(false);
         rec.onerror  = () => setListening(false);
         rec.start();
@@ -125,14 +142,11 @@ export default function ChatModal({ onClose }: { onClose: () => void }) {
                 onClick={e => e.stopPropagation()}
             >
                 {/* ── Left: Spline robot ─────────────────────────────────────── */}
-                <div className="hidden md:block w-[38%] shrink-0 bg-[#0d0e1a] relative overflow-hidden">
+                <div className="hidden md:block w-[54%] shrink-0 bg-[#0d0e1a] relative z-10">
                     {/* Robot — ocupa todo el panel */}
-                    <div className="absolute inset-0">
+                    <div className="absolute inset-0 z-30">
                         <SplineRobot />
                     </div>
-
-                    {/* Fade inferior encima del robot */}
-                    <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#0d0e1a] to-transparent pointer-events-none z-10" />
 
                     {/* Etiqueta + ondas de voz */}
                     <div className="absolute bottom-5 w-full flex flex-col items-center gap-2 z-20">
