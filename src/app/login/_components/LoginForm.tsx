@@ -16,7 +16,7 @@ interface FormErrors {
 
 function IconMail({ hasError }: { hasError?: boolean }) {
     return (
-        <svg className={`w-5 h-5 shrink-0 ${hasError ? "text-red-400" : "text-gray-400"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <svg className={`w-5 h-5 shrink-0 ${hasError ? "text-red-400" : "text-white/50"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
         </svg>
     );
@@ -24,7 +24,7 @@ function IconMail({ hasError }: { hasError?: boolean }) {
 
 function IconLock() {
     return (
-        <svg className="w-5 h-5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <svg className="w-5 h-5 text-white/50 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
         </svg>
     );
@@ -109,14 +109,14 @@ export default function LoginForm() {
     return (
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
             {errors.general && (
-                <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600">
+                <div className="rounded-xl bg-red-500/10 border border-red-500/30 px-4 py-3 text-sm text-red-300">
                     {errors.general}
                 </div>
             )}
 
             {/* Email */}
             <div>
-                <div className={`flex items-center gap-3 border rounded-xl px-4 py-3 bg-white transition-colors ${activeEmailError ? "border-red-400 bg-red-50" : "border-gray-200 focus-within:border-[#EF233C]"}`}>
+                <div className={`flex items-center gap-3 border rounded-xl px-4 py-3 transition-colors ${activeEmailError ? "border-red-400 bg-red-500/10" : "border-white/15 bg-white/8 focus-within:border-[#EF233C]"}`}>
                     <IconMail hasError={!!activeEmailError} />
                     <input
                         name="email"
@@ -126,7 +126,7 @@ export default function LoginForm() {
                         onChange={handleChange}
                         onBlur={() => setEmailTouched(true)}
                         autoComplete="email"
-                        className="flex-1 bg-transparent text-sm text-gray-800 placeholder-gray-400 outline-none"
+                        className="flex-1 bg-transparent text-sm text-white placeholder-white/40 outline-none"
                     />
                 </div>
                 {activeEmailError && (
@@ -136,7 +136,7 @@ export default function LoginForm() {
 
             {/* Contraseña */}
             <div>
-                <div className={`flex items-center gap-3 border rounded-xl px-4 py-3 bg-white transition-colors ${errors.password ? "border-red-400 bg-red-50" : "border-gray-200 focus-within:border-[#EF233C]"}`}>
+                <div className={`flex items-center gap-3 border rounded-xl px-4 py-3 transition-colors ${errors.password ? "border-red-400 bg-red-500/10" : "border-white/15 bg-white/8 focus-within:border-[#EF233C]"}`}>
                     <IconLock />
                     <input
                         name="password"
@@ -145,12 +145,12 @@ export default function LoginForm() {
                         value={form.password}
                         onChange={handleChange}
                         autoComplete="current-password"
-                        className="flex-1 bg-transparent text-sm text-gray-800 placeholder-gray-400 outline-none"
+                        className="flex-1 bg-transparent text-sm text-white placeholder-white/40 outline-none"
                     />
                     <button
                         type="button"
                         onClick={() => setShowPassword((v) => !v)}
-                        className="text-gray-400 hover:text-gray-600 transition-colors"
+                        className="text-white/50 hover:text-white/80 transition-colors"
                         tabIndex={-1}
                     >
                         <IconEye visible={showPassword} />

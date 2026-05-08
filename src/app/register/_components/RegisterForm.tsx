@@ -94,7 +94,7 @@ function validateForm(data: FormState): FormErrors {
 
 function IconPerson() {
     return (
-        <svg className="w-5 h-5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <svg className="w-5 h-5 text-white/50 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
         </svg>
     );
@@ -102,7 +102,7 @@ function IconPerson() {
 
 function IconMail({ hasError }: { hasError?: boolean }) {
     return (
-        <svg className={`w-5 h-5 shrink-0 ${hasError ? "text-red-400" : "text-gray-400"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <svg className={`w-5 h-5 shrink-0 ${hasError ? "text-red-400" : "text-white/50"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
         </svg>
     );
@@ -110,7 +110,7 @@ function IconMail({ hasError }: { hasError?: boolean }) {
 
 function IconLock() {
     return (
-        <svg className="w-5 h-5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <svg className="w-5 h-5 text-white/50 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
         </svg>
     );
@@ -157,7 +157,7 @@ function StrengthMeter({ password }: { password: string }) {
                 {[1, 2, 3, 4].map((i) => (
                     <div
                         key={i}
-                        className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${i <= score ? color : "bg-gray-200"}`}
+                        className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${i <= score ? color : "bg-white/15"}`}
                     />
                 ))}
             </div>
@@ -248,7 +248,7 @@ export default function RegisterForm() {
     return (
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-3">
             {errors.general && (
-                <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600">
+                <div className="rounded-xl bg-red-500/10 border border-red-500/30 px-4 py-3 text-sm text-red-300">
                     {errors.general}
                 </div>
             )}
@@ -257,7 +257,7 @@ export default function RegisterForm() {
             <div className="grid grid-cols-2 gap-3">
                 {(["firstName", "lastName"] as const).map((field) => (
                     <div key={field}>
-                        <div className={`flex items-center gap-3 border rounded-xl px-4 py-3 bg-white transition-colors ${errors[field] ? "border-red-400 bg-red-50" : "border-gray-200 focus-within:border-[#EF233C]"}`}>
+                        <div className={`flex items-center gap-3 border rounded-xl px-4 py-3 transition-colors ${errors[field] ? "border-red-400 bg-red-500/10" : "border-white/15 bg-white/8 focus-within:border-[#EF233C]"}`}>
                             <IconPerson />
                             <input
                                 name={field}
@@ -266,7 +266,7 @@ export default function RegisterForm() {
                                 value={form[field]}
                                 onChange={handleChange}
                                 autoComplete="off"
-                                className="flex-1 bg-transparent text-sm text-gray-800 placeholder-gray-400 outline-none min-w-0"
+                                className="flex-1 bg-transparent text-sm text-white placeholder-white/40 outline-none min-w-0"
                             />
                         </div>
                         {errors[field] && (
@@ -278,7 +278,7 @@ export default function RegisterForm() {
 
             {/* Email */}
             <div>
-                <div className={`flex items-center gap-3 border rounded-xl px-4 py-3 bg-white transition-colors ${activeEmailError ? "border-red-400 bg-red-50" : "border-gray-200 focus-within:border-[#EF233C]"}`}>
+                <div className={`flex items-center gap-3 border rounded-xl px-4 py-3 transition-colors ${activeEmailError ? "border-red-400 bg-red-500/10" : "border-white/15 bg-white/8 focus-within:border-[#EF233C]"}`}>
                     <IconMail hasError={!!activeEmailError} />
                     <input
                         name="email"
@@ -288,7 +288,7 @@ export default function RegisterForm() {
                         onChange={handleChange}
                         onBlur={handleEmailBlur}
                         autoComplete="off"
-                        className="flex-1 bg-transparent text-sm text-gray-800 placeholder-gray-400 outline-none"
+                        className="flex-1 bg-transparent text-sm text-white placeholder-white/40 outline-none"
                     />
                     {emailTouched && form.email && !activeEmailError && (
                         <IconCheck />
@@ -301,7 +301,7 @@ export default function RegisterForm() {
 
             {/* Contraseña */}
             <div>
-                <div className={`flex items-center gap-3 border rounded-xl px-4 py-3 bg-white transition-colors ${errors.password ? "border-red-400 bg-red-50" : "border-gray-200 focus-within:border-[#EF233C]"}`}>
+                <div className={`flex items-center gap-3 border rounded-xl px-4 py-3 transition-colors ${errors.password ? "border-red-400 bg-red-500/10" : "border-white/15 bg-white/8 focus-within:border-[#EF233C]"}`}>
                     <IconLock />
                     <input
                         name="password"
@@ -310,12 +310,12 @@ export default function RegisterForm() {
                         value={form.password}
                         onChange={handleChange}
                         autoComplete="new-password"
-                        className="flex-1 bg-transparent text-sm text-gray-800 placeholder-gray-400 outline-none"
+                        className="flex-1 bg-transparent text-sm text-white placeholder-white/40 outline-none"
                     />
                     <button
                         type="button"
                         onClick={() => setShowPassword((v) => !v)}
-                        className="text-gray-400 hover:text-gray-600 transition-colors"
+                        className="text-white/50 hover:text-white/80 transition-colors"
                         tabIndex={-1}
                     >
                         <IconEye visible={showPassword} />
@@ -329,12 +329,12 @@ export default function RegisterForm() {
 
             {/* Confirmar contraseña */}
             <div>
-                <div className={`flex items-center gap-3 border rounded-xl px-4 py-3 bg-white transition-colors ${
+                <div className={`flex items-center gap-3 border rounded-xl px-4 py-3 transition-colors ${
                     confirmStatus === "mismatch" || errors.confirmPassword
-                        ? "border-red-400 bg-red-50"
+                        ? "border-red-400 bg-red-500/10"
                         : confirmStatus === "match"
-                        ? "border-green-400 bg-green-50"
-                        : "border-gray-200 focus-within:border-[#EF233C]"
+                        ? "border-green-400 bg-green-500/10"
+                        : "border-white/15 bg-white/8 focus-within:border-[#EF233C]"
                 }`}>
                     <IconLock />
                     <input
@@ -344,7 +344,7 @@ export default function RegisterForm() {
                         value={form.confirmPassword}
                         onChange={handleChange}
                         autoComplete="new-password"
-                        className="flex-1 bg-transparent text-sm text-gray-800 placeholder-gray-400 outline-none"
+                        className="flex-1 bg-transparent text-sm text-white placeholder-white/40 outline-none"
                     />
                     {/* icono de match en tiempo real */}
                     {confirmStatus === "match" && <IconCheck />}
@@ -352,7 +352,7 @@ export default function RegisterForm() {
                     <button
                         type="button"
                         onClick={() => setShowConfirm((v) => !v)}
-                        className="text-gray-400 hover:text-gray-600 transition-colors"
+                        className="text-white/50 hover:text-white/80 transition-colors"
                         tabIndex={-1}
                     >
                         <IconEye visible={showConfirm} />

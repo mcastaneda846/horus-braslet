@@ -253,16 +253,29 @@ function ContactModal({
 
 export default function ContactsPanel() {
     const [contacts, setContacts] = useState<Contact[]>([]);
+    const [loadError, setLoadError] = useState(false);
     const [modal, setModal]       = useState<ModalState>({ open: false, contact: null });
     const [saving, setSaving]     = useState(false);
     const [confirmId, setConfirmId] = useState<string | null>(null);
 
+    function loadContacts() {
+        setLoadError(false);
+        fetch("/api/contacts")
+            .then((r) => {
+                if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                return r.json();
+            })
+            .then((data: unknown) => {
+                if (Array.isArray(data)) setContacts(data as Contact[]);
+                else setLoadError(true);
+            })
+            .catch(() => setLoadError(true));
+    }
+
     // Carga inicial de contactos desde el servidor al montar el componente
     useEffect(() => {
-        fetch("/api/contacts")
-            .then((r) => r.json())
-            .then(setContacts)
-            .catch(console.error);
+        loadContacts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     function openModal(contact: Contact | null = null) {
@@ -325,7 +338,12 @@ export default function ContactsPanel() {
                     </button>
                 </div>
 
-                {contacts.length === 0 ? (
+                {loadError ? (
+                    <div className="text-center py-6">
+                        <p className="text-xs text-red-400 mb-2">No se pudieron cargar los contactos</p>
+                        <button onClick={loadContacts} className="text-xs text-[#EF233C] underline">Reintentar</button>
+                    </div>
+                ) : contacts.length === 0 ? (
                     <p className="text-xs text-[#8D99AE] text-center py-6">
                         No hay contactos. Agrega uno con el botón +
                     </p>

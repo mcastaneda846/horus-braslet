@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
 
+export const dynamic = "force-dynamic";
+
 const DB_PATH = path.join(process.cwd(), "data", "db.json");
 
 interface Contact {
@@ -13,13 +15,18 @@ interface Contact {
     phone: string;
 }
 
-async function readDb() {
-    const raw = await fs.readFile(DB_PATH, "utf-8");
-    return JSON.parse(raw) as { contacts: Contact[] };
+interface Db {
+    contacts: Contact[];
+    profileExtras?: Record<string, unknown>;
 }
 
-async function writeDb(data: { contacts: Contact[] }) {
-    await fs.writeFile(DB_PATH, JSON.stringify(data, null, 2), "utf-8");
+async function readDb(): Promise<Db> {
+    const raw = await fs.readFile(DB_PATH, "utf-8");
+    return JSON.parse(raw) as Db;
+}
+
+async function writeDb(db: Db) {
+    await fs.writeFile(DB_PATH, JSON.stringify(db, null, 2), "utf-8");
 }
 
 export async function PUT(

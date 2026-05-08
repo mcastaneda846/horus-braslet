@@ -5,6 +5,9 @@ import { promises as fs } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
 
+// Deshabilita la caché de Next.js para que siempre lea el archivo actualizado
+export const dynamic = "force-dynamic";
+
 // process.cwd() apunta a la raíz del proyecto independientemente del entorno de ejecución
 const DB_PATH = path.join(process.cwd(), "data", "db.json");
 
@@ -15,13 +18,18 @@ interface Contact {
     phone: string;
 }
 
-async function readDb() {
-    const raw = await fs.readFile(DB_PATH, "utf-8");
-    return JSON.parse(raw) as { contacts: Contact[] };
+interface Db {
+    contacts: Contact[];
+    profileExtras?: Record<string, unknown>;
 }
 
-async function writeDb(data: { contacts: Contact[] }) {
-    await fs.writeFile(DB_PATH, JSON.stringify(data, null, 2), "utf-8");
+async function readDb(): Promise<Db> {
+    const raw = await fs.readFile(DB_PATH, "utf-8");
+    return JSON.parse(raw) as Db;
+}
+
+async function writeDb(db: Db) {
+    await fs.writeFile(DB_PATH, JSON.stringify(db, null, 2), "utf-8");
 }
 
 // GET /api/contacts — devuelve todos los contactos

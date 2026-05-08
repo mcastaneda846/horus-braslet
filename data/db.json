@@ -13,16 +13,16 @@
       "phone": "+57 315 888 4567"
     },
     {
-      "id": "3",
-      "name": "Carlos Pérez",
-      "relation": "Amigo",
-      "phone": "+57 320 777 8901"
-    },
-    {
       "id": "4cf70861-01d1-4f00-a3a2-5ff5d4d2af08",
       "name": "Andres Cortes",
       "relation": "Familiar",
       "phone": "320 6040624"
     }
-  ]
+  ],
+  "profileExtras": {
+    "6771a490-3f3b-4236-83ac-b3b26d0eb20d": {
+      "phone": "3206040624",
+      "location": "medellin"
+    }
+  }
 }

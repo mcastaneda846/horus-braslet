@@ -21,7 +21,7 @@ export default function RegisterPage() {
 
             {/* ── Overlay oscuro de izquierda a derecha ─────────────────────── */}
             <div
-                className="absolute inset-0 z-1 pointer-events-none"
+                className="absolute inset-0 z-[1] pointer-events-none"
                 style={{
                     background: "linear-gradient(to right, rgba(7,8,14,0.58) 0%, rgba(7,8,14,0.38) 40%, rgba(7,8,14,0.08) 65%, rgba(7,8,14,0.0) 100%)",
                 }}
