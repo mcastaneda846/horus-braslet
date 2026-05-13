@@ -1,26 +1,102 @@
-@import "../../node_modules/tailwindcss/dist/lib.d.mts";
+@import "tailwindcss";
+
+@theme {
+  --color-background: #0a0a0b;
+  --color-foreground: #ecedee;
+  
+  --color-primary: #e11d48;
+  --color-primary-foreground: #ffffff;
+  
+  --color-secondary: #18181b;
+  --color-secondary-foreground: #ecedee;
+  
+  --color-accent: #27272a;
+  --color-accent-foreground: #ffffff;
+
+  --color-muted: #18181b;
+  --color-muted-foreground: #a1a1aa;
+
+  --color-card: #111113;
+  --color-card-foreground: #ecedee;
+
+  --color-border: #27272a;
+  
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+
+  --font-sans: "Geist", "Inter", system-ui, sans-serif;
+}
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: 10 10 11;
+  --foreground: 210 40% 98%;
+  --card: 12 12 14;
+  --card-foreground: 210 40% 98%;
+  --popover: 12 12 14;
+  --popover-foreground: 210 40% 98%;
+  --primary: 351 100% 57%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 24 24 27;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 24 24 27;
+  --muted-foreground: 215 20% 65%;
+  --accent: 351 100% 57%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62% 30%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 39 39 42;
+  --input: 39 39 42;
+  --ring: 351 100% 57%;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-feature-settings: "rlig" 1, "calt" 1;
+    min-height: 100vh;
+    overflow-x: hidden;
+    letter-spacing: -0.01em;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .glass-panel {
+    background: #111113;
+    border: 1px solid var(--color-border);
+  }
+
+  .glass-card {
+    background: #111113;
+    border: 1px solid var(--color-border);
+    transition: all 0.2s ease-in-out;
+  }
+
+  .glass-card:hover {
+    background: #18181b;
+    border-color: #3f3f46;
+  }
+
+  .neo-glow-red {
+    box-shadow: 0 0 20px -5px rgba(225, 29, 72, 0.2);
+  }
+}
+
+/* Scrollbar futurista */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 35, 69, 0.2);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 35, 69, 0.5);
 }
