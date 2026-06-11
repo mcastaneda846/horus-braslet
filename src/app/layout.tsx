@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Horus Braslet",
+  title: "Horus",
   description: "Red de protección inteligente con tecnología NFC.",
   icons: {
     icon: "/ojo.png",
