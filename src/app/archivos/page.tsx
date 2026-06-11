@@ -75,8 +75,9 @@ export default function ArchivosPage() {
 
             // Reload documents
             fetchDocs(userId);
-        } catch (err: any) {
-            setUploadError(err.message || "Error al procesar el archivo");
+        } catch (err: unknown) {
+            const errorMessage = err instanceof Error ? err.message : "Error al procesar el archivo";
+            setUploadError(errorMessage);
         } finally {
             setUploading(false);
             if (e.target.value) e.target.value = "";
@@ -88,11 +89,6 @@ export default function ArchivosPage() {
         // Local UI filter to avoid manual backend deletion endpoints block
         setDocuments((prev) => prev.filter((d) => d.publicId !== publicId));
     }
-
-    // Storage Calculation (Summing up mock/realistic sizes)
-    const totalBytes = documents.length * 1.1 * 1024 * 1024; // estimate 1.1 MB per file
-    const totalMB = Math.min(100, Math.round((totalBytes / (1024 * 1024)) * 10) / 10 + 4.4); // fallback offset
-    const percentage = Math.min(100, (totalMB / 100) * 100);
 
     // Helpers to get file type details
     function getFileTypeStyles(type: string) {

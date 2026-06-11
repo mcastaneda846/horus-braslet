@@ -101,7 +101,19 @@ export default function MedicalProfilePage() {
     };
 
     useEffect(() => {
-        refreshData();
+        fetch("/api/medical-profile")
+            .then((r) => {
+                if (!r.ok) {
+                    window.location.href = "/login";
+                    throw new Error("No autorizado");
+                }
+                return r.json();
+            })
+            .then((res: MedicalProfileData) => {
+                setData(res);
+            })
+            .catch((err) => console.error("Error loading medical profile:", err))
+            .finally(() => setLoading(false));
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
