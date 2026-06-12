@@ -46,6 +46,46 @@ interface MedicalProfileData {
     medicalHistory: MedicalHistoryItem[];
 }
 
+type MedicalProfilePayload =
+    | {
+          type: "condition";
+          data: {
+              conditionName: string;
+              severity: string;
+              status: string;
+              notes: string | null;
+          };
+      }
+    | {
+          type: "allergy";
+          data: {
+              allergenName: string;
+              allergyType: string;
+              severity: string;
+              reactionDescription: string | null;
+          };
+      }
+    | {
+          type: "medication";
+          data: {
+              customMedicationName: string;
+              dosage: string | null;
+              frequency: string | null;
+              route: string;
+              purpose: string | null;
+              isCurrent: boolean;
+          };
+      }
+    | {
+          type: "history";
+          data: {
+              eventName: string;
+              eventType: string;
+              location: string | null;
+              outcome: string | null;
+          };
+      };
+
 export default function MedicalProfilePage() {
     const [data, setData] = useState<MedicalProfileData | null>(null);
     const [loading, setLoading] = useState(true);
@@ -121,7 +161,7 @@ export default function MedicalProfilePage() {
         setSubmitting(true);
         setFormError(null);
 
-        let payload: any = {};
+        let payload: MedicalProfilePayload;
 
         if (activeTab === "general") {
             payload = {
@@ -155,7 +195,7 @@ export default function MedicalProfilePage() {
                     isCurrent,
                 },
             };
-        } else if (activeTab === "history") {
+        } else {
             payload = {
                 type: "history",
                 data: {
@@ -208,8 +248,9 @@ export default function MedicalProfilePage() {
 
             setIsModalOpen(false);
             refreshData();
-        } catch (err: any) {
-            setFormError(err.message || "Ocurrió un error inesperado");
+        } catch (err) {
+            const message = err instanceof Error ? err.message : "Ocurrió un error inesperado";
+            setFormError(message);
         } finally {
             setSubmitting(false);
         }
@@ -360,7 +401,7 @@ export default function MedicalProfilePage() {
                                                     </span>
                                                 </div>
                                                 <p className="text-xs text-[#8D99AE] font-bold">Estado: <span className="text-[#1C1917]">{c.status}</span></p>
-                                                {c.notes && <p className="text-sm text-[#1C1917] mt-1 italic font-medium">"{c.notes}"</p>}
+                                                {c.notes && <p className="text-sm text-[#1C1917] mt-1 italic font-medium">{c.notes}</p>}
                                             </div>
                                         ))}
                                     </div>

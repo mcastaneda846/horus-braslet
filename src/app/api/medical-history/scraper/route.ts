@@ -30,11 +30,12 @@ export async function POST(request: Request) {
       message: 'Historial médico procesado y sincronizado en Neon con éxito.' 
     }, { status: 200 });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API Error] Error crítico en el endpoint del scraper:', error);
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json({ 
       error: 'Error interno del servidor al procesar el historial.',
-      details: error.message 
+      details: message 
     }, { status: 500 });
   }
 }

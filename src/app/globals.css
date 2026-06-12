@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 @theme {
+  --font-sans: var(--font-pliant), system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), sans-serif;
+
   --color-pink: #FAB2D3;
   --color-pink-foreground: #391628;
   
@@ -25,6 +28,14 @@
 body {
   background-color: #F2F1EC;
   color: #1C1917;
+}
+
+body, input, button, select, textarea {
+  font-family: var(--font-pliant), system-ui, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-space-grotesk), sans-serif;
 }
 
 /* oculta el badge "Built with Spline" del shadow DOM */
@@ -99,3 +110,22 @@ spline-viewer::part(logo) {
   animation: look-around 10s infinite ease-in-out;
 }
 
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-18px) rotate(2deg); }
+}
+
+@keyframes float-medium {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-13px) rotate(-3deg); }
+}
+
+@keyframes float-fast {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-22px) rotate(4deg); }
+}

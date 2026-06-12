@@ -1,12 +1,56 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, GenerateContentResult } from "@google/generative-ai";
+import { 
+  BloodType, 
+  Gender, 
+  AllergyType, 
+  AllergySeverity, 
+  ConditionSeverity, 
+  ConditionStatus, 
+  MedicationRoute, 
+  MedicalHistoryEventType 
+} from "@/src/generated/client";
+
+export interface StructuredMedicalText {
+  personalInfo?: {
+    bloodType?: BloodType | null;
+    gender?: Gender | null;
+  } | null;
+  explicitNoAllergies?: boolean | null;
+  explicitNoMedications?: boolean | null;
+  allergies?: Array<{
+    allergenName: string;
+    allergyType: AllergyType;
+    severity: AllergySeverity;
+    reactionDescription?: string | null;
+  }> | null;
+  chronicConditions?: Array<{
+    conditionName: string;
+    severity?: ConditionSeverity | null;
+    status?: ConditionStatus;
+    notes?: string | null;
+  }> | null;
+  medications?: Array<{
+    customMedicationName: string;
+    dosage?: string | null;
+    frequency?: string | null;
+    route?: MedicationRoute;
+    purpose?: string | null;
+  }> | null;
+  medicalHistory?: Array<{
+    eventType: MedicalHistoryEventType;
+    eventName: string;
+    location?: string | null;
+    outcome?: string | null;
+  }> | null;
+}
 
 async function generateContentWithRetry(
   genAI: GoogleGenerativeAI,
   primaryModel: string,
   prompt: string
-): Promise<any> {
+): Promise<GenerateContentResult> {
   const models = [primaryModel, "gemini-2.0-flash", "gemini-2.5-pro", "gemini-2.5-flash-lite"];
-  let lastError: any = null;
+  let lastError: Error | null = null;
 
   for (const modelName of models) {
     let delay = 2000;
@@ -18,9 +62,9 @@ async function generateContentWithRetry(
         const model = genAI.getGenerativeModel({ model: modelName });
         const result = await model.generateContent(prompt);
         return result;
-      } catch (error: any) {
-        lastError = error;
-        const errorMessage = error instanceof Error ? error.message : String(error);
+      } catch (error: unknown) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+        const errorMessage = lastError.message;
         
         const isRetryable = 
           errorMessage.includes("503") || 
@@ -112,7 +156,7 @@ ${text}
   }
 }
 
-export async function structureMedicalTextWithGemini(cleanText: string): Promise<any> {
+export async function structureMedicalTextWithGemini(cleanText: string): Promise<StructuredMedicalText> {
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
   if (!GEMINI_API_KEY) {

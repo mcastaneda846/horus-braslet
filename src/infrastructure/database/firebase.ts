@@ -30,7 +30,7 @@ try {
         update: async () => {},
       })
     }),
-    runTransaction: async (cb: any) => cb({
+    runTransaction: async (cb: (transaction: unknown) => Promise<unknown>) => cb({
       get: async () => ({ exists: false, data: () => null }),
       set: async () => {},
       update: async () => {},
