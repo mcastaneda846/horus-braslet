@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { COLOMBIA_DEPARTMENTS, COLOMBIA_CITIES_BY_DEPARTMENT } from "../_data/colombia";
 
 export interface ShippingAddress {
@@ -27,6 +27,24 @@ export default function CheckoutForm({ productId, createOrder }: CheckoutFormPro
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [pedido, setPedido] = useState<{
+        producto: string;
+        colorNombre: string;
+        colorHex: string;
+        tieneImagenFrente?: boolean;
+        tieneImagenReverso?: boolean;
+    } | null>(null);
+
+    useEffect(() => {
+        const stored = sessionStorage.getItem("pedido");
+        if (stored) {
+            try {
+                setPedido(JSON.parse(stored));
+            } catch (err) {
+                console.error("Error reading customization from sessionStorage:", err);
+            }
+        }
+    }, []);
 
     const cityOptions = useMemo(() => {
         if (!form.department) return [];
@@ -72,9 +90,32 @@ export default function CheckoutForm({ productId, createOrder }: CheckoutFormPro
     return (
         <form onSubmit={onSubmit} className="bg-white border border-[#EDF2F4] rounded-2xl p-6 shadow-sm">
             <h3 className="text-lg font-semibold text-[#2B2D42]">Direccion de envio</h3>
-            <p className="text-sm text-[#8D99AE] mt-1">
+            <p className="text-sm text-[#8D99AE] mt-1 mb-5">
                 Confirma la direccion para enviar tu dispositivo Horus.
             </p>
+
+            {pedido && (
+                <div className="mb-6 p-4 bg-gray-50 border border-[#EDF2F4] rounded-xl flex flex-col gap-2">
+                    <p className="text-[10px] font-bold text-[#8D99AE] uppercase tracking-wider">
+                        Personalización elegida
+                    </p>
+                    <div className="flex items-center justify-between text-sm text-[#2B2D42]">
+                        <span className="font-semibold">{pedido.producto}</span>
+                        <div className="flex items-center gap-2">
+                            <span
+                                className="w-3.5 h-3.5 rounded-full border border-gray-300 shadow-sm"
+                                style={{ backgroundColor: pedido.colorHex }}
+                            />
+                            <span className="text-xs text-[#8D99AE]">{pedido.colorNombre}</span>
+                        </div>
+                    </div>
+                    {(pedido.tieneImagenFrente || pedido.tieneImagenReverso) && (
+                        <p className="text-xs text-[#8D99AE] flex items-center gap-1">
+                            <span>✓</span> Con imagen de personalización cargada
+                        </p>
+                    )}
+                </div>
+            )}
 
             <div className="mt-6 grid gap-4">
                 <label className="text-sm text-[#2B2D42] font-medium">
