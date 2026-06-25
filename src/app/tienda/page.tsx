@@ -29,13 +29,20 @@ const COLORES_TARJETA = [
 
 // NavLink removed to use FloatingSidebar
 
+/**
+ * StorePage: Server Component rendering the storefront product catalog.
+ * Authenticates the user session, queries active products from PostgreSQL,
+ * and formats the product features and configurations for 3D preview cards.
+ */
 export default async function StorePage() {
+    // 1. Authenticate user session using JWT cookie guard
     try {
         await authGuard();
     } catch {
         redirect("/login");
     }
 
+    // 2. Fetch active products (Bracelet or Card type) from the database
     const products = await prisma.product.findMany({
         where: {
             isActive: true,
@@ -44,6 +51,7 @@ export default async function StorePage() {
         orderBy: { price: "asc" },
     });
 
+    // 3. Map database products into structured data for UI rendering
     const mappedProducts = products.map((product) => {
         const isBracelet = product.productType === "BRACELET";
         return {
@@ -54,6 +62,7 @@ export default async function StorePage() {
                 : "Ambos lados · Tu imagen en alta resolución"
             ),
             precio: Number(product.price).toLocaleString("es-CO"),
+            // Redirects to customization pages passing the product ID
             href: isBracelet 
                 ? `/personalizar/manilla?productId=${product.id}` 
                 : `/personalizar/tarjeta?productId=${product.id}`,

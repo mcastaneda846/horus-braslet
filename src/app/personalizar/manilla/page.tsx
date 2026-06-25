@@ -30,19 +30,28 @@ const FEATURES = [
   'Cuero genuino premium cosido',
 ]
 
+/**
+ * ManillaConfigurator: Configurator page component allowing users to customize
+ * the base color of their 3D medical bracelet, preview changes in real-time,
+ * and proceed to checkout by saving customizations in sessionStorage.
+ */
 function ManillaConfigurator() {
-  const [color, setColor] = useState(COLORES[0].hex)
+  const [color, setColor] = useState(COLORES[0].hex) // Color state hook, default to the first color (Azul)
   const router = useRouter()
   const searchParams = useSearchParams()
-  const productId = searchParams.get('productId')
+  const productId = searchParams.get('productId') // Extract productId from the URL search parameters
 
   const colorActual = COLORES.find(c => c.hex === color) ?? COLORES[0]
 
+  /**
+   * Saves customization details in client sessionStorage and redirects the user to checkout.
+   */
   const handleComprar = () => {
     if (!productId) {
       router.push('/tienda')
       return
     }
+    // Save choices to sessionStorage so the checkout form can render customized details
     sessionStorage.setItem('pedido', JSON.stringify({
       producto: 'Manilla Médica',
       colorNombre: colorActual.nombre,
@@ -54,7 +63,7 @@ function ManillaConfigurator() {
 
   return (
     <div className="flex flex-col h-screen bg-white overflow-hidden">
-      {/* ── BARRA SUPERIOR ── */}
+      {/* ── HEADER ── */}
       <header className="flex items-center px-6 h-12 border-b border-gray-100 shrink-0">
         <button
           onClick={() => router.back()}
@@ -68,18 +77,18 @@ function ManillaConfigurator() {
         <div className="w-14" />
       </header>
 
-      {/* ── LAYOUT PRINCIPAL ── */}
+      {/* ── MAIN LAYOUT ── */}
       <div className="flex flex-col lg:flex-row flex-1 min-h-0">
-        {/* ── COLUMNA IZQUIERDA: canvas 3D ── */}
+        {/* ── LEFT COLUMN: 3D Canvas Preview ── */}
         <div className="flex-1 flex flex-col bg-gray-50 min-h-[320px] lg:min-h-0">
-          {/* Canvas ocupa todo el espacio disponible */}
+          {/* WebGL Canvas occupying all available space */}
           <div className="flex-1">
             <ProductCanvas enableOrbit={true} cameraPosition={[0, 1.2, 5]}>
               <ManillaModel color={color} autoRotate={true} />
             </ProductCanvas>
           </div>
 
-          {/* Ficha técnica en la parte baja del canvas (solo desktop) */}
+          {/* Technical specifications panel footer (desktop only) */}
           <div className="hidden lg:grid grid-cols-4 border-t border-gray-200 bg-white shrink-0">
             {SPECS.map((s) => (
               <div key={s.label} className="py-3.5 px-5 border-r border-gray-100 last:border-0">
@@ -90,7 +99,7 @@ function ManillaConfigurator() {
           </div>
         </div>
 
-        {/* ── COLUMNA DERECHA: panel de opciones ── */}
+        {/* ── RIGHT COLUMN: Configuration Sidebar ── */}
         <div className="
           w-full lg:w-[400px] xl:w-[440px]
           lg:h-full overflow-y-auto
@@ -98,7 +107,7 @@ function ManillaConfigurator() {
           flex flex-col
         ">
           <div className="flex flex-col gap-7 p-7 flex-1">
-            {/* Nombre del producto */}
+            {/* Product description header */}
             <div>
               <p className="text-[10px] tracking-widest text-gray-400 uppercase mb-1">
                 Horus Guard
@@ -111,7 +120,7 @@ function ManillaConfigurator() {
               </p>
             </div>
 
-            {/* Selector de color */}
+            {/* Band color swatches selector */}
             <div>
               <div className="flex items-center justify-between mb-4">
                 <p className="text-sm font-medium text-gray-700">Color</p>
@@ -125,7 +134,7 @@ function ManillaConfigurator() {
               />
             </div>
 
-            {/* Características en grid */}
+            {/* Checklist of features */}
             <div>
               <p className="text-sm font-medium text-gray-700 mb-3">Incluye</p>
               <div className="grid grid-cols-2 gap-2">
@@ -138,10 +147,10 @@ function ManillaConfigurator() {
               </div>
             </div>
 
-            {/* Precio + CTA — pegados al fondo */}
+            {/* Pricing details and checkout CTA button */}
             <div className="mt-auto pt-4 border-t border-gray-100">
               <div className="flex items-baseline justify-between mb-4">
-                <p className="text-sm text-gray-400">Precio total</p>
+                <p className="text-sm text-[#8D99AE]">Precio total</p>
                 <p className="text-3xl font-bold text-gray-900">
                   $29.900
                   <span className="text-sm font-normal text-gray-400 ml-1">COP</span>
@@ -168,6 +177,7 @@ function ManillaConfigurator() {
 
 export default function PersonalizarManillaPage() {
   return (
+    // Wrap configurator with Suspense to handle useSearchParams CSR hydration
     <Suspense fallback={<div className="h-screen flex items-center justify-center text-sm text-gray-500">Cargando configurador...</div>}>
       <ManillaConfigurator />
     </Suspense>
