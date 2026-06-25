@@ -34,7 +34,6 @@ export default async function ProfilePage() {
                     <h1 className="text-3xl font-black text-[#1C1917]">Mi Perfil</h1>
                     <p className="text-sm text-[#8D99AE] font-semibold mt-1">Configura tus datos de salud y contacto</p>
                 </div>
-
                 <ProfileClient userId={userId} />
             </main>
         </div>
