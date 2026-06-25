@@ -1,7 +1,5 @@
 generator client {
-  provider   = "prisma-client"
-  output     = "../generated/prisma"
-  engineType = "client"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -45,6 +43,8 @@ model PersonalInformation {
   identificationNumber String?    @unique @map("identification_number")
   identificationType   String?    @map("identification_type")
   photoUrl             String?    @map("photo_url")
+  phone                String?
+  location             String?
   createdAt            DateTime   @default(now()) @map("created_at")
   updatedAt            DateTime   @updatedAt @map("updated_at")
   user                 User       @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -101,10 +101,10 @@ model ChronicCondition {
 }
 
 model MedicationCatalog {
-  id              String           @id @default(uuid()) @db.Uuid
-  genericName     String           @unique @map("generic_name")
-  commonDosages   Json?            @map("common_dosages")
-  createdAt       DateTime         @default(now()) @map("created_at")
+  id            String           @id @default(uuid()) @db.Uuid
+  genericName   String           @unique @map("generic_name")
+  commonDosages Json?            @map("common_dosages")
+  createdAt     DateTime         @default(now()) @map("created_at")
   userMedications UserMedication[]
 
   @@index([genericName])
@@ -214,6 +214,92 @@ model PrivacySettings {
   @@map("privacy_settings")
 }
 
+model Product {
+  id           String      @id @default(uuid()) @db.Uuid
+  name         String      @unique
+  productType  ProductType @map("product_type")
+  description  String?     @db.Text
+  price        Decimal     @db.Decimal(10, 2)
+  currency     String      @default("COP")
+  isActive     Boolean     @default(true) @map("is_active")
+  billingCycle String      @default("ANNUAL") @map("billing_cycle")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+  orders       Order[]
+  subscriptions Subscription[]
+
+  @@map("products")
+}
+
+model Order {
+  id                 String      @id @default(uuid()) @db.Uuid
+  userId             String      @map("user_id") @db.Uuid
+  productId          String      @map("product_id") @db.Uuid
+  reference          String      @unique
+  status             OrderStatus @default(PENDING)
+  totalAmount        Decimal     @map("total_amount") @db.Decimal(10, 2)
+  currency           String      @default("COP")
+  shippingStreet     String      @map("shipping_street")
+  shippingCity       String      @map("shipping_city")
+  shippingDepartment String      @map("shipping_department")
+  shippingZip        String?     @map("shipping_zip")
+  createdAt          DateTime    @default(now()) @map("created_at")
+  updatedAt          DateTime    @updatedAt @map("updated_at")
+  user               User        @relation(fields: [userId], references: [id])
+  product            Product     @relation(fields: [productId], references: [id])
+  payment            Payment?
+  subscription       Subscription?
+
+  @@index([userId, status])
+  @@index([reference])
+  @@map("orders")
+}
+
+model Payment {
+  id              String        @id @default(uuid()) @db.Uuid
+  orderId         String        @unique @map("order_id") @db.Uuid
+  userId          String        @map("user_id") @db.Uuid
+  mpTransactionId String?       @unique @map("mp_transaction_id")
+  mpReference     String?       @map("mp_reference")
+  paymentMethod   PaymentMethod @map("payment_method")
+  status          PaymentStatus @default(PENDING)
+  amount          Decimal       @db.Decimal(10, 2)
+  currency        String        @default("COP")
+  mpResponse      Json?         @map("mp_response")
+  paidAt          DateTime?     @map("paid_at")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  order           Order         @relation(fields: [orderId], references: [id])
+  user            User          @relation(fields: [userId], references: [id])
+
+  @@index([userId, status])
+  @@index([mpTransactionId])
+  @@index([status, createdAt(sort: Desc)])
+  @@map("payments")
+}
+
+model Subscription {
+  id                    String             @id @default(uuid()) @db.Uuid
+  userId                String             @map("user_id") @db.Uuid
+  orderId               String?            @unique @map("order_id") @db.Uuid
+  productId             String             @map("product_id") @db.Uuid
+  status                SubscriptionStatus @default(PENDING)
+  startDate             DateTime?          @map("start_date")
+  endDate               DateTime?          @map("end_date")
+  cancelledAt           DateTime?          @map("cancelled_at")
+  autoRenew             Boolean            @default(true) @map("auto_renew")
+  renewalReminderSentAt DateTime?          @map("renewal_reminder_sent_at")
+  createdAt             DateTime           @default(now()) @map("created_at")
+  updatedAt             DateTime           @updatedAt @map("updated_at")
+  user                  User               @relation(fields: [userId], references: [id])
+  product               Product            @relation(fields: [productId], references: [id])
+  order                 Order?             @relation(fields: [orderId], references: [id])
+
+  @@index([userId, status])
+  @@index([endDate])
+  @@map("subscriptions")
+}
+
 enum AccountStatus {
   ACTIVE
   INACTIVE
@@ -288,179 +374,40 @@ enum AlertStatus {
   FALSE_ALARM
 }
 
-// ============================================================
-// ENUM: nuevos para pagos
-// ============================================================
-
 enum ProductType {
-  BRACELET // manilla física
-  CARD // tarjeta física
+  BRACELET
+  CARD
 }
 
 enum OrderStatus {
-   PENDING // orden creada, esperando pago
-   PAYMENT_PENDING // en proceso de pago
-   PAID // pago confirmado por MercadoPago
-   PROCESSING // preparando envío
-   SHIPPED // enviado
-   DELIVERED // entregado
-   CANCELLED // cancelado
-   REFUNDED // reembolsado
+  PENDING
+  PAYMENT_PENDING
+  PAID
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
 }
 
 enum PaymentStatus {
-   PENDING // esperando respuesta de MercadoPago
-   APPROVED // pago aprobado
-   DECLINED // pago rechazado
-   VOIDED // anulado
-   ERROR // error en el proceso
+  PENDING
+  APPROVED
+  DECLINED
+  VOIDED
+  ERROR
 }
 
 enum PaymentMethod {
-  CARD // tarjeta crédito/débito
-  PSE // transferencia bancaria
-  NEQUI // Nequi
+  CARD
+  PSE
+  NEQUI
   BANCOLOMBIA_TRANSFER
 }
 
 enum SubscriptionStatus {
-  ACTIVE // suscripción vigente
-  EXPIRED // venció
-  CANCELLED // cancelada por el usuario
-  PENDING // esperando primer pago
-}
-
-// ============================================================
-// TABLA: products
-// Catálogo de productos (manilla y tarjeta)
-// ============================================================
-
-model Product {
-  id          String      @id @default(uuid()) @db.Uuid
-  name        String      @unique //"Horus Bracelet", "Horus Card"
-  productType ProductType @map("product_type")
-  description String?     @db.Text
-  price       Decimal     @db.Decimal(10, 2) // precio en COP
-  currency    String      @default("COP")
-  isActive    Boolean     @default(true) @map("is_active")
-
-  // Suscripción anual
-  billingCycle String @default("ANNUAL") @map("billing_cycle")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  orders        Order[]
-  subscriptions Subscription[]
-
-  @@map("products")
-}
-
-// ============================================================
-// TABLA: orders
-// Orden de compra — antes del pago
-// ============================================================
-
-model Order {
-   id        String @id @default(uuid()) @db.Uuid
-   userId    String @map("user_id") @db.Uuid
-   productId String @map("product_id") @db.Uuid
-
-   // Referencia única para MercadoPago
-   reference String @unique // "horus-1234567890"
-
-  status      OrderStatus @default(PENDING)
-  totalAmount Decimal     @map("total_amount") @db.Decimal(10, 2)
-  currency    String      @default("COP")
-
-  shippingStreet     String  @map("shipping_street")
-  shippingCity       String  @map("shipping_city")
-  shippingDepartment String  @map("shipping_department")
-  shippingZip        String? @map("shipping_zip")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Relaciones
-  user         User          @relation(fields: [userId], references: [id])
-  product      Product       @relation(fields: [productId], references: [id])
-  payment      Payment?
-  subscription Subscription?
-
-  @@index([userId, status])
-  @@index([reference])
-  @@map("orders")
-}
-
-// ============================================================
-// TABLA: payments
-// Registro de cada intento de pago con MercadoPago
-// ============================================================
-
-model Payment {
-  id      String @id @default(uuid()) @db.Uuid
-  orderId String @unique @map("order_id") @db.Uuid
-  userId  String @map("user_id") @db.Uuid
-
-  // Datos de MercadoPago
-  mpTransactionId String?       @unique @map("mp_transaction_id")
-  mpReference     String?       @map("mp_reference")
-  paymentMethod      PaymentMethod @map("payment_method")
-  status             PaymentStatus @default(PENDING)
-
-  // Montos
-  amount   Decimal @db.Decimal(10, 2)
-  currency String  @default("COP")
-
-  // Respuesta de MercadoPago (JSON completo para auditoría)
-  mpResponse Json? @map("mp_response")
-
-  // Timestamps
-  paidAt    DateTime? @map("paid_at")
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-
-  // Relaciones
-  order Order @relation(fields: [orderId], references: [id])
-  user  User  @relation(fields: [userId], references: [id])
-
-  @@index([userId, status])
-  @@index([mpTransactionId])
-  @@index([status, createdAt(sort: Desc)])
-  @@map("payments")
-}
-
-// ============================================================
-// TABLA: subscriptions
-// Suscripción anual del usuario
-// ============================================================
-
-model Subscription {
-  id        String  @id @default(uuid()) @db.Uuid
-  userId    String  @map("user_id") @db.Uuid
-  orderId   String? @unique @map("order_id") @db.Uuid
-  productId String  @map("product_id") @db.Uuid
-
-  status SubscriptionStatus @default(PENDING)
-
-  // Fechas
-  startDate   DateTime? @map("start_date")
-  endDate     DateTime? @map("end_date") // startDate + 1 año
-  cancelledAt DateTime? @map("cancelled_at")
-
-  // Renovación
-  autoRenew             Boolean   @default(true) @map("auto_renew")
-  renewalReminderSentAt DateTime? @map("renewal_reminder_sent_at")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Relaciones
-  user    User    @relation(fields: [userId], references: [id])
-  product Product @relation(fields: [productId], references: [id])
-  order   Order?  @relation(fields: [orderId], references: [id])
-
-  @@index([userId, status])
-  @@index([endDate]) // para detectar suscripciones por vencer
-  @@map("subscriptions")
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  PENDING
 }

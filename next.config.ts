@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["arla-roomiest-iconoclastically.ngrok-free.dev"],
-  serverExternalPackages: ["pdfkit", "fontkit", "restructure", "deep-equal"],
+  serverExternalPackages: ["pdfkit", "fontkit", "restructure", "deep-equal", "tesseract.js"],
   /* config options here */
 };
 
