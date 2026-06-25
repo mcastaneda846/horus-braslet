@@ -88,55 +88,55 @@ export default function CheckoutForm({ productId, createOrder }: CheckoutFormPro
     };
 
     return (
-        <form onSubmit={onSubmit} className="bg-white border border-[#EDF2F4] rounded-2xl p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-[#2B2D42]">Direccion de envio</h3>
-            <p className="text-sm text-[#8D99AE] mt-1 mb-5">
-                Confirma la direccion para enviar tu dispositivo Horus.
+        <form onSubmit={onSubmit} className="bg-white border border-[#E4E2DC] rounded-[32px] p-8 shadow-sm">
+            <h3 className="text-lg font-black text-[#1C1917]">Dirección de envío</h3>
+            <p className="text-sm text-[#8D99AE] font-semibold mt-1 mb-5">
+                Confirma la dirección para enviar tu dispositivo Horus.
             </p>
 
             {pedido && (
-                <div className="mb-6 p-4 bg-gray-50 border border-[#EDF2F4] rounded-xl flex flex-col gap-2">
-                    <p className="text-[10px] font-bold text-[#8D99AE] uppercase tracking-wider">
+                <div className="mb-6 p-4 bg-[#F2F1EC]/60 border border-[#E4E2DC] rounded-2xl flex flex-col gap-2">
+                    <p className="text-[10px] font-extrabold text-[#8D99AE] uppercase tracking-wider">
                         Personalización elegida
                     </p>
-                    <div className="flex items-center justify-between text-sm text-[#2B2D42]">
+                    <div className="flex items-center justify-between text-sm text-[#1C1917]">
                         <span className="font-semibold">{pedido.producto}</span>
                         <div className="flex items-center gap-2">
                             <span
                                 className="w-3.5 h-3.5 rounded-full border border-gray-300 shadow-sm"
                                 style={{ backgroundColor: pedido.colorHex }}
                             />
-                            <span className="text-xs text-[#8D99AE]">{pedido.colorNombre}</span>
+                            <span className="text-xs text-[#8D99AE] font-bold">{pedido.colorNombre}</span>
                         </div>
                     </div>
                     {(pedido.tieneImagenFrente || pedido.tieneImagenReverso) && (
-                        <p className="text-xs text-[#8D99AE] flex items-center gap-1">
-                            <span>✓</span> Con imagen de personalización cargada
+                        <p className="text-xs text-[#8D99AE] font-semibold flex items-center gap-1">
+                            <span className="text-[#96C979]">✓</span> Con imagen de personalización cargada
                         </p>
                     )}
                 </div>
             )}
 
             <div className="mt-6 grid gap-4">
-                <label className="text-sm text-[#2B2D42] font-medium">
-                    Direccion
+                <label className="text-sm text-[#1C1917] font-semibold">
+                    Dirección
                     <input
                         value={form.street}
                         onChange={(event) => onChange("street", event.target.value)}
                         required
-                        className="mt-2 w-full rounded-xl border border-[#E5E7EB] bg-white px-4 py-2.5 text-sm text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                        className="mt-2 w-full rounded-xl border border-[#E4E2DC] bg-[#F2F1EC]/40 px-4 py-2.5 text-sm text-[#1C1917] font-bold focus:outline-none focus:ring-2 focus:ring-[#FAB2D3]/40 focus:border-[#FAB2D3] transition-all duration-200"
                         placeholder="Calle 123 #45-67"
                     />
                 </label>
                 <div className="grid gap-4 md:grid-cols-2">
-                    <label className="text-sm text-[#2B2D42] font-medium">
+                    <label className="text-sm text-[#1C1917] font-semibold">
                         Departamento
                         <input
                             list="department-list"
                             value={form.department}
                             onChange={(event) => onDepartmentChange(event.target.value)}
                             required
-                            className="mt-2 w-full rounded-xl border border-[#E5E7EB] bg-white px-4 py-2.5 text-sm text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                            className="mt-2 w-full rounded-xl border border-[#E4E2DC] bg-[#F2F1EC]/40 px-4 py-2.5 text-sm text-[#1C1917] font-bold focus:outline-none focus:ring-2 focus:ring-[#FAB2D3]/40 focus:border-[#FAB2D3] transition-all duration-200"
                             placeholder="Selecciona departamento"
                         />
                         <datalist id="department-list">
@@ -145,14 +145,14 @@ export default function CheckoutForm({ productId, createOrder }: CheckoutFormPro
                             ))}
                         </datalist>
                     </label>
-                    <label className="text-sm text-[#2B2D42] font-medium">
+                    <label className="text-sm text-[#1C1917] font-semibold">
                         Ciudad
                         <input
                             list="city-list"
                             value={form.city}
                             onChange={(event) => onChange("city", event.target.value)}
                             required
-                            className="mt-2 w-full rounded-xl border border-[#E5E7EB] bg-white px-4 py-2.5 text-sm text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                            className="mt-2 w-full rounded-xl border border-[#E4E2DC] bg-[#F2F1EC]/40 px-4 py-2.5 text-sm text-[#1C1917] font-bold focus:outline-none focus:ring-2 focus:ring-[#FAB2D3]/40 focus:border-[#FAB2D3] transition-all duration-200"
                             placeholder={form.department ? "Selecciona ciudad" : "Selecciona departamento"}
                             disabled={!form.department}
                         />
@@ -163,19 +163,19 @@ export default function CheckoutForm({ productId, createOrder }: CheckoutFormPro
                         </datalist>
                     </label>
                 </div>
-                <label className="text-sm text-[#2B2D42] font-medium">
-                    Codigo postal (opcional)
+                <label className="text-sm text-[#1C1917] font-semibold">
+                    Código postal (opcional)
                     <input
                         value={form.zip ?? ""}
                         onChange={(event) => onChange("zip", event.target.value)}
-                        className="mt-2 w-full rounded-xl border border-[#E5E7EB] bg-white px-4 py-2.5 text-sm text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                        className="mt-2 w-full rounded-xl border border-[#E4E2DC] bg-[#F2F1EC]/40 px-4 py-2.5 text-sm text-[#1C1917] font-bold focus:outline-none focus:ring-2 focus:ring-[#FAB2D3]/40 focus:border-[#FAB2D3] transition-all duration-200"
                         placeholder="110111"
                     />
                 </label>
             </div>
 
             {error && (
-                <div className="mt-4 text-sm text-[#EF233C] bg-[#FEE2E2] border border-[#FECACA] rounded-xl px-4 py-2">
+                <div className="mt-4 text-sm text-[#E62B34] bg-[#FEF2F2] border border-[#FCA5A5] rounded-xl px-4 py-2.5 font-semibold">
                     {error}
                 </div>
             )}
@@ -183,7 +183,7 @@ export default function CheckoutForm({ productId, createOrder }: CheckoutFormPro
             <button
                 type="submit"
                 disabled={loading}
-                className="mt-6 w-full rounded-xl bg-[#EF233C] text-white py-3 text-sm font-semibold hover:bg-[#D90429] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                className="mt-6 w-full rounded-xl bg-[#1C1917] text-white py-3.5 text-sm font-bold tracking-wide hover:bg-[#2D2A26] transition-colors disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
             >
                 {loading ? "Redirigiendo a Mercado Pago..." : "Pagar con Mercado Pago"}
             </button>
