@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { authGuard } from "@/src/shared/lib/auth.guard";
 import { AuthRepositoryImpl } from "@/src/infrastructure/repositories/auth.repository.impl";
-import { prisma } from "@/src/infrastructure/database/prisma/client";
 import LogoutButton from "./_components/LogoutButton";
 import LocationMap from "./_components/LocationMap";
 import ChatButton from "./_components/ChatButton";
@@ -61,9 +60,8 @@ function EmergencyLines() {
 }
 
 export default async function DashboardPage() {
-    let firstName       = "Usuario";
-    let userId          = "";
-    let hasSubscription = false;
+    let firstName = "Usuario";
+    let userId    = "";
 
     try {
         const session    = await authGuard();
@@ -71,11 +69,6 @@ export default async function DashboardPage() {
         const user       = await repository.findById(session.sub);
         if (user) firstName = user.firstName;
         userId = session.sub;
-
-        const sub = await prisma.subscription.findFirst({
-            where: { userId: session.sub, status: "ACTIVE", endDate: { gt: new Date() } },
-        });
-        hasSubscription = !!sub;
     } catch {
         redirect("/login");
     }
@@ -131,7 +124,7 @@ export default async function DashboardPage() {
 
                     {/* ── Izquierda (3 cols): Chat → Notificaciones → Dispositivos → Mapa ── */}
                     <div className="xl:col-span-3 flex flex-col gap-5">
-                        <ChatButton userId={userId} hasSubscription={hasSubscription} />
+                        <ChatButton userId={userId} />
                         <NotificationsCard />
                         <DevicesCard />
                         <div className="bg-white rounded-[28px] p-6 shadow-sm border border-[#E4E2DC] flex flex-col">
@@ -158,7 +151,7 @@ export default async function DashboardPage() {
 
                     {/* ── Derecha (2 cols): QR → Líneas de emergencia ── */}
                     <div className="xl:col-span-2 flex flex-col gap-5">
-                        <QrPermissionsCard userId={userId} hasSubscription={hasSubscription} />
+                        <QrPermissionsCard userId={userId} />
                         <EmergencyLines />
                     </div>
                 </div>
