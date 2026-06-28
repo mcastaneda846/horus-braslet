@@ -32,6 +32,7 @@ export async function registerUseCase(
         passwordHash,
         firstName: input.firstName,
         lastName: input.lastName,
+        termsAcceptedAt: new Date(),
     });
 
     const accessToken  = signAccessToken({ sub: user.id, email: user.email });

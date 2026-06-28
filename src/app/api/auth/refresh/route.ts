@@ -15,6 +15,7 @@ function normalizeNextPath(rawNext: string | null | undefined): string {
     if (!rawNext) return fallback;
 
     // Prevent open-redirects: only allow same-site relative paths.
+    if (rawNext.toLowerCase().startsWith("javascript:")) return fallback;
     if (!rawNext.startsWith("/")) return fallback;
     if (rawNext.startsWith("//")) return fallback;
     if (rawNext.includes("://")) return fallback;

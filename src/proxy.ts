@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { COOKIE_NAMES } from "@/src/shared/lib/cookie.lib";
 
-const PROTECTED_ROUTES = ["/dashboard", "/profile", "/emergency"];
+const PROTECTED_ROUTES = ["/dashboard", "/profile", "/emergency", "/archivos", "/tienda", "/medical", "/checkout"];
 const AUTH_ROUTES      = ["/login", "/register"];
 
 // Verifica el access token sin usar jsonwebtoken (incompatible con Edge Runtime).

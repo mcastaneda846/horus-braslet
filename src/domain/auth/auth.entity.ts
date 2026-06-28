@@ -11,4 +11,5 @@ export interface CreateUserData {
     passwordHash: string;
     firstName: string;
     lastName: string;
+    termsAcceptedAt: Date;
 }

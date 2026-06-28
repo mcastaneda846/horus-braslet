@@ -31,6 +31,9 @@ export type UserMinAggregateOutputType = {
   nfcTagId: string | null
   accountStatus: $Enums.AccountStatus | null
   lastLogin: Date | null
+  pushToken: string | null
+  healthReportEnabled: boolean | null
+  termsAcceptedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -42,6 +45,9 @@ export type UserMaxAggregateOutputType = {
   nfcTagId: string | null
   accountStatus: $Enums.AccountStatus | null
   lastLogin: Date | null
+  pushToken: string | null
+  healthReportEnabled: boolean | null
+  termsAcceptedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -53,6 +59,9 @@ export type UserCountAggregateOutputType = {
   nfcTagId: number
   accountStatus: number
   lastLogin: number
+  pushToken: number
+  healthReportEnabled: number
+  termsAcceptedAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -66,6 +75,9 @@ export type UserMinAggregateInputType = {
   nfcTagId?: true
   accountStatus?: true
   lastLogin?: true
+  pushToken?: true
+  healthReportEnabled?: true
+  termsAcceptedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -77,6 +89,9 @@ export type UserMaxAggregateInputType = {
   nfcTagId?: true
   accountStatus?: true
   lastLogin?: true
+  pushToken?: true
+  healthReportEnabled?: true
+  termsAcceptedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -88,6 +103,9 @@ export type UserCountAggregateInputType = {
   nfcTagId?: true
   accountStatus?: true
   lastLogin?: true
+  pushToken?: true
+  healthReportEnabled?: true
+  termsAcceptedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -172,6 +190,9 @@ export type UserGroupByOutputType = {
   nfcTagId: string | null
   accountStatus: $Enums.AccountStatus
   lastLogin: Date | null
+  pushToken: string | null
+  healthReportEnabled: boolean
+  termsAcceptedAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -204,6 +225,9 @@ export type UserWhereInput = {
   nfcTagId?: Prisma.StringNullableFilter<"User"> | string | null
   accountStatus?: Prisma.EnumAccountStatusFilter<"User"> | $Enums.AccountStatus
   lastLogin?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  pushToken?: Prisma.StringNullableFilter<"User"> | string | null
+  healthReportEnabled?: Prisma.BoolFilter<"User"> | boolean
+  termsAcceptedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   allergies?: Prisma.AllergyListRelationFilter
@@ -212,13 +236,17 @@ export type UserWhereInput = {
   emergencyContacts?: Prisma.EmergencyContactListRelationFilter
   medicalHistory?: Prisma.MedicalHistoryListRelationFilter
   medicalProfile?: Prisma.XOR<Prisma.MedicalProfileNullableScalarRelationFilter, Prisma.MedicalProfileWhereInput> | null
-  nfcScans?: Prisma.NfcScanListRelationFilter
+  profileScans?: Prisma.ProfileScanListRelationFilter
   personalInfo?: Prisma.XOR<Prisma.PersonalInformationNullableScalarRelationFilter, Prisma.PersonalInformationWhereInput> | null
   privacySettings?: Prisma.XOR<Prisma.PrivacySettingsNullableScalarRelationFilter, Prisma.PrivacySettingsWhereInput> | null
   medications?: Prisma.UserMedicationListRelationFilter
   orders?: Prisma.OrderListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
   subscriptions?: Prisma.SubscriptionListRelationFilter
+  deviceLoginCodes?: Prisma.DeviceLoginCodeListRelationFilter
+  deviceSessions?: Prisma.DeviceSessionListRelationFilter
+  securityLogs?: Prisma.SecurityLogListRelationFilter
+  userDevices?: Prisma.UserDeviceListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -228,6 +256,9 @@ export type UserOrderByWithRelationInput = {
   nfcTagId?: Prisma.SortOrderInput | Prisma.SortOrder
   accountStatus?: Prisma.SortOrder
   lastLogin?: Prisma.SortOrderInput | Prisma.SortOrder
+  pushToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  healthReportEnabled?: Prisma.SortOrder
+  termsAcceptedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   allergies?: Prisma.AllergyOrderByRelationAggregateInput
@@ -236,13 +267,17 @@ export type UserOrderByWithRelationInput = {
   emergencyContacts?: Prisma.EmergencyContactOrderByRelationAggregateInput
   medicalHistory?: Prisma.MedicalHistoryOrderByRelationAggregateInput
   medicalProfile?: Prisma.MedicalProfileOrderByWithRelationInput
-  nfcScans?: Prisma.NfcScanOrderByRelationAggregateInput
+  profileScans?: Prisma.ProfileScanOrderByRelationAggregateInput
   personalInfo?: Prisma.PersonalInformationOrderByWithRelationInput
   privacySettings?: Prisma.PrivacySettingsOrderByWithRelationInput
   medications?: Prisma.UserMedicationOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
   subscriptions?: Prisma.SubscriptionOrderByRelationAggregateInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeOrderByRelationAggregateInput
+  deviceSessions?: Prisma.DeviceSessionOrderByRelationAggregateInput
+  securityLogs?: Prisma.SecurityLogOrderByRelationAggregateInput
+  userDevices?: Prisma.UserDeviceOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -255,6 +290,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   passwordHash?: Prisma.StringFilter<"User"> | string
   accountStatus?: Prisma.EnumAccountStatusFilter<"User"> | $Enums.AccountStatus
   lastLogin?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  pushToken?: Prisma.StringNullableFilter<"User"> | string | null
+  healthReportEnabled?: Prisma.BoolFilter<"User"> | boolean
+  termsAcceptedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   allergies?: Prisma.AllergyListRelationFilter
@@ -263,13 +301,17 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   emergencyContacts?: Prisma.EmergencyContactListRelationFilter
   medicalHistory?: Prisma.MedicalHistoryListRelationFilter
   medicalProfile?: Prisma.XOR<Prisma.MedicalProfileNullableScalarRelationFilter, Prisma.MedicalProfileWhereInput> | null
-  nfcScans?: Prisma.NfcScanListRelationFilter
+  profileScans?: Prisma.ProfileScanListRelationFilter
   personalInfo?: Prisma.XOR<Prisma.PersonalInformationNullableScalarRelationFilter, Prisma.PersonalInformationWhereInput> | null
   privacySettings?: Prisma.XOR<Prisma.PrivacySettingsNullableScalarRelationFilter, Prisma.PrivacySettingsWhereInput> | null
   medications?: Prisma.UserMedicationListRelationFilter
   orders?: Prisma.OrderListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
   subscriptions?: Prisma.SubscriptionListRelationFilter
+  deviceLoginCodes?: Prisma.DeviceLoginCodeListRelationFilter
+  deviceSessions?: Prisma.DeviceSessionListRelationFilter
+  securityLogs?: Prisma.SecurityLogListRelationFilter
+  userDevices?: Prisma.UserDeviceListRelationFilter
 }, "id" | "email" | "nfcTagId">
 
 export type UserOrderByWithAggregationInput = {
@@ -279,6 +321,9 @@ export type UserOrderByWithAggregationInput = {
   nfcTagId?: Prisma.SortOrderInput | Prisma.SortOrder
   accountStatus?: Prisma.SortOrder
   lastLogin?: Prisma.SortOrderInput | Prisma.SortOrder
+  pushToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  healthReportEnabled?: Prisma.SortOrder
+  termsAcceptedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -296,6 +341,9 @@ export type UserScalarWhereWithAggregatesInput = {
   nfcTagId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   accountStatus?: Prisma.EnumAccountStatusWithAggregatesFilter<"User"> | $Enums.AccountStatus
   lastLogin?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  pushToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  healthReportEnabled?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  termsAcceptedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -307,6 +355,9 @@ export type UserCreateInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -315,13 +366,17 @@ export type UserCreateInput = {
   emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -331,6 +386,9 @@ export type UserUncheckedCreateInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -339,13 +397,17 @@ export type UserUncheckedCreateInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileUncheckedCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanUncheckedCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanUncheckedCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationUncheckedCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsUncheckedCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -355,6 +417,9 @@ export type UserUpdateInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -363,13 +428,17 @@ export type UserUpdateInput = {
   emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -379,6 +448,9 @@ export type UserUncheckedUpdateInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -387,13 +459,17 @@ export type UserUncheckedUpdateInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUncheckedUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUncheckedUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUncheckedUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUncheckedUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUncheckedUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -403,6 +479,9 @@ export type UserCreateManyInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -414,6 +493,9 @@ export type UserUpdateManyMutationInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -425,6 +507,9 @@ export type UserUncheckedUpdateManyInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -436,6 +521,9 @@ export type UserCountOrderByAggregateInput = {
   nfcTagId?: Prisma.SortOrder
   accountStatus?: Prisma.SortOrder
   lastLogin?: Prisma.SortOrder
+  pushToken?: Prisma.SortOrder
+  healthReportEnabled?: Prisma.SortOrder
+  termsAcceptedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -447,6 +535,9 @@ export type UserMaxOrderByAggregateInput = {
   nfcTagId?: Prisma.SortOrder
   accountStatus?: Prisma.SortOrder
   lastLogin?: Prisma.SortOrder
+  pushToken?: Prisma.SortOrder
+  healthReportEnabled?: Prisma.SortOrder
+  termsAcceptedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -458,6 +549,9 @@ export type UserMinOrderByAggregateInput = {
   nfcTagId?: Prisma.SortOrder
   accountStatus?: Prisma.SortOrder
   lastLogin?: Prisma.SortOrder
+  pushToken?: Prisma.SortOrder
+  healthReportEnabled?: Prisma.SortOrder
+  termsAcceptedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -465,6 +559,11 @@ export type UserMinOrderByAggregateInput = {
 export type UserScalarRelationFilter = {
   is?: Prisma.UserWhereInput
   isNot?: Prisma.UserWhereInput
+}
+
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -483,8 +582,70 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type UserCreateNestedOneWithoutUserDevicesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserDevicesInput, Prisma.UserUncheckedCreateWithoutUserDevicesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserDevicesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutUserDevicesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserDevicesInput, Prisma.UserUncheckedCreateWithoutUserDevicesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserDevicesInput
+  upsert?: Prisma.UserUpsertWithoutUserDevicesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUserDevicesInput, Prisma.UserUpdateWithoutUserDevicesInput>, Prisma.UserUncheckedUpdateWithoutUserDevicesInput>
+}
+
+export type UserCreateNestedOneWithoutDeviceLoginCodesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDeviceLoginCodesInput, Prisma.UserUncheckedCreateWithoutDeviceLoginCodesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDeviceLoginCodesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutDeviceLoginCodesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDeviceLoginCodesInput, Prisma.UserUncheckedCreateWithoutDeviceLoginCodesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDeviceLoginCodesInput
+  upsert?: Prisma.UserUpsertWithoutDeviceLoginCodesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDeviceLoginCodesInput, Prisma.UserUpdateWithoutDeviceLoginCodesInput>, Prisma.UserUncheckedUpdateWithoutDeviceLoginCodesInput>
+}
+
+export type UserCreateNestedOneWithoutDeviceSessionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDeviceSessionsInput, Prisma.UserUncheckedCreateWithoutDeviceSessionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDeviceSessionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutDeviceSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDeviceSessionsInput, Prisma.UserUncheckedCreateWithoutDeviceSessionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDeviceSessionsInput
+  upsert?: Prisma.UserUpsertWithoutDeviceSessionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDeviceSessionsInput, Prisma.UserUpdateWithoutDeviceSessionsInput>, Prisma.UserUncheckedUpdateWithoutDeviceSessionsInput>
+}
+
+export type UserCreateNestedOneWithoutSecurityLogsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSecurityLogsInput, Prisma.UserUncheckedCreateWithoutSecurityLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSecurityLogsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutSecurityLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSecurityLogsInput, Prisma.UserUncheckedCreateWithoutSecurityLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSecurityLogsInput
+  upsert?: Prisma.UserUpsertWithoutSecurityLogsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSecurityLogsInput, Prisma.UserUpdateWithoutSecurityLogsInput>, Prisma.UserUncheckedUpdateWithoutSecurityLogsInput>
 }
 
 export type UserCreateNestedOneWithoutPersonalInfoInput = {
@@ -585,18 +746,18 @@ export type UserUpdateOneRequiredWithoutMedicalHistoryNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMedicalHistoryInput, Prisma.UserUpdateWithoutMedicalHistoryInput>, Prisma.UserUncheckedUpdateWithoutMedicalHistoryInput>
 }
 
-export type UserCreateNestedOneWithoutNfcScansInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutNfcScansInput, Prisma.UserUncheckedCreateWithoutNfcScansInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNfcScansInput
+export type UserCreateNestedOneWithoutProfileScansInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProfileScansInput, Prisma.UserUncheckedCreateWithoutProfileScansInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProfileScansInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutNfcScansNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutNfcScansInput, Prisma.UserUncheckedCreateWithoutNfcScansInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNfcScansInput
-  upsert?: Prisma.UserUpsertWithoutNfcScansInput
+export type UserUpdateOneRequiredWithoutProfileScansNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProfileScansInput, Prisma.UserUncheckedCreateWithoutProfileScansInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProfileScansInput
+  upsert?: Prisma.UserUpsertWithoutProfileScansInput
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNfcScansInput, Prisma.UserUpdateWithoutNfcScansInput>, Prisma.UserUncheckedUpdateWithoutNfcScansInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProfileScansInput, Prisma.UserUpdateWithoutProfileScansInput>, Prisma.UserUncheckedUpdateWithoutProfileScansInput>
 }
 
 export type UserCreateNestedOneWithoutEmergencyAlertsInput = {
@@ -669,13 +830,16 @@ export type UserUpdateOneRequiredWithoutSubscriptionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSubscriptionsInput, Prisma.UserUpdateWithoutSubscriptionsInput>, Prisma.UserUncheckedUpdateWithoutSubscriptionsInput>
 }
 
-export type UserCreateWithoutPersonalInfoInput = {
+export type UserCreateWithoutUserDevicesInput = {
   id?: string
   email: string
   passwordHash: string
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -684,12 +848,560 @@ export type UserCreateWithoutPersonalInfoInput = {
   emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanCreateNestedManyWithoutUserInput
+  personalInfo?: Prisma.PersonalInformationCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutUserDevicesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  nfcTagId?: string | null
+  accountStatus?: $Enums.AccountStatus
+  lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
+  chronicConditions?: Prisma.ChronicConditionUncheckedCreateNestedManyWithoutUserInput
+  emergencyAlerts?: Prisma.EmergencyAlertUncheckedCreateNestedManyWithoutUserInput
+  emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutUserInput
+  medicalHistory?: Prisma.MedicalHistoryUncheckedCreateNestedManyWithoutUserInput
+  medicalProfile?: Prisma.MedicalProfileUncheckedCreateNestedOneWithoutUserInput
+  profileScans?: Prisma.ProfileScanUncheckedCreateNestedManyWithoutUserInput
+  personalInfo?: Prisma.PersonalInformationUncheckedCreateNestedOneWithoutUserInput
+  privacySettings?: Prisma.PrivacySettingsUncheckedCreateNestedOneWithoutUserInput
+  medications?: Prisma.UserMedicationUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutUserDevicesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserDevicesInput, Prisma.UserUncheckedCreateWithoutUserDevicesInput>
+}
+
+export type UserUpsertWithoutUserDevicesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutUserDevicesInput, Prisma.UserUncheckedUpdateWithoutUserDevicesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserDevicesInput, Prisma.UserUncheckedCreateWithoutUserDevicesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutUserDevicesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutUserDevicesInput, Prisma.UserUncheckedUpdateWithoutUserDevicesInput>
+}
+
+export type UserUpdateWithoutUserDevicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
+  chronicConditions?: Prisma.ChronicConditionUpdateManyWithoutUserNestedInput
+  emergencyAlerts?: Prisma.EmergencyAlertUpdateManyWithoutUserNestedInput
+  emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutUserNestedInput
+  medicalHistory?: Prisma.MedicalHistoryUpdateManyWithoutUserNestedInput
+  medicalProfile?: Prisma.MedicalProfileUpdateOneWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUpdateManyWithoutUserNestedInput
+  personalInfo?: Prisma.PersonalInformationUpdateOneWithoutUserNestedInput
+  privacySettings?: Prisma.PrivacySettingsUpdateOneWithoutUserNestedInput
+  medications?: Prisma.UserMedicationUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutUserDevicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
+  chronicConditions?: Prisma.ChronicConditionUncheckedUpdateManyWithoutUserNestedInput
+  emergencyAlerts?: Prisma.EmergencyAlertUncheckedUpdateManyWithoutUserNestedInput
+  emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutUserNestedInput
+  medicalHistory?: Prisma.MedicalHistoryUncheckedUpdateManyWithoutUserNestedInput
+  medicalProfile?: Prisma.MedicalProfileUncheckedUpdateOneWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUncheckedUpdateManyWithoutUserNestedInput
+  personalInfo?: Prisma.PersonalInformationUncheckedUpdateOneWithoutUserNestedInput
+  privacySettings?: Prisma.PrivacySettingsUncheckedUpdateOneWithoutUserNestedInput
+  medications?: Prisma.UserMedicationUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutDeviceLoginCodesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  nfcTagId?: string | null
+  accountStatus?: $Enums.AccountStatus
+  lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
+  chronicConditions?: Prisma.ChronicConditionCreateNestedManyWithoutUserInput
+  emergencyAlerts?: Prisma.EmergencyAlertCreateNestedManyWithoutUserInput
+  emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutUserInput
+  medicalHistory?: Prisma.MedicalHistoryCreateNestedManyWithoutUserInput
+  medicalProfile?: Prisma.MedicalProfileCreateNestedOneWithoutUserInput
+  profileScans?: Prisma.ProfileScanCreateNestedManyWithoutUserInput
+  personalInfo?: Prisma.PersonalInformationCreateNestedOneWithoutUserInput
+  privacySettings?: Prisma.PrivacySettingsCreateNestedOneWithoutUserInput
+  medications?: Prisma.UserMedicationCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutDeviceLoginCodesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  nfcTagId?: string | null
+  accountStatus?: $Enums.AccountStatus
+  lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
+  chronicConditions?: Prisma.ChronicConditionUncheckedCreateNestedManyWithoutUserInput
+  emergencyAlerts?: Prisma.EmergencyAlertUncheckedCreateNestedManyWithoutUserInput
+  emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutUserInput
+  medicalHistory?: Prisma.MedicalHistoryUncheckedCreateNestedManyWithoutUserInput
+  medicalProfile?: Prisma.MedicalProfileUncheckedCreateNestedOneWithoutUserInput
+  profileScans?: Prisma.ProfileScanUncheckedCreateNestedManyWithoutUserInput
+  personalInfo?: Prisma.PersonalInformationUncheckedCreateNestedOneWithoutUserInput
+  privacySettings?: Prisma.PrivacySettingsUncheckedCreateNestedOneWithoutUserInput
+  medications?: Prisma.UserMedicationUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutDeviceLoginCodesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutDeviceLoginCodesInput, Prisma.UserUncheckedCreateWithoutDeviceLoginCodesInput>
+}
+
+export type UserUpsertWithoutDeviceLoginCodesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutDeviceLoginCodesInput, Prisma.UserUncheckedUpdateWithoutDeviceLoginCodesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDeviceLoginCodesInput, Prisma.UserUncheckedCreateWithoutDeviceLoginCodesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutDeviceLoginCodesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutDeviceLoginCodesInput, Prisma.UserUncheckedUpdateWithoutDeviceLoginCodesInput>
+}
+
+export type UserUpdateWithoutDeviceLoginCodesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
+  chronicConditions?: Prisma.ChronicConditionUpdateManyWithoutUserNestedInput
+  emergencyAlerts?: Prisma.EmergencyAlertUpdateManyWithoutUserNestedInput
+  emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutUserNestedInput
+  medicalHistory?: Prisma.MedicalHistoryUpdateManyWithoutUserNestedInput
+  medicalProfile?: Prisma.MedicalProfileUpdateOneWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUpdateManyWithoutUserNestedInput
+  personalInfo?: Prisma.PersonalInformationUpdateOneWithoutUserNestedInput
+  privacySettings?: Prisma.PrivacySettingsUpdateOneWithoutUserNestedInput
+  medications?: Prisma.UserMedicationUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutDeviceLoginCodesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
+  chronicConditions?: Prisma.ChronicConditionUncheckedUpdateManyWithoutUserNestedInput
+  emergencyAlerts?: Prisma.EmergencyAlertUncheckedUpdateManyWithoutUserNestedInput
+  emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutUserNestedInput
+  medicalHistory?: Prisma.MedicalHistoryUncheckedUpdateManyWithoutUserNestedInput
+  medicalProfile?: Prisma.MedicalProfileUncheckedUpdateOneWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUncheckedUpdateManyWithoutUserNestedInput
+  personalInfo?: Prisma.PersonalInformationUncheckedUpdateOneWithoutUserNestedInput
+  privacySettings?: Prisma.PrivacySettingsUncheckedUpdateOneWithoutUserNestedInput
+  medications?: Prisma.UserMedicationUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutDeviceSessionsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  nfcTagId?: string | null
+  accountStatus?: $Enums.AccountStatus
+  lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
+  chronicConditions?: Prisma.ChronicConditionCreateNestedManyWithoutUserInput
+  emergencyAlerts?: Prisma.EmergencyAlertCreateNestedManyWithoutUserInput
+  emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutUserInput
+  medicalHistory?: Prisma.MedicalHistoryCreateNestedManyWithoutUserInput
+  medicalProfile?: Prisma.MedicalProfileCreateNestedOneWithoutUserInput
+  profileScans?: Prisma.ProfileScanCreateNestedManyWithoutUserInput
+  personalInfo?: Prisma.PersonalInformationCreateNestedOneWithoutUserInput
+  privacySettings?: Prisma.PrivacySettingsCreateNestedOneWithoutUserInput
+  medications?: Prisma.UserMedicationCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutDeviceSessionsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  nfcTagId?: string | null
+  accountStatus?: $Enums.AccountStatus
+  lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
+  chronicConditions?: Prisma.ChronicConditionUncheckedCreateNestedManyWithoutUserInput
+  emergencyAlerts?: Prisma.EmergencyAlertUncheckedCreateNestedManyWithoutUserInput
+  emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutUserInput
+  medicalHistory?: Prisma.MedicalHistoryUncheckedCreateNestedManyWithoutUserInput
+  medicalProfile?: Prisma.MedicalProfileUncheckedCreateNestedOneWithoutUserInput
+  profileScans?: Prisma.ProfileScanUncheckedCreateNestedManyWithoutUserInput
+  personalInfo?: Prisma.PersonalInformationUncheckedCreateNestedOneWithoutUserInput
+  privacySettings?: Prisma.PrivacySettingsUncheckedCreateNestedOneWithoutUserInput
+  medications?: Prisma.UserMedicationUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutDeviceSessionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutDeviceSessionsInput, Prisma.UserUncheckedCreateWithoutDeviceSessionsInput>
+}
+
+export type UserUpsertWithoutDeviceSessionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutDeviceSessionsInput, Prisma.UserUncheckedUpdateWithoutDeviceSessionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDeviceSessionsInput, Prisma.UserUncheckedCreateWithoutDeviceSessionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutDeviceSessionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutDeviceSessionsInput, Prisma.UserUncheckedUpdateWithoutDeviceSessionsInput>
+}
+
+export type UserUpdateWithoutDeviceSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
+  chronicConditions?: Prisma.ChronicConditionUpdateManyWithoutUserNestedInput
+  emergencyAlerts?: Prisma.EmergencyAlertUpdateManyWithoutUserNestedInput
+  emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutUserNestedInput
+  medicalHistory?: Prisma.MedicalHistoryUpdateManyWithoutUserNestedInput
+  medicalProfile?: Prisma.MedicalProfileUpdateOneWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUpdateManyWithoutUserNestedInput
+  personalInfo?: Prisma.PersonalInformationUpdateOneWithoutUserNestedInput
+  privacySettings?: Prisma.PrivacySettingsUpdateOneWithoutUserNestedInput
+  medications?: Prisma.UserMedicationUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutDeviceSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
+  chronicConditions?: Prisma.ChronicConditionUncheckedUpdateManyWithoutUserNestedInput
+  emergencyAlerts?: Prisma.EmergencyAlertUncheckedUpdateManyWithoutUserNestedInput
+  emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutUserNestedInput
+  medicalHistory?: Prisma.MedicalHistoryUncheckedUpdateManyWithoutUserNestedInput
+  medicalProfile?: Prisma.MedicalProfileUncheckedUpdateOneWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUncheckedUpdateManyWithoutUserNestedInput
+  personalInfo?: Prisma.PersonalInformationUncheckedUpdateOneWithoutUserNestedInput
+  privacySettings?: Prisma.PrivacySettingsUncheckedUpdateOneWithoutUserNestedInput
+  medications?: Prisma.UserMedicationUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSecurityLogsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  nfcTagId?: string | null
+  accountStatus?: $Enums.AccountStatus
+  lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
+  chronicConditions?: Prisma.ChronicConditionCreateNestedManyWithoutUserInput
+  emergencyAlerts?: Prisma.EmergencyAlertCreateNestedManyWithoutUserInput
+  emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutUserInput
+  medicalHistory?: Prisma.MedicalHistoryCreateNestedManyWithoutUserInput
+  medicalProfile?: Prisma.MedicalProfileCreateNestedOneWithoutUserInput
+  profileScans?: Prisma.ProfileScanCreateNestedManyWithoutUserInput
+  personalInfo?: Prisma.PersonalInformationCreateNestedOneWithoutUserInput
+  privacySettings?: Prisma.PrivacySettingsCreateNestedOneWithoutUserInput
+  medications?: Prisma.UserMedicationCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSecurityLogsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  nfcTagId?: string | null
+  accountStatus?: $Enums.AccountStatus
+  lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
+  chronicConditions?: Prisma.ChronicConditionUncheckedCreateNestedManyWithoutUserInput
+  emergencyAlerts?: Prisma.EmergencyAlertUncheckedCreateNestedManyWithoutUserInput
+  emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutUserInput
+  medicalHistory?: Prisma.MedicalHistoryUncheckedCreateNestedManyWithoutUserInput
+  medicalProfile?: Prisma.MedicalProfileUncheckedCreateNestedOneWithoutUserInput
+  profileScans?: Prisma.ProfileScanUncheckedCreateNestedManyWithoutUserInput
+  personalInfo?: Prisma.PersonalInformationUncheckedCreateNestedOneWithoutUserInput
+  privacySettings?: Prisma.PrivacySettingsUncheckedCreateNestedOneWithoutUserInput
+  medications?: Prisma.UserMedicationUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSecurityLogsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSecurityLogsInput, Prisma.UserUncheckedCreateWithoutSecurityLogsInput>
+}
+
+export type UserUpsertWithoutSecurityLogsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSecurityLogsInput, Prisma.UserUncheckedUpdateWithoutSecurityLogsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSecurityLogsInput, Prisma.UserUncheckedCreateWithoutSecurityLogsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSecurityLogsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSecurityLogsInput, Prisma.UserUncheckedUpdateWithoutSecurityLogsInput>
+}
+
+export type UserUpdateWithoutSecurityLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
+  chronicConditions?: Prisma.ChronicConditionUpdateManyWithoutUserNestedInput
+  emergencyAlerts?: Prisma.EmergencyAlertUpdateManyWithoutUserNestedInput
+  emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutUserNestedInput
+  medicalHistory?: Prisma.MedicalHistoryUpdateManyWithoutUserNestedInput
+  medicalProfile?: Prisma.MedicalProfileUpdateOneWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUpdateManyWithoutUserNestedInput
+  personalInfo?: Prisma.PersonalInformationUpdateOneWithoutUserNestedInput
+  privacySettings?: Prisma.PrivacySettingsUpdateOneWithoutUserNestedInput
+  medications?: Prisma.UserMedicationUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSecurityLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
+  chronicConditions?: Prisma.ChronicConditionUncheckedUpdateManyWithoutUserNestedInput
+  emergencyAlerts?: Prisma.EmergencyAlertUncheckedUpdateManyWithoutUserNestedInput
+  emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutUserNestedInput
+  medicalHistory?: Prisma.MedicalHistoryUncheckedUpdateManyWithoutUserNestedInput
+  medicalProfile?: Prisma.MedicalProfileUncheckedUpdateOneWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUncheckedUpdateManyWithoutUserNestedInput
+  personalInfo?: Prisma.PersonalInformationUncheckedUpdateOneWithoutUserNestedInput
+  privacySettings?: Prisma.PrivacySettingsUncheckedUpdateOneWithoutUserNestedInput
+  medications?: Prisma.UserMedicationUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPersonalInfoInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  nfcTagId?: string | null
+  accountStatus?: $Enums.AccountStatus
+  lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
+  chronicConditions?: Prisma.ChronicConditionCreateNestedManyWithoutUserInput
+  emergencyAlerts?: Prisma.EmergencyAlertCreateNestedManyWithoutUserInput
+  emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutUserInput
+  medicalHistory?: Prisma.MedicalHistoryCreateNestedManyWithoutUserInput
+  medicalProfile?: Prisma.MedicalProfileCreateNestedOneWithoutUserInput
+  profileScans?: Prisma.ProfileScanCreateNestedManyWithoutUserInput
+  privacySettings?: Prisma.PrivacySettingsCreateNestedOneWithoutUserInput
+  medications?: Prisma.UserMedicationCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPersonalInfoInput = {
@@ -699,6 +1411,9 @@ export type UserUncheckedCreateWithoutPersonalInfoInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -707,12 +1422,16 @@ export type UserUncheckedCreateWithoutPersonalInfoInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileUncheckedCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanUncheckedCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanUncheckedCreateNestedManyWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsUncheckedCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPersonalInfoInput = {
@@ -738,6 +1457,9 @@ export type UserUpdateWithoutPersonalInfoInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -746,12 +1468,16 @@ export type UserUpdateWithoutPersonalInfoInput = {
   emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUpdateManyWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPersonalInfoInput = {
@@ -761,6 +1487,9 @@ export type UserUncheckedUpdateWithoutPersonalInfoInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -769,12 +1498,16 @@ export type UserUncheckedUpdateWithoutPersonalInfoInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUncheckedUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUncheckedUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUncheckedUpdateManyWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUncheckedUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMedicalProfileInput = {
@@ -784,6 +1517,9 @@ export type UserCreateWithoutMedicalProfileInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -791,13 +1527,17 @@ export type UserCreateWithoutMedicalProfileInput = {
   emergencyAlerts?: Prisma.EmergencyAlertCreateNestedManyWithoutUserInput
   emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryCreateNestedManyWithoutUserInput
-  nfcScans?: Prisma.NfcScanCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMedicalProfileInput = {
@@ -807,6 +1547,9 @@ export type UserUncheckedCreateWithoutMedicalProfileInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -814,13 +1557,17 @@ export type UserUncheckedCreateWithoutMedicalProfileInput = {
   emergencyAlerts?: Prisma.EmergencyAlertUncheckedCreateNestedManyWithoutUserInput
   emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedCreateNestedManyWithoutUserInput
-  nfcScans?: Prisma.NfcScanUncheckedCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanUncheckedCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationUncheckedCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsUncheckedCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMedicalProfileInput = {
@@ -846,6 +1593,9 @@ export type UserUpdateWithoutMedicalProfileInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -853,13 +1603,17 @@ export type UserUpdateWithoutMedicalProfileInput = {
   emergencyAlerts?: Prisma.EmergencyAlertUpdateManyWithoutUserNestedInput
   emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUpdateManyWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMedicalProfileInput = {
@@ -869,6 +1623,9 @@ export type UserUncheckedUpdateWithoutMedicalProfileInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -876,13 +1633,17 @@ export type UserUncheckedUpdateWithoutMedicalProfileInput = {
   emergencyAlerts?: Prisma.EmergencyAlertUncheckedUpdateManyWithoutUserNestedInput
   emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedUpdateManyWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUncheckedUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUncheckedUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUncheckedUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUncheckedUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAllergiesInput = {
@@ -892,6 +1653,9 @@ export type UserCreateWithoutAllergiesInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   chronicConditions?: Prisma.ChronicConditionCreateNestedManyWithoutUserInput
@@ -899,13 +1663,17 @@ export type UserCreateWithoutAllergiesInput = {
   emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAllergiesInput = {
@@ -915,6 +1683,9 @@ export type UserUncheckedCreateWithoutAllergiesInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   chronicConditions?: Prisma.ChronicConditionUncheckedCreateNestedManyWithoutUserInput
@@ -922,13 +1693,17 @@ export type UserUncheckedCreateWithoutAllergiesInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileUncheckedCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanUncheckedCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanUncheckedCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationUncheckedCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsUncheckedCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAllergiesInput = {
@@ -954,6 +1729,9 @@ export type UserUpdateWithoutAllergiesInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chronicConditions?: Prisma.ChronicConditionUpdateManyWithoutUserNestedInput
@@ -961,13 +1739,17 @@ export type UserUpdateWithoutAllergiesInput = {
   emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAllergiesInput = {
@@ -977,6 +1759,9 @@ export type UserUncheckedUpdateWithoutAllergiesInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chronicConditions?: Prisma.ChronicConditionUncheckedUpdateManyWithoutUserNestedInput
@@ -984,13 +1769,17 @@ export type UserUncheckedUpdateWithoutAllergiesInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUncheckedUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUncheckedUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUncheckedUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUncheckedUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUncheckedUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutChronicConditionsInput = {
@@ -1000,6 +1789,9 @@ export type UserCreateWithoutChronicConditionsInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -1007,13 +1799,17 @@ export type UserCreateWithoutChronicConditionsInput = {
   emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutChronicConditionsInput = {
@@ -1023,6 +1819,9 @@ export type UserUncheckedCreateWithoutChronicConditionsInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -1030,13 +1829,17 @@ export type UserUncheckedCreateWithoutChronicConditionsInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileUncheckedCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanUncheckedCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanUncheckedCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationUncheckedCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsUncheckedCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutChronicConditionsInput = {
@@ -1062,6 +1865,9 @@ export type UserUpdateWithoutChronicConditionsInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -1069,13 +1875,17 @@ export type UserUpdateWithoutChronicConditionsInput = {
   emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutChronicConditionsInput = {
@@ -1085,6 +1895,9 @@ export type UserUncheckedUpdateWithoutChronicConditionsInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -1092,13 +1905,17 @@ export type UserUncheckedUpdateWithoutChronicConditionsInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUncheckedUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUncheckedUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUncheckedUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUncheckedUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUncheckedUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMedicationsInput = {
@@ -1108,6 +1925,9 @@ export type UserCreateWithoutMedicationsInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -1116,12 +1936,16 @@ export type UserCreateWithoutMedicationsInput = {
   emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsCreateNestedOneWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMedicationsInput = {
@@ -1131,6 +1955,9 @@ export type UserUncheckedCreateWithoutMedicationsInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -1139,12 +1966,16 @@ export type UserUncheckedCreateWithoutMedicationsInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileUncheckedCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanUncheckedCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanUncheckedCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationUncheckedCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsUncheckedCreateNestedOneWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMedicationsInput = {
@@ -1170,6 +2001,9 @@ export type UserUpdateWithoutMedicationsInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -1178,12 +2012,16 @@ export type UserUpdateWithoutMedicationsInput = {
   emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUpdateOneWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMedicationsInput = {
@@ -1193,6 +2031,9 @@ export type UserUncheckedUpdateWithoutMedicationsInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -1201,12 +2042,16 @@ export type UserUncheckedUpdateWithoutMedicationsInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUncheckedUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUncheckedUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUncheckedUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUncheckedUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUncheckedUpdateOneWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEmergencyContactsInput = {
@@ -1216,6 +2061,9 @@ export type UserCreateWithoutEmergencyContactsInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -1223,13 +2071,17 @@ export type UserCreateWithoutEmergencyContactsInput = {
   emergencyAlerts?: Prisma.EmergencyAlertCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEmergencyContactsInput = {
@@ -1239,6 +2091,9 @@ export type UserUncheckedCreateWithoutEmergencyContactsInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -1246,13 +2101,17 @@ export type UserUncheckedCreateWithoutEmergencyContactsInput = {
   emergencyAlerts?: Prisma.EmergencyAlertUncheckedCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileUncheckedCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanUncheckedCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanUncheckedCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationUncheckedCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsUncheckedCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEmergencyContactsInput = {
@@ -1278,6 +2137,9 @@ export type UserUpdateWithoutEmergencyContactsInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -1285,13 +2147,17 @@ export type UserUpdateWithoutEmergencyContactsInput = {
   emergencyAlerts?: Prisma.EmergencyAlertUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEmergencyContactsInput = {
@@ -1301,6 +2167,9 @@ export type UserUncheckedUpdateWithoutEmergencyContactsInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -1308,13 +2177,17 @@ export type UserUncheckedUpdateWithoutEmergencyContactsInput = {
   emergencyAlerts?: Prisma.EmergencyAlertUncheckedUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUncheckedUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUncheckedUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUncheckedUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUncheckedUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUncheckedUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMedicalHistoryInput = {
@@ -1324,6 +2197,9 @@ export type UserCreateWithoutMedicalHistoryInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -1331,13 +2207,17 @@ export type UserCreateWithoutMedicalHistoryInput = {
   emergencyAlerts?: Prisma.EmergencyAlertCreateNestedManyWithoutUserInput
   emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMedicalHistoryInput = {
@@ -1347,6 +2227,9 @@ export type UserUncheckedCreateWithoutMedicalHistoryInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -1354,13 +2237,17 @@ export type UserUncheckedCreateWithoutMedicalHistoryInput = {
   emergencyAlerts?: Prisma.EmergencyAlertUncheckedCreateNestedManyWithoutUserInput
   emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileUncheckedCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanUncheckedCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanUncheckedCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationUncheckedCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsUncheckedCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMedicalHistoryInput = {
@@ -1386,6 +2273,9 @@ export type UserUpdateWithoutMedicalHistoryInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -1393,13 +2283,17 @@ export type UserUpdateWithoutMedicalHistoryInput = {
   emergencyAlerts?: Prisma.EmergencyAlertUpdateManyWithoutUserNestedInput
   emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMedicalHistoryInput = {
@@ -1409,6 +2303,9 @@ export type UserUncheckedUpdateWithoutMedicalHistoryInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -1416,22 +2313,29 @@ export type UserUncheckedUpdateWithoutMedicalHistoryInput = {
   emergencyAlerts?: Prisma.EmergencyAlertUncheckedUpdateManyWithoutUserNestedInput
   emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUncheckedUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUncheckedUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUncheckedUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUncheckedUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUncheckedUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutNfcScansInput = {
+export type UserCreateWithoutProfileScansInput = {
   id?: string
   email: string
   passwordHash: string
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -1446,15 +2350,22 @@ export type UserCreateWithoutNfcScansInput = {
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutNfcScansInput = {
+export type UserUncheckedCreateWithoutProfileScansInput = {
   id?: string
   email: string
   passwordHash: string
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -1469,31 +2380,38 @@ export type UserUncheckedCreateWithoutNfcScansInput = {
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutNfcScansInput = {
+export type UserCreateOrConnectWithoutProfileScansInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutNfcScansInput, Prisma.UserUncheckedCreateWithoutNfcScansInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProfileScansInput, Prisma.UserUncheckedCreateWithoutProfileScansInput>
 }
 
-export type UserUpsertWithoutNfcScansInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutNfcScansInput, Prisma.UserUncheckedUpdateWithoutNfcScansInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutNfcScansInput, Prisma.UserUncheckedCreateWithoutNfcScansInput>
+export type UserUpsertWithoutProfileScansInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProfileScansInput, Prisma.UserUncheckedUpdateWithoutProfileScansInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProfileScansInput, Prisma.UserUncheckedCreateWithoutProfileScansInput>
   where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutNfcScansInput = {
+export type UserUpdateToOneWithWhereWithoutProfileScansInput = {
   where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutNfcScansInput, Prisma.UserUncheckedUpdateWithoutNfcScansInput>
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProfileScansInput, Prisma.UserUncheckedUpdateWithoutProfileScansInput>
 }
 
-export type UserUpdateWithoutNfcScansInput = {
+export type UserUpdateWithoutProfileScansInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -1508,15 +2426,22 @@ export type UserUpdateWithoutNfcScansInput = {
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutNfcScansInput = {
+export type UserUncheckedUpdateWithoutProfileScansInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -1531,6 +2456,10 @@ export type UserUncheckedUpdateWithoutNfcScansInput = {
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEmergencyAlertsInput = {
@@ -1540,6 +2469,9 @@ export type UserCreateWithoutEmergencyAlertsInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -1547,13 +2479,17 @@ export type UserCreateWithoutEmergencyAlertsInput = {
   emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEmergencyAlertsInput = {
@@ -1563,6 +2499,9 @@ export type UserUncheckedCreateWithoutEmergencyAlertsInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -1570,13 +2509,17 @@ export type UserUncheckedCreateWithoutEmergencyAlertsInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileUncheckedCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanUncheckedCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanUncheckedCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationUncheckedCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsUncheckedCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEmergencyAlertsInput = {
@@ -1602,6 +2545,9 @@ export type UserUpdateWithoutEmergencyAlertsInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -1609,13 +2555,17 @@ export type UserUpdateWithoutEmergencyAlertsInput = {
   emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEmergencyAlertsInput = {
@@ -1625,6 +2575,9 @@ export type UserUncheckedUpdateWithoutEmergencyAlertsInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -1632,13 +2585,17 @@ export type UserUncheckedUpdateWithoutEmergencyAlertsInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUncheckedUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUncheckedUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUncheckedUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUncheckedUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUncheckedUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPrivacySettingsInput = {
@@ -1648,6 +2605,9 @@ export type UserCreateWithoutPrivacySettingsInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -1656,12 +2616,16 @@ export type UserCreateWithoutPrivacySettingsInput = {
   emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPrivacySettingsInput = {
@@ -1671,6 +2635,9 @@ export type UserUncheckedCreateWithoutPrivacySettingsInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -1679,12 +2646,16 @@ export type UserUncheckedCreateWithoutPrivacySettingsInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileUncheckedCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanUncheckedCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanUncheckedCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationUncheckedCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPrivacySettingsInput = {
@@ -1710,6 +2681,9 @@ export type UserUpdateWithoutPrivacySettingsInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -1718,12 +2692,16 @@ export type UserUpdateWithoutPrivacySettingsInput = {
   emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPrivacySettingsInput = {
@@ -1733,6 +2711,9 @@ export type UserUncheckedUpdateWithoutPrivacySettingsInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -1741,12 +2722,16 @@ export type UserUncheckedUpdateWithoutPrivacySettingsInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUncheckedUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUncheckedUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUncheckedUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUncheckedUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOrdersInput = {
@@ -1756,6 +2741,9 @@ export type UserCreateWithoutOrdersInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -1764,12 +2752,16 @@ export type UserCreateWithoutOrdersInput = {
   emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOrdersInput = {
@@ -1779,6 +2771,9 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -1787,12 +2782,16 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileUncheckedCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanUncheckedCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanUncheckedCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationUncheckedCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsUncheckedCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOrdersInput = {
@@ -1818,6 +2817,9 @@ export type UserUpdateWithoutOrdersInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -1826,12 +2828,16 @@ export type UserUpdateWithoutOrdersInput = {
   emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -1841,6 +2847,9 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -1849,12 +2858,16 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUncheckedUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUncheckedUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUncheckedUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUncheckedUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUncheckedUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPaymentsInput = {
@@ -1864,6 +2877,9 @@ export type UserCreateWithoutPaymentsInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -1872,12 +2888,16 @@ export type UserCreateWithoutPaymentsInput = {
   emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPaymentsInput = {
@@ -1887,6 +2907,9 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -1895,12 +2918,16 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileUncheckedCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanUncheckedCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanUncheckedCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationUncheckedCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsUncheckedCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPaymentsInput = {
@@ -1926,6 +2953,9 @@ export type UserUpdateWithoutPaymentsInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -1934,12 +2964,16 @@ export type UserUpdateWithoutPaymentsInput = {
   emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentsInput = {
@@ -1949,6 +2983,9 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -1957,12 +2994,16 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUncheckedUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUncheckedUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUncheckedUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUncheckedUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUncheckedUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSubscriptionsInput = {
@@ -1972,6 +3013,9 @@ export type UserCreateWithoutSubscriptionsInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -1980,12 +3024,16 @@ export type UserCreateWithoutSubscriptionsInput = {
   emergencyContacts?: Prisma.EmergencyContactCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSubscriptionsInput = {
@@ -1995,6 +3043,9 @@ export type UserUncheckedCreateWithoutSubscriptionsInput = {
   nfcTagId?: string | null
   accountStatus?: $Enums.AccountStatus
   lastLogin?: Date | string | null
+  pushToken?: string | null
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -2003,12 +3054,16 @@ export type UserUncheckedCreateWithoutSubscriptionsInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedCreateNestedManyWithoutUserInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedCreateNestedManyWithoutUserInput
   medicalProfile?: Prisma.MedicalProfileUncheckedCreateNestedOneWithoutUserInput
-  nfcScans?: Prisma.NfcScanUncheckedCreateNestedManyWithoutUserInput
+  profileScans?: Prisma.ProfileScanUncheckedCreateNestedManyWithoutUserInput
   personalInfo?: Prisma.PersonalInformationUncheckedCreateNestedOneWithoutUserInput
   privacySettings?: Prisma.PrivacySettingsUncheckedCreateNestedOneWithoutUserInput
   medications?: Prisma.UserMedicationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedCreateNestedManyWithoutUserInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedCreateNestedManyWithoutUserInput
+  securityLogs?: Prisma.SecurityLogUncheckedCreateNestedManyWithoutUserInput
+  userDevices?: Prisma.UserDeviceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSubscriptionsInput = {
@@ -2034,6 +3089,9 @@ export type UserUpdateWithoutSubscriptionsInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -2042,12 +3100,16 @@ export type UserUpdateWithoutSubscriptionsInput = {
   emergencyContacts?: Prisma.EmergencyContactUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSubscriptionsInput = {
@@ -2057,6 +3119,9 @@ export type UserUncheckedUpdateWithoutSubscriptionsInput = {
   nfcTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accountStatus?: Prisma.EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -2065,12 +3130,16 @@ export type UserUncheckedUpdateWithoutSubscriptionsInput = {
   emergencyContacts?: Prisma.EmergencyContactUncheckedUpdateManyWithoutUserNestedInput
   medicalHistory?: Prisma.MedicalHistoryUncheckedUpdateManyWithoutUserNestedInput
   medicalProfile?: Prisma.MedicalProfileUncheckedUpdateOneWithoutUserNestedInput
-  nfcScans?: Prisma.NfcScanUncheckedUpdateManyWithoutUserNestedInput
+  profileScans?: Prisma.ProfileScanUncheckedUpdateManyWithoutUserNestedInput
   personalInfo?: Prisma.PersonalInformationUncheckedUpdateOneWithoutUserNestedInput
   privacySettings?: Prisma.PrivacySettingsUncheckedUpdateOneWithoutUserNestedInput
   medications?: Prisma.UserMedicationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  deviceLoginCodes?: Prisma.DeviceLoginCodeUncheckedUpdateManyWithoutUserNestedInput
+  deviceSessions?: Prisma.DeviceSessionUncheckedUpdateManyWithoutUserNestedInput
+  securityLogs?: Prisma.SecurityLogUncheckedUpdateManyWithoutUserNestedInput
+  userDevices?: Prisma.UserDeviceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -2084,11 +3153,15 @@ export type UserCountOutputType = {
   emergencyAlerts: number
   emergencyContacts: number
   medicalHistory: number
-  nfcScans: number
+  profileScans: number
   medications: number
   orders: number
   payments: number
   subscriptions: number
+  deviceLoginCodes: number
+  deviceSessions: number
+  securityLogs: number
+  userDevices: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2097,11 +3170,15 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   emergencyAlerts?: boolean | UserCountOutputTypeCountEmergencyAlertsArgs
   emergencyContacts?: boolean | UserCountOutputTypeCountEmergencyContactsArgs
   medicalHistory?: boolean | UserCountOutputTypeCountMedicalHistoryArgs
-  nfcScans?: boolean | UserCountOutputTypeCountNfcScansArgs
+  profileScans?: boolean | UserCountOutputTypeCountProfileScansArgs
   medications?: boolean | UserCountOutputTypeCountMedicationsArgs
   orders?: boolean | UserCountOutputTypeCountOrdersArgs
   payments?: boolean | UserCountOutputTypeCountPaymentsArgs
   subscriptions?: boolean | UserCountOutputTypeCountSubscriptionsArgs
+  deviceLoginCodes?: boolean | UserCountOutputTypeCountDeviceLoginCodesArgs
+  deviceSessions?: boolean | UserCountOutputTypeCountDeviceSessionsArgs
+  securityLogs?: boolean | UserCountOutputTypeCountSecurityLogsArgs
+  userDevices?: boolean | UserCountOutputTypeCountUserDevicesArgs
 }
 
 /**
@@ -2152,8 +3229,8 @@ export type UserCountOutputTypeCountMedicalHistoryArgs<ExtArgs extends runtime.T
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountNfcScansArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.NfcScanWhereInput
+export type UserCountOutputTypeCountProfileScansArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProfileScanWhereInput
 }
 
 /**
@@ -2184,6 +3261,34 @@ export type UserCountOutputTypeCountSubscriptionsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.SubscriptionWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountDeviceLoginCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DeviceLoginCodeWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountDeviceSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DeviceSessionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSecurityLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SecurityLogWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountUserDevicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserDeviceWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2192,6 +3297,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   nfcTagId?: boolean
   accountStatus?: boolean
   lastLogin?: boolean
+  pushToken?: boolean
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   allergies?: boolean | Prisma.User$allergiesArgs<ExtArgs>
@@ -2200,13 +3308,17 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   emergencyContacts?: boolean | Prisma.User$emergencyContactsArgs<ExtArgs>
   medicalHistory?: boolean | Prisma.User$medicalHistoryArgs<ExtArgs>
   medicalProfile?: boolean | Prisma.User$medicalProfileArgs<ExtArgs>
-  nfcScans?: boolean | Prisma.User$nfcScansArgs<ExtArgs>
+  profileScans?: boolean | Prisma.User$profileScansArgs<ExtArgs>
   personalInfo?: boolean | Prisma.User$personalInfoArgs<ExtArgs>
   privacySettings?: boolean | Prisma.User$privacySettingsArgs<ExtArgs>
   medications?: boolean | Prisma.User$medicationsArgs<ExtArgs>
   orders?: boolean | Prisma.User$ordersArgs<ExtArgs>
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
   subscriptions?: boolean | Prisma.User$subscriptionsArgs<ExtArgs>
+  deviceLoginCodes?: boolean | Prisma.User$deviceLoginCodesArgs<ExtArgs>
+  deviceSessions?: boolean | Prisma.User$deviceSessionsArgs<ExtArgs>
+  securityLogs?: boolean | Prisma.User$securityLogsArgs<ExtArgs>
+  userDevices?: boolean | Prisma.User$userDevicesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2217,6 +3329,9 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   nfcTagId?: boolean
   accountStatus?: boolean
   lastLogin?: boolean
+  pushToken?: boolean
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -2228,6 +3343,9 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   nfcTagId?: boolean
   accountStatus?: boolean
   lastLogin?: boolean
+  pushToken?: boolean
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -2239,11 +3357,14 @@ export type UserSelectScalar = {
   nfcTagId?: boolean
   accountStatus?: boolean
   lastLogin?: boolean
+  pushToken?: boolean
+  healthReportEnabled?: boolean
+  termsAcceptedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "nfcTagId" | "accountStatus" | "lastLogin" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "nfcTagId" | "accountStatus" | "lastLogin" | "pushToken" | "healthReportEnabled" | "termsAcceptedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   allergies?: boolean | Prisma.User$allergiesArgs<ExtArgs>
   chronicConditions?: boolean | Prisma.User$chronicConditionsArgs<ExtArgs>
@@ -2251,13 +3372,17 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   emergencyContacts?: boolean | Prisma.User$emergencyContactsArgs<ExtArgs>
   medicalHistory?: boolean | Prisma.User$medicalHistoryArgs<ExtArgs>
   medicalProfile?: boolean | Prisma.User$medicalProfileArgs<ExtArgs>
-  nfcScans?: boolean | Prisma.User$nfcScansArgs<ExtArgs>
+  profileScans?: boolean | Prisma.User$profileScansArgs<ExtArgs>
   personalInfo?: boolean | Prisma.User$personalInfoArgs<ExtArgs>
   privacySettings?: boolean | Prisma.User$privacySettingsArgs<ExtArgs>
   medications?: boolean | Prisma.User$medicationsArgs<ExtArgs>
   orders?: boolean | Prisma.User$ordersArgs<ExtArgs>
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
   subscriptions?: boolean | Prisma.User$subscriptionsArgs<ExtArgs>
+  deviceLoginCodes?: boolean | Prisma.User$deviceLoginCodesArgs<ExtArgs>
+  deviceSessions?: boolean | Prisma.User$deviceSessionsArgs<ExtArgs>
+  securityLogs?: boolean | Prisma.User$securityLogsArgs<ExtArgs>
+  userDevices?: boolean | Prisma.User$userDevicesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2272,13 +3397,17 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     emergencyContacts: Prisma.$EmergencyContactPayload<ExtArgs>[]
     medicalHistory: Prisma.$MedicalHistoryPayload<ExtArgs>[]
     medicalProfile: Prisma.$MedicalProfilePayload<ExtArgs> | null
-    nfcScans: Prisma.$NfcScanPayload<ExtArgs>[]
+    profileScans: Prisma.$ProfileScanPayload<ExtArgs>[]
     personalInfo: Prisma.$PersonalInformationPayload<ExtArgs> | null
     privacySettings: Prisma.$PrivacySettingsPayload<ExtArgs> | null
     medications: Prisma.$UserMedicationPayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
     subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
+    deviceLoginCodes: Prisma.$DeviceLoginCodePayload<ExtArgs>[]
+    deviceSessions: Prisma.$DeviceSessionPayload<ExtArgs>[]
+    securityLogs: Prisma.$SecurityLogPayload<ExtArgs>[]
+    userDevices: Prisma.$UserDevicePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2287,6 +3416,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     nfcTagId: string | null
     accountStatus: $Enums.AccountStatus
     lastLogin: Date | null
+    pushToken: string | null
+    healthReportEnabled: boolean
+    termsAcceptedAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -2689,13 +3821,17 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   emergencyContacts<T extends Prisma.User$emergencyContactsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$emergencyContactsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmergencyContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   medicalHistory<T extends Prisma.User$medicalHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$medicalHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MedicalHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   medicalProfile<T extends Prisma.User$medicalProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$medicalProfileArgs<ExtArgs>>): Prisma.Prisma__MedicalProfileClient<runtime.Types.Result.GetResult<Prisma.$MedicalProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  nfcScans<T extends Prisma.User$nfcScansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$nfcScansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NfcScanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  profileScans<T extends Prisma.User$profileScansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$profileScansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProfileScanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   personalInfo<T extends Prisma.User$personalInfoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$personalInfoArgs<ExtArgs>>): Prisma.Prisma__PersonalInformationClient<runtime.Types.Result.GetResult<Prisma.$PersonalInformationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   privacySettings<T extends Prisma.User$privacySettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$privacySettingsArgs<ExtArgs>>): Prisma.Prisma__PrivacySettingsClient<runtime.Types.Result.GetResult<Prisma.$PrivacySettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   medications<T extends Prisma.User$medicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$medicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserMedicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.User$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.User$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   subscriptions<T extends Prisma.User$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  deviceLoginCodes<T extends Prisma.User$deviceLoginCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$deviceLoginCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeviceLoginCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  deviceSessions<T extends Prisma.User$deviceSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$deviceSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeviceSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  securityLogs<T extends Prisma.User$securityLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$securityLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SecurityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  userDevices<T extends Prisma.User$userDevicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userDevicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserDevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2731,6 +3867,9 @@ export interface UserFieldRefs {
   readonly nfcTagId: Prisma.FieldRef<"User", 'String'>
   readonly accountStatus: Prisma.FieldRef<"User", 'AccountStatus'>
   readonly lastLogin: Prisma.FieldRef<"User", 'DateTime'>
+  readonly pushToken: Prisma.FieldRef<"User", 'String'>
+  readonly healthReportEnabled: Prisma.FieldRef<"User", 'Boolean'>
+  readonly termsAcceptedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -3265,27 +4404,27 @@ export type User$medicalProfileArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * User.nfcScans
+ * User.profileScans
  */
-export type User$nfcScansArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$profileScansArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the NfcScan
+   * Select specific fields to fetch from the ProfileScan
    */
-  select?: Prisma.NfcScanSelect<ExtArgs> | null
+  select?: Prisma.ProfileScanSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the NfcScan
+   * Omit specific fields from the ProfileScan
    */
-  omit?: Prisma.NfcScanOmit<ExtArgs> | null
+  omit?: Prisma.ProfileScanOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.NfcScanInclude<ExtArgs> | null
-  where?: Prisma.NfcScanWhereInput
-  orderBy?: Prisma.NfcScanOrderByWithRelationInput | Prisma.NfcScanOrderByWithRelationInput[]
-  cursor?: Prisma.NfcScanWhereUniqueInput
+  include?: Prisma.ProfileScanInclude<ExtArgs> | null
+  where?: Prisma.ProfileScanWhereInput
+  orderBy?: Prisma.ProfileScanOrderByWithRelationInput | Prisma.ProfileScanOrderByWithRelationInput[]
+  cursor?: Prisma.ProfileScanWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.NfcScanScalarFieldEnum | Prisma.NfcScanScalarFieldEnum[]
+  distinct?: Prisma.ProfileScanScalarFieldEnum | Prisma.ProfileScanScalarFieldEnum[]
 }
 
 /**
@@ -3420,6 +4559,102 @@ export type User$subscriptionsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.SubscriptionScalarFieldEnum | Prisma.SubscriptionScalarFieldEnum[]
+}
+
+/**
+ * User.deviceLoginCodes
+ */
+export type User$deviceLoginCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeviceLoginCode
+   */
+  select?: Prisma.DeviceLoginCodeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeviceLoginCode
+   */
+  omit?: Prisma.DeviceLoginCodeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeviceLoginCodeInclude<ExtArgs> | null
+  where?: Prisma.DeviceLoginCodeWhereInput
+  orderBy?: Prisma.DeviceLoginCodeOrderByWithRelationInput | Prisma.DeviceLoginCodeOrderByWithRelationInput[]
+  cursor?: Prisma.DeviceLoginCodeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DeviceLoginCodeScalarFieldEnum | Prisma.DeviceLoginCodeScalarFieldEnum[]
+}
+
+/**
+ * User.deviceSessions
+ */
+export type User$deviceSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeviceSession
+   */
+  select?: Prisma.DeviceSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeviceSession
+   */
+  omit?: Prisma.DeviceSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeviceSessionInclude<ExtArgs> | null
+  where?: Prisma.DeviceSessionWhereInput
+  orderBy?: Prisma.DeviceSessionOrderByWithRelationInput | Prisma.DeviceSessionOrderByWithRelationInput[]
+  cursor?: Prisma.DeviceSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DeviceSessionScalarFieldEnum | Prisma.DeviceSessionScalarFieldEnum[]
+}
+
+/**
+ * User.securityLogs
+ */
+export type User$securityLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SecurityLog
+   */
+  select?: Prisma.SecurityLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SecurityLog
+   */
+  omit?: Prisma.SecurityLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SecurityLogInclude<ExtArgs> | null
+  where?: Prisma.SecurityLogWhereInput
+  orderBy?: Prisma.SecurityLogOrderByWithRelationInput | Prisma.SecurityLogOrderByWithRelationInput[]
+  cursor?: Prisma.SecurityLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SecurityLogScalarFieldEnum | Prisma.SecurityLogScalarFieldEnum[]
+}
+
+/**
+ * User.userDevices
+ */
+export type User$userDevicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserDevice
+   */
+  select?: Prisma.UserDeviceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserDevice
+   */
+  omit?: Prisma.UserDeviceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserDeviceInclude<ExtArgs> | null
+  where?: Prisma.UserDeviceWhereInput
+  orderBy?: Prisma.UserDeviceOrderByWithRelationInput | Prisma.UserDeviceOrderByWithRelationInput[]
+  cursor?: Prisma.UserDeviceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserDeviceScalarFieldEnum | Prisma.UserDeviceScalarFieldEnum[]
 }
 
 /**

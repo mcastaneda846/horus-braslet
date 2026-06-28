@@ -19,7 +19,7 @@ const ALLOWED_EXTS = new Set(["jpg", "jpeg", "png", "webp", "gif"]);
 
 export async function POST(req: NextRequest) {
     const userId = await getSessionUserId();
-    if (!userId) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+    if (!userId) return NextResponse.json({ error: "Tu sesión ha expirado o no has iniciado sesión. Por favor, vuelve a ingresar." }, { status: 401 });
 
     const formData = await req.formData();
     const file = formData.get("photo") as File | null;
@@ -37,6 +37,9 @@ export async function POST(req: NextRequest) {
     await fs.mkdir(uploadDir, { recursive: true });
 
     const buffer = Buffer.from(await file.arrayBuffer());
+    if (buffer.length > 5 * 1024 * 1024) {
+        return NextResponse.json({ error: "Imagen muy grande (máx 5MB)" }, { status: 413 });
+    }
     await fs.writeFile(path.join(uploadDir, filename), buffer);
 
     // Cachebuster para forzar recarga en el cliente cuando el nombre del archivo no cambia

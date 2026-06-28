@@ -1,6 +1,6 @@
 // 1. Tus imports actuales
 import { PrismaClient } from '@/src/generated/client';
-import { correctOcrTextWithGemini, structureMedicalTextWithGemini, normalizeMedicationNamesWithGemini, StructuredMedicalText } from '@/src/infrastructure/ai/gemini';
+import { correctOcrText, structureMedicalText, normalizeMedicationNames, StructuredMedicalData as StructuredMedicalText } from '@/src/infrastructure/ai/openai';
 
 // 2. IMPORTANTE: Necesitamos el driver de PostgreSQL/Neon que configuró tu equipo
 import { Pool } from 'pg'; 
@@ -23,17 +23,17 @@ export class MedicalHistoryScraper {
       console.log(`[Scraper] Iniciando pipeline para el usuario: ${userId}`);
 
       // Sub-paso A: Corregir errores ortográficos del OCR usando la función existente
-      const cleanText = await correctOcrTextWithGemini(firebaseOcrText);
+      const cleanText = await correctOcrText(firebaseOcrText);
 
       // Sub-paso B: Enviar el texto limpio a la nueva función para obtener el JSON estructurado
-      const structuredJson = await structureMedicalTextWithGemini(cleanText);
+      const structuredJson = await structureMedicalText(cleanText);
       
       // Sub-paso C: Normalizar nombres de medicamentos extraídos
       let normalizedMedications: Record<string, string> = {};
       if (structuredJson.medications && structuredJson.medications.length > 0) {
-        const rawNames = structuredJson.medications.map((m) => m.customMedicationName).filter(Boolean);
+        const rawNames = structuredJson.medications.map((m) => m.customMedicationName).filter((n): n is string => !!n);
         if (rawNames.length > 0) {
-          normalizedMedications = await normalizeMedicationNamesWithGemini(rawNames);
+          normalizedMedications = await normalizeMedicationNames(rawNames);
         }
       }
 
@@ -45,6 +45,13 @@ export class MedicalHistoryScraper {
       console.error(`[Scraper Error] Error en el pipeline del usuario ${userId}:`, error);
       throw error;
     }
+  }
+
+  /**
+   * Guarda datos estructurados ya revisados por el usuario (llamado desde confirmExtraction).
+   */
+  async saveStructuredData(userId: string, data: StructuredMedicalText, normalizedMedications: Record<string, string>): Promise<void> {
+    return this.saveToPostgres(userId, data, normalizedMedications);
   }
 
   /**
@@ -105,15 +112,17 @@ export class MedicalHistoryScraper {
             const nameLower = name.toLowerCase().trim();
             if (!existingAllergenNames.has(nameLower) && !seenAllergenNamesInBatch.has(nameLower)) {
               seenAllergenNamesInBatch.add(nameLower);
-              allergiesToInsert.push({
-                userId: userId,
-                allergenName: name,
-                allergyType: a.allergyType,
-                severity: a.severity,
-                reactionDescription: a.reactionDescription || null,
-                createdAt: nowColombia,
-                updatedAt: nowColombia,
-              });
+              if (a.allergyType && a.severity) {
+                allergiesToInsert.push({
+                  userId: userId,
+                  allergenName: name,
+                  allergyType: a.allergyType,
+                  severity: a.severity,
+                  reactionDescription: a.reactionDescription || null,
+                  createdAt: nowColombia,
+                  updatedAt: nowColombia,
+                });
+              }
             }
           }
         }
@@ -233,7 +242,7 @@ export class MedicalHistoryScraper {
           if (!h.eventName) continue;
 
           const key = `${h.eventType}_${h.eventName.toLowerCase().trim()}`;
-          if (!existingHistoryKeys.has(key) && !seenHistoryKeysInBatch.has(key)) {
+          if (!existingHistoryKeys.has(key) && !seenHistoryKeysInBatch.has(key) && h.eventType) {
             seenHistoryKeysInBatch.add(key);
             historyToInsert.push({
               userId: userId,

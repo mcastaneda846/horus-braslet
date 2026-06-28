@@ -2,16 +2,23 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Spinner from "@/src/components/Spinner";
 
 function EyeIcon({ open }: { open: boolean }) {
-    return open ? (
-        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#B8B0A6" strokeWidth={1.8}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-        </svg>
-    ) : (
-        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#B8B0A6" strokeWidth={1.8}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
+    return (
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="#C4BDB7">
+            {open ? (
+                <>
+                    <ellipse cx="12" cy="12" rx="9" ry="5.5" stroke="#C4BDB7" />
+                    <circle cx="12" cy="12" r="2.5" fill="#C4BDB7" stroke="none" />
+                </>
+            ) : (
+                <>
+                    <ellipse cx="12" cy="12" rx="9" ry="5.5" stroke="#C4BDB7" />
+                    <circle cx="12" cy="12" r="2.5" fill="#C4BDB7" stroke="none" />
+                    <line x1="4" y1="20" x2="20" y2="4" stroke="#C4BDB7" strokeWidth={1.6} strokeLinecap="round" />
+                </>
+            )}
         </svg>
     );
 }
@@ -66,13 +73,13 @@ export default function LoginForm() {
             {/* ── Campo Correo ── */}
             <div>
                 <div style={{
-                    background: "rgba(255,255,255,0.85)",
+                    background: "var(--h-card)",
                     backdropFilter: "blur(8px)",
                     borderRadius: "16px",
                     padding: "9px 16px 10px",
                     boxShadow: errors.email
                         ? "0 0 0 1.5px #EF4444, 0 2px 8px rgba(0,0,0,0.05)"
-                        : "0 2px 10px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04)",
+                        : "0 2px 10px rgba(0,0,0,0.07), 0 0 0 1px var(--h-border)",
                     display: "flex", flexDirection: "column", gap: "2px",
                 }}>
                     <label style={{ fontSize: "11px", fontWeight: 600, color: "#A8A09A", letterSpacing: "0.02em" }}>
@@ -97,13 +104,13 @@ export default function LoginForm() {
             {/* ── Campo Contraseña ── */}
             <div>
                 <div style={{
-                    background: "rgba(255,255,255,0.85)",
+                    background: "var(--h-card)",
                     backdropFilter: "blur(8px)",
                     borderRadius: "16px",
                     padding: "9px 16px 10px",
                     boxShadow: errors.password
                         ? "0 0 0 1.5px #EF4444, 0 2px 8px rgba(0,0,0,0.05)"
-                        : "0 2px 10px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04)",
+                        : "0 2px 10px rgba(0,0,0,0.07), 0 0 0 1px var(--h-border)",
                     display: "flex", flexDirection: "column", gap: "2px",
                 }}>
                     <label style={{ fontSize: "11px", fontWeight: 600, color: "#A8A09A", letterSpacing: "0.02em" }}>
@@ -118,7 +125,7 @@ export default function LoginForm() {
                             autoComplete="current-password"
                             style={{
                                 flex: 1, background: "transparent", border: "none", outline: "none",
-                                fontSize: "15px", fontWeight: 700, color: "#1A1512",
+                                fontSize: "15px", fontWeight: 700, color: "var(--h-text)",
                                 fontFamily: "inherit", padding: 0,
                             }}
                         />
@@ -144,8 +151,8 @@ export default function LoginForm() {
                 disabled={loading}
                 style={{
                     width: "100%",
-                    background: "#1A1512",
-                    color: "white",
+                    background: "var(--h-dark)",
+                    color: "var(--h-bg)",
                     border: "none",
                     borderRadius: "100px",
                     padding: "15px 24px",
@@ -169,14 +176,8 @@ export default function LoginForm() {
                 onMouseUp={e => (e.currentTarget.style.transform = "scale(1)")}
             >
                 {loading ? (
-                    <>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ animation: "spin 0.8s linear infinite" }}>
-                            <circle opacity={0.25} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={4} />
-                            <path opacity={0.75} fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                        </svg>
-                        Iniciando...
-                    </>
-                ) : "Iniciar sesión →"}
+                    <><Spinner size={16} />&nbsp;Iniciando...</>
+                ) : "Iniciar sesión"}
             </button>
         </form>
     );
