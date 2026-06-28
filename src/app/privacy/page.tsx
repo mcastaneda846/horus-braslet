@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { NavbarCta } from "../terms/_components/NavbarCta";
+import { FooterCta } from "../terms/_components/FooterCta";
 
 export const metadata: Metadata = {
     title: "Política de Privacidad · Horus",
@@ -305,9 +306,7 @@ export default function PrivacyPage() {
                     <Link href="/terms" style={{ fontSize: "13px", fontWeight: 700, color: "var(--h-text)", textDecoration: "underline", textUnderlineOffset: "2px" }}>
                         Términos y Condiciones
                     </Link>
-                    <Link href="/register" style={{ fontSize: "13px", fontWeight: 700, color: "var(--h-text)", textDecoration: "underline", textUnderlineOffset: "2px" }}>
-                        Crear cuenta
-                    </Link>
+                    <FooterCta />
                     <span style={{ fontSize: "13px", color: "var(--h-muted)" }}>
                         © {new Date().getFullYear()} Horus Health. Todos los derechos reservados.
                     </span>

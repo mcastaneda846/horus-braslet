@@ -263,6 +263,13 @@ export default function ChatModal({ onClose, userId }: { onClose: () => void; us
         onClose();
     }, [onClose]);
 
+    // Lock body scroll while modal is open
+    useEffect(() => {
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => { document.body.style.overflow = prev; };
+    }, []);
+
     useEffect(() => {
         if (!historyOpen) inputRef.current?.focus();
         const onKey = (e: KeyboardEvent) => {
@@ -323,7 +330,8 @@ export default function ChatModal({ onClose, userId }: { onClose: () => void; us
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleClose} />
 
-            <div className="relative z-10 w-full max-w-xl h-[90vh] rounded-3xl overflow-hidden flex shadow-2xl"
+            <div className="relative z-10 w-full max-w-xl rounded-3xl overflow-hidden flex shadow-2xl"
+                style={{ height: "min(90dvh, 90vh)", maxHeight: "720px" }}
                 onClick={e => e.stopPropagation()}>
 
                 <div className="flex-1 flex flex-col min-w-0 relative" style={{ background: BG }}>

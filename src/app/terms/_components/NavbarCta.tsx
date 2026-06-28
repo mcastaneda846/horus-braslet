@@ -9,12 +9,16 @@ const btnStyle: React.CSSProperties = {
 };
 
 export function NavbarCta() {
-    const [loggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
 
     useEffect(() => {
-        setLoggedIn(document.cookie.includes("access_token"));
+        fetch("/api/auth/me")
+            .then(r => r.json())
+            .then(d => setLoggedIn(!!d.loggedIn))
+            .catch(() => setLoggedIn(false));
     }, []);
 
+    if (loggedIn === null) return null; // evita flash
     return loggedIn
         ? <Link href="/dashboard" style={btnStyle}>Volver a la app</Link>
         : <Link href="/register" style={btnStyle}>Crear cuenta</Link>;

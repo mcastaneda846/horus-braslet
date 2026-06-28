@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import EyeOfHorusIcon from "@/src/components/EyeOfHorusIcon";
 import { authGuard } from "@/src/shared/lib/auth.guard";
 
 interface PaymentSuccessSearchParams {
@@ -89,25 +88,31 @@ export default async function PaymentSuccessPage({ searchParams }: PaymentStatus
 
     return (
         <div className="min-h-screen bg-[var(--h-bg)] flex flex-col">
-            <header className="flex items-center justify-between px-6 md:px-10 py-6 bg-[var(--h-card)] border-b border-[var(--h-border)]">
-                <div className="flex items-center gap-3">
-                    <EyeOfHorusIcon className="w-7 h-7" />
-                    <div>
-                        <p className="text-xs text-[#8D99AE] uppercase tracking-[0.2em]">
-                            {isFailed ? "Pago no procesado" : "Pago aprobado"}
-                        </p>
-                        <h1 className="text-lg font-bold text-[var(--h-text)]">Horus Braslet</h1>
-                    </div>
-                </div>
-                <Link
-                    href="/dashboard"
-                    className="text-sm font-semibold text-[#EF233C] hover:text-[#D90429] transition-colors"
-                >
+
+            {/* Floating navbar */}
+            <div style={{
+                position: "fixed", top: "16px", left: "50%", transform: "translateX(-50%)",
+                zIndex: 50, width: "calc(100% - 48px)", maxWidth: "760px",
+                background: "#1A1512", borderRadius: "100px",
+                padding: "8px 8px 8px 16px",
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+                boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
+            }}>
+                <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/logos-horus-1.svg" alt="Horus" style={{ height: "28px", width: "auto" }} />
+                    <span style={{ color: "white", fontSize: "15px", fontWeight: 700, letterSpacing: "-0.01em" }}>Horus Health</span>
+                </Link>
+                <Link href="/dashboard" style={{
+                    background: "#FAD957", color: "#1A1512", borderRadius: "100px",
+                    padding: "8px 20px", fontSize: "13px", fontWeight: 700,
+                    textDecoration: "none", whiteSpace: "nowrap",
+                }}>
                     Ir al dashboard
                 </Link>
-            </header>
+            </div>
 
-            <main className="flex-1 px-6 md:px-10 py-10">
+            <main className="flex-1 px-6 md:px-10 py-10" style={{ paddingTop: "96px" }}>
                 <div className="max-w-3xl mx-auto">
                     <div className="bg-[var(--h-card)] border border-[var(--h-border)] rounded-2xl p-8 shadow-sm text-center">
                         <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto ${
@@ -179,7 +184,8 @@ export default async function PaymentSuccessPage({ searchParams }: PaymentStatus
                             </Link>
                             <Link
                                 href="/dashboard"
-                                className="px-5 py-2.5 rounded-xl bg-[#EF233C] text-white text-sm font-semibold hover:bg-[#D90429] transition-colors"
+                                className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors"
+                                style={{ background: "#1A1512", color: "#FAD957" }}
                             >
                                 Ver dashboard
                             </Link>

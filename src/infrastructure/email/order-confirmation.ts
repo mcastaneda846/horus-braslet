@@ -110,9 +110,14 @@ export async function generateReceiptPdfBuffer(payload: OrderEmailPayload): Prom
             doc.image(LOGO_PATH, m, 20, { height: 52, fit: [52, 52] });
         }
 
-        const textX = existsSync(LOGO_PATH) ? m + 64 : m;
-        doc.fillColor(BRAND.white).font(fonts.b).fontSize(22).text("HORUS", textX, 22);
-        doc.fillColor(BRAND.gold).font(fonts.r).fontSize(10).text("Confirmación de compra", textX, 50);
+        if (existsSync(LOGO_PATH)) {
+            // Logo already contains "HORUS" — only show subtitle, right of logo
+            doc.fillColor(BRAND.gold).font(fonts.r).fontSize(10)
+                .text("Confirmación de compra", m + 64, 42);
+        } else {
+            doc.fillColor(BRAND.white).font(fonts.b).fontSize(22).text("HORUS", m, 22);
+            doc.fillColor(BRAND.gold).font(fonts.r).fontSize(10).text("Confirmación de compra", m, 50);
+        }
 
         /* ── ORDEN ── */
         let y = 118;
