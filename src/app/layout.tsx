@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Space_Grotesk, DM_Sans } from "next/font/google";
 import localFont from "next/font/local";
 import Script from "next/script";
+import { ThemeProvider } from "@/src/components/ThemeProvider";
+import PageTransition from "@/src/components/PageTransition";
+import FloatingSidebar from "@/src/components/FloatingSidebar";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -46,10 +49,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${pliant.variable} ${spaceGrotesk.variable} ${dmSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        {/* Desregistra service workers obsoletos que causan crashes en dev */}
+      <body className="min-h-full flex flex-col bg-[var(--h-bg)] text-[var(--h-text)] transition-colors duration-200">
         <Script id="sw-cleanup" strategy="afterInteractive">{`
           if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(function(regs) {
@@ -57,7 +60,12 @@ export default function RootLayout({
             });
           }
         `}</Script>
-        {children}
+        <ThemeProvider>
+          <FloatingSidebar />
+          <PageTransition>
+            {children}
+          </PageTransition>
+        </ThemeProvider>
       </body>
     </html>
   );

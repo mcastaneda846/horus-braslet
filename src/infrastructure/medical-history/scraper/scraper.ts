@@ -31,7 +31,7 @@ export class MedicalHistoryScraper {
       // Sub-paso C: Normalizar nombres de medicamentos extraídos
       let normalizedMedications: Record<string, string> = {};
       if (structuredJson.medications && structuredJson.medications.length > 0) {
-        const rawNames = structuredJson.medications.map((m) => m.customMedicationName).filter(Boolean);
+        const rawNames = structuredJson.medications.map((m) => m.customMedicationName).filter((n): n is string => !!n);
         if (rawNames.length > 0) {
           normalizedMedications = await normalizeMedicationNames(rawNames);
         }
@@ -112,15 +112,17 @@ export class MedicalHistoryScraper {
             const nameLower = name.toLowerCase().trim();
             if (!existingAllergenNames.has(nameLower) && !seenAllergenNamesInBatch.has(nameLower)) {
               seenAllergenNamesInBatch.add(nameLower);
-              allergiesToInsert.push({
-                userId: userId,
-                allergenName: name,
-                allergyType: a.allergyType,
-                severity: a.severity,
-                reactionDescription: a.reactionDescription || null,
-                createdAt: nowColombia,
-                updatedAt: nowColombia,
-              });
+              if (a.allergyType && a.severity) {
+                allergiesToInsert.push({
+                  userId: userId,
+                  allergenName: name,
+                  allergyType: a.allergyType,
+                  severity: a.severity,
+                  reactionDescription: a.reactionDescription || null,
+                  createdAt: nowColombia,
+                  updatedAt: nowColombia,
+                });
+              }
             }
           }
         }
@@ -240,7 +242,7 @@ export class MedicalHistoryScraper {
           if (!h.eventName) continue;
 
           const key = `${h.eventType}_${h.eventName.toLowerCase().trim()}`;
-          if (!existingHistoryKeys.has(key) && !seenHistoryKeysInBatch.has(key)) {
+          if (!existingHistoryKeys.has(key) && !seenHistoryKeysInBatch.has(key) && h.eventType) {
             seenHistoryKeysInBatch.add(key);
             historyToInsert.push({
               userId: userId,

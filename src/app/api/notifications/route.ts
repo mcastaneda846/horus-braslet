@@ -28,7 +28,6 @@ export async function GET() {
 
         const notifications = snap.docs.map(d => {
             const data = d.data();
-            // Convert Firestore Timestamp to ISO string
             const ts = data.timestamp;
             const timestamp = ts?.toDate?.()?.toISOString?.() ?? ts ?? null;
             return {
@@ -44,7 +43,7 @@ export async function GET() {
         return NextResponse.json({ notifications });
     } catch (error) {
         console.error("notifications route error:", error);
-        return NextResponse.json({ notifications: [] });
+        return NextResponse.json({ error: "Error al obtener notificaciones" }, { status: 500 });
     }
 }
 

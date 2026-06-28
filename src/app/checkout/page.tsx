@@ -63,16 +63,16 @@ export default async function CheckoutPage({ searchParams }: CheckoutPageProps) 
     const isCard = product.productType === "CARD";
 
     return (
-        <div className="min-h-screen" style={{ background: "#F2F1EC" }}>
+        <div className="min-h-screen bg-[var(--h-bg)]">
 
             {/* Header */}
-            <header className="flex items-center justify-between px-6 md:px-10 py-4 bg-white border-b border-[#E4E2DC]">
+            <header className="flex items-center justify-between px-6 md:px-10 py-4 bg-[var(--h-card)] border-b border-[var(--h-border)]">
                 <div className="flex items-center gap-3">
                     <img src="/logos-horus-2.svg" alt="Horus" className="h-8 w-auto" />
-                    <div className="h-5 w-px bg-[#E4E2DC]" />
+                    <div className="h-5 w-px bg-[var(--h-border)]" />
                     <span className="text-xs font-bold text-[#8D99AE] uppercase tracking-[0.15em]">Checkout seguro</span>
                 </div>
-                <Link href="/tienda" className="text-sm font-semibold text-[#8D99AE] hover:text-[#1A1512] transition-colors flex items-center gap-1.5">
+                <Link href="/tienda" className="text-sm font-semibold text-[var(--h-muted)] hover:text-[var(--h-text)] transition-colors flex items-center gap-1.5">
                     <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
                     </svg>

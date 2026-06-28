@@ -37,6 +37,9 @@ export async function POST(req: NextRequest) {
     await fs.mkdir(uploadDir, { recursive: true });
 
     const buffer = Buffer.from(await file.arrayBuffer());
+    if (buffer.length > 5 * 1024 * 1024) {
+        return NextResponse.json({ error: "Imagen muy grande (máx 5MB)" }, { status: 413 });
+    }
     await fs.writeFile(path.join(uploadDir, filename), buffer);
 
     // Cachebuster para forzar recarga en el cliente cuando el nombre del archivo no cambia

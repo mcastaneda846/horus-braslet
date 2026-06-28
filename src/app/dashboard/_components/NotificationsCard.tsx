@@ -73,7 +73,8 @@ export default function NotificationsCard() {
     const load = useCallback(async (isManual = false) => {
         if (isManual) setLoading(true);
         try {
-            const res  = await fetch("/api/notifications", { cache: "no-store" });
+            const res = await fetch("/api/notifications");
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json() as { notifications: Notif[] };
             setNotifs(data.notifications ?? []);
             setError(false);
@@ -109,16 +110,16 @@ export default function NotificationsCard() {
     const unread = notifs.filter(n => !n.read).length;
 
     return (
-        <div className="bg-white rounded-[24px] p-5 shadow-sm border border-[#E4E2DC]">
+        <div className="bg-[var(--h-card)] rounded-[24px] p-5 shadow-sm border border-[var(--h-border)]">
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-xl bg-[#F0EBE3] flex items-center justify-center shrink-0">
-                        <svg className="w-4 h-4 text-[#1A1512]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                    <div className="w-8 h-8 rounded-xl bg-[var(--h-card2)] flex items-center justify-center shrink-0">
+                        <svg className="w-4 h-4 text-[var(--h-text)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/>
                         </svg>
                     </div>
-                    <h2 className="text-xs font-extrabold text-[#1A1512] uppercase tracking-wide">Notificaciones</h2>
+                    <h2 className="text-xs font-extrabold text-[var(--h-text)] uppercase tracking-wide">Notificaciones</h2>
                     {unread > 0 && (
                         <span className="text-[10px] bg-[#EF4444] text-white font-bold px-1.5 py-0.5 rounded-full leading-none">
                             {unread}
@@ -126,7 +127,7 @@ export default function NotificationsCard() {
                     )}
                 </div>
                 <button onClick={() => load(true)} title="Actualizar"
-                    className="text-[#8D99AE] hover:text-[#1A1512] transition-colors p-1">
+                    className="text-[var(--h-muted)] hover:text-[var(--h-text)] transition-colors p-1">
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
                     </svg>
@@ -160,7 +161,7 @@ export default function NotificationsCard() {
                             <div
                                 key={n.id}
                                 onClick={() => !n.read && markRead(n.id)}
-                                className={`flex items-start gap-3 py-2.5 border-b border-[#E4E2DC] last:border-0 group cursor-pointer ${
+                                className={`flex items-start gap-3 py-2.5 border-b border-[var(--h-border)] last:border-0 group cursor-pointer ${
                                     n.read ? "opacity-60" : ""
                                 }`}>
                                 {/* Type dot */}
@@ -173,7 +174,7 @@ export default function NotificationsCard() {
 
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-start justify-between gap-2">
-                                        <p className={`text-xs font-semibold truncate ${n.read ? "text-[#8D99AE]" : "text-[#1A1512]"}`}>
+                                        <p className={`text-xs font-semibold truncate ${n.read ? "text-[var(--h-muted)]" : "text-[var(--h-text)]"}`}>
                                             {n.title}
                                         </p>
                                         {!n.read && (
@@ -193,7 +194,7 @@ export default function NotificationsCard() {
                                 {/* Dismiss */}
                                 <button
                                     onClick={e => { e.stopPropagation(); dismiss(n.id); }}
-                                    className="opacity-0 group-hover:opacity-100 transition-opacity text-[#8D99AE] hover:text-[#1A1512] p-0.5 shrink-0 mt-0.5">
+                                    className="opacity-0 group-hover:opacity-100 transition-opacity text-[var(--h-muted)] hover:text-[var(--h-text)] p-0.5 shrink-0 mt-0.5">
                                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
                                         strokeLinecap="round" strokeLinejoin="round">
                                         <path d="M6 18 18 6M6 6l12 12"/>

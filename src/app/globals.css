@@ -1,5 +1,35 @@
 @import "tailwindcss";
 
+/* Dark mode via .dark class (next-themes) */
+@variant dark (&:where(.dark, .dark *));
+
+/* ── Horus semantic tokens ───────────────────────────────────────────────── */
+:root {
+  --h-bg:      #F2F1EC;
+  --h-card:    #FFFFFF;
+  --h-card2:   #F8F7F4;
+  --h-text:    #1C1917;
+  --h-muted:   #8D99AE;
+  --h-border:  #E4E2DC;
+  --h-dark:    #1A1512;
+  --h-gold:    #FAD957;
+  --h-green:   #22C55E;
+  --h-sidebar: #191512;  /* sidebar always dark */
+}
+
+.dark {
+  --h-bg:     #0F0C0A;
+  --h-card:   #1A1512;
+  --h-card2:  #231C15;
+  --h-text:   #F2F1EC;
+  --h-muted:  #8D99AE;
+  --h-border: #2D2319;
+  --h-dark:   #F2F1EC;
+  --h-gold:   #FAD957;
+  --h-green:  #22C55E;
+  --h-sidebar:#191512;
+}
+
 @theme {
   --font-sans: var(--font-pliant), system-ui, sans-serif;
   --font-display: var(--font-space-grotesk), sans-serif;
@@ -26,8 +56,9 @@
 }
 
 body {
-  background-color: #F2F1EC;
-  color: #1C1917;
+  background-color: var(--h-bg);
+  color: var(--h-text);
+  transition: background-color 0.2s, color 0.2s;
 }
 
 body, input, button, select, textarea {

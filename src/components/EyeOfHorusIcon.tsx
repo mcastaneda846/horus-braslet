@@ -1,13 +1,15 @@
-/**
- * Ícono del Ojo de Horus — logo oficial de Horus.
- * Usa la imagen original ojo.png ubicada en /public.
- */
-export default function EyeOfHorusIcon({ className }: { className?: string }) {
+import Image from "next/image";
+import type { CSSProperties } from "react";
+
+export default function EyeOfHorusIcon({ className, style }: { className?: string; style?: CSSProperties }) {
     return (
-        <img
-            src="/ojo.png"
-            alt="Ojo de Horus — Horus"
+        <Image
+            src="/logos-horus-2.svg"
+            alt="Horus"
+            width={48}
+            height={48}
             className={className}
+            style={style}
         />
     );
 }

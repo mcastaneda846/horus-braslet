@@ -1951,6 +1951,7 @@ export const UserScalarFieldEnum = {
   lastLogin: 'lastLogin',
   pushToken: 'pushToken',
   healthReportEnabled: 'healthReportEnabled',
+  termsAcceptedAt: 'termsAcceptedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

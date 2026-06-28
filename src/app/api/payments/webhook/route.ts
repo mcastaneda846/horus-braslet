@@ -7,7 +7,11 @@ import { sendOrderConfirmationEmail } from "@/src/infrastructure/email/order-con
 export const runtime = "nodejs";
 
 type OrderWithProduct = Prisma.OrderGetPayload<{
-    include: { product: true; payment: true; user: { select: { email: true } } };
+    include: {
+        product: { select: { id: true; name: true; productType: true; price: true } };
+        payment: true;
+        user: { select: { email: true } };
+    };
 }>;
 
 interface MercadoPagoPayment {
@@ -50,7 +54,11 @@ export async function POST(request: NextRequest) {
         // 2. Buscar la orden por referencia
         const order = await prisma.order.findUnique({
             where:   { reference },
-            include: { payment: true, product: true, user: { select: { email: true } } },
+            include: {
+                payment: true,
+                product: { select: { id: true, name: true, productType: true, price: true } },
+                user: { select: { email: true } },
+            },
         });
 
         if (!order) {
@@ -59,21 +67,25 @@ export async function POST(request: NextRequest) {
         }
 
         // 3. Actualizar según el estado de MercadoPago
-        if (status === "approved") {
-            await handleApprovedPayment(order, mpPayload, String(paymentId));
-        } else if (status === "rejected") {
-            await handleRejectedPayment(order, mpPayload, String(paymentId));
-        } else if (status === "pending" || status === "in_process") {
-            await handlePendingPayment(order, String(paymentId));
+        try {
+            if (status === "approved") {
+                await handleApprovedPayment(order, mpPayload, String(paymentId));
+            } else if (status === "rejected") {
+                await handleRejectedPayment(order, mpPayload, String(paymentId));
+            } else if (status === "pending" || status === "in_process") {
+                await handlePendingPayment(order, String(paymentId));
+            }
+        } catch (handlerError: unknown) {
+            console.error("[WEBHOOK_HANDLER_ERROR]", handlerError);
+            // Retornar 500 para que MercadoPago reintente la notificación
+            return NextResponse.json({ error: "Error al procesar el pago" }, { status: 500 });
         }
 
-        // MercadoPago necesita siempre 200
         return NextResponse.json({ received: true }, { status: 200 });
 
     } catch (error: unknown) {
         console.error("[WEBHOOK_ERROR]", error);
-        // Siempre 200 para que MP no reintente indefinidamente
-        return NextResponse.json({ received: true }, { status: 200 });
+        return NextResponse.json({ error: "Error interno del webhook" }, { status: 500 });
     }
 }
 

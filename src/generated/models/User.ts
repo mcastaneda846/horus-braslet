@@ -33,6 +33,7 @@ export type UserMinAggregateOutputType = {
   lastLogin: Date | null
   pushToken: string | null
   healthReportEnabled: boolean | null
+  termsAcceptedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -46,6 +47,7 @@ export type UserMaxAggregateOutputType = {
   lastLogin: Date | null
   pushToken: string | null
   healthReportEnabled: boolean | null
+  termsAcceptedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -59,6 +61,7 @@ export type UserCountAggregateOutputType = {
   lastLogin: number
   pushToken: number
   healthReportEnabled: number
+  termsAcceptedAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -74,6 +77,7 @@ export type UserMinAggregateInputType = {
   lastLogin?: true
   pushToken?: true
   healthReportEnabled?: true
+  termsAcceptedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -87,6 +91,7 @@ export type UserMaxAggregateInputType = {
   lastLogin?: true
   pushToken?: true
   healthReportEnabled?: true
+  termsAcceptedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -100,6 +105,7 @@ export type UserCountAggregateInputType = {
   lastLogin?: true
   pushToken?: true
   healthReportEnabled?: true
+  termsAcceptedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -186,6 +192,7 @@ export type UserGroupByOutputType = {
   lastLogin: Date | null
   pushToken: string | null
   healthReportEnabled: boolean
+  termsAcceptedAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -220,6 +227,7 @@ export type UserWhereInput = {
   lastLogin?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   pushToken?: Prisma.StringNullableFilter<"User"> | string | null
   healthReportEnabled?: Prisma.BoolFilter<"User"> | boolean
+  termsAcceptedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   allergies?: Prisma.AllergyListRelationFilter
@@ -250,6 +258,7 @@ export type UserOrderByWithRelationInput = {
   lastLogin?: Prisma.SortOrderInput | Prisma.SortOrder
   pushToken?: Prisma.SortOrderInput | Prisma.SortOrder
   healthReportEnabled?: Prisma.SortOrder
+  termsAcceptedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   allergies?: Prisma.AllergyOrderByRelationAggregateInput
@@ -283,6 +292,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   lastLogin?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   pushToken?: Prisma.StringNullableFilter<"User"> | string | null
   healthReportEnabled?: Prisma.BoolFilter<"User"> | boolean
+  termsAcceptedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   allergies?: Prisma.AllergyListRelationFilter
@@ -313,6 +323,7 @@ export type UserOrderByWithAggregationInput = {
   lastLogin?: Prisma.SortOrderInput | Prisma.SortOrder
   pushToken?: Prisma.SortOrderInput | Prisma.SortOrder
   healthReportEnabled?: Prisma.SortOrder
+  termsAcceptedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -332,6 +343,7 @@ export type UserScalarWhereWithAggregatesInput = {
   lastLogin?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   pushToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   healthReportEnabled?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  termsAcceptedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -345,6 +357,7 @@ export type UserCreateInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -375,6 +388,7 @@ export type UserUncheckedCreateInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -405,6 +419,7 @@ export type UserUpdateInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -435,6 +450,7 @@ export type UserUncheckedUpdateInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -465,6 +481,7 @@ export type UserCreateManyInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -478,6 +495,7 @@ export type UserUpdateManyMutationInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -491,6 +509,7 @@ export type UserUncheckedUpdateManyInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -504,6 +523,7 @@ export type UserCountOrderByAggregateInput = {
   lastLogin?: Prisma.SortOrder
   pushToken?: Prisma.SortOrder
   healthReportEnabled?: Prisma.SortOrder
+  termsAcceptedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -517,6 +537,7 @@ export type UserMaxOrderByAggregateInput = {
   lastLogin?: Prisma.SortOrder
   pushToken?: Prisma.SortOrder
   healthReportEnabled?: Prisma.SortOrder
+  termsAcceptedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -530,6 +551,7 @@ export type UserMinOrderByAggregateInput = {
   lastLogin?: Prisma.SortOrder
   pushToken?: Prisma.SortOrder
   healthReportEnabled?: Prisma.SortOrder
+  termsAcceptedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -817,6 +839,7 @@ export type UserCreateWithoutUserDevicesInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -846,6 +869,7 @@ export type UserUncheckedCreateWithoutUserDevicesInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -891,6 +915,7 @@ export type UserUpdateWithoutUserDevicesInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -920,6 +945,7 @@ export type UserUncheckedUpdateWithoutUserDevicesInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -949,6 +975,7 @@ export type UserCreateWithoutDeviceLoginCodesInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -978,6 +1005,7 @@ export type UserUncheckedCreateWithoutDeviceLoginCodesInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -1023,6 +1051,7 @@ export type UserUpdateWithoutDeviceLoginCodesInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -1052,6 +1081,7 @@ export type UserUncheckedUpdateWithoutDeviceLoginCodesInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -1081,6 +1111,7 @@ export type UserCreateWithoutDeviceSessionsInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -1110,6 +1141,7 @@ export type UserUncheckedCreateWithoutDeviceSessionsInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -1155,6 +1187,7 @@ export type UserUpdateWithoutDeviceSessionsInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -1184,6 +1217,7 @@ export type UserUncheckedUpdateWithoutDeviceSessionsInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -1213,6 +1247,7 @@ export type UserCreateWithoutSecurityLogsInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -1242,6 +1277,7 @@ export type UserUncheckedCreateWithoutSecurityLogsInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -1287,6 +1323,7 @@ export type UserUpdateWithoutSecurityLogsInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -1316,6 +1353,7 @@ export type UserUncheckedUpdateWithoutSecurityLogsInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -1345,6 +1383,7 @@ export type UserCreateWithoutPersonalInfoInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -1374,6 +1413,7 @@ export type UserUncheckedCreateWithoutPersonalInfoInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -1419,6 +1459,7 @@ export type UserUpdateWithoutPersonalInfoInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -1448,6 +1489,7 @@ export type UserUncheckedUpdateWithoutPersonalInfoInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -1477,6 +1519,7 @@ export type UserCreateWithoutMedicalProfileInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -1506,6 +1549,7 @@ export type UserUncheckedCreateWithoutMedicalProfileInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -1551,6 +1595,7 @@ export type UserUpdateWithoutMedicalProfileInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -1580,6 +1625,7 @@ export type UserUncheckedUpdateWithoutMedicalProfileInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -1609,6 +1655,7 @@ export type UserCreateWithoutAllergiesInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   chronicConditions?: Prisma.ChronicConditionCreateNestedManyWithoutUserInput
@@ -1638,6 +1685,7 @@ export type UserUncheckedCreateWithoutAllergiesInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   chronicConditions?: Prisma.ChronicConditionUncheckedCreateNestedManyWithoutUserInput
@@ -1683,6 +1731,7 @@ export type UserUpdateWithoutAllergiesInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chronicConditions?: Prisma.ChronicConditionUpdateManyWithoutUserNestedInput
@@ -1712,6 +1761,7 @@ export type UserUncheckedUpdateWithoutAllergiesInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chronicConditions?: Prisma.ChronicConditionUncheckedUpdateManyWithoutUserNestedInput
@@ -1741,6 +1791,7 @@ export type UserCreateWithoutChronicConditionsInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -1770,6 +1821,7 @@ export type UserUncheckedCreateWithoutChronicConditionsInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -1815,6 +1867,7 @@ export type UserUpdateWithoutChronicConditionsInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -1844,6 +1897,7 @@ export type UserUncheckedUpdateWithoutChronicConditionsInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -1873,6 +1927,7 @@ export type UserCreateWithoutMedicationsInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -1902,6 +1957,7 @@ export type UserUncheckedCreateWithoutMedicationsInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -1947,6 +2003,7 @@ export type UserUpdateWithoutMedicationsInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -1976,6 +2033,7 @@ export type UserUncheckedUpdateWithoutMedicationsInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -2005,6 +2063,7 @@ export type UserCreateWithoutEmergencyContactsInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -2034,6 +2093,7 @@ export type UserUncheckedCreateWithoutEmergencyContactsInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -2079,6 +2139,7 @@ export type UserUpdateWithoutEmergencyContactsInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -2108,6 +2169,7 @@ export type UserUncheckedUpdateWithoutEmergencyContactsInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -2137,6 +2199,7 @@ export type UserCreateWithoutMedicalHistoryInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -2166,6 +2229,7 @@ export type UserUncheckedCreateWithoutMedicalHistoryInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -2211,6 +2275,7 @@ export type UserUpdateWithoutMedicalHistoryInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -2240,6 +2305,7 @@ export type UserUncheckedUpdateWithoutMedicalHistoryInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -2269,6 +2335,7 @@ export type UserCreateWithoutProfileScansInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -2298,6 +2365,7 @@ export type UserUncheckedCreateWithoutProfileScansInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -2343,6 +2411,7 @@ export type UserUpdateWithoutProfileScansInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -2372,6 +2441,7 @@ export type UserUncheckedUpdateWithoutProfileScansInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -2401,6 +2471,7 @@ export type UserCreateWithoutEmergencyAlertsInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -2430,6 +2501,7 @@ export type UserUncheckedCreateWithoutEmergencyAlertsInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -2475,6 +2547,7 @@ export type UserUpdateWithoutEmergencyAlertsInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -2504,6 +2577,7 @@ export type UserUncheckedUpdateWithoutEmergencyAlertsInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -2533,6 +2607,7 @@ export type UserCreateWithoutPrivacySettingsInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -2562,6 +2637,7 @@ export type UserUncheckedCreateWithoutPrivacySettingsInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -2607,6 +2683,7 @@ export type UserUpdateWithoutPrivacySettingsInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -2636,6 +2713,7 @@ export type UserUncheckedUpdateWithoutPrivacySettingsInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -2665,6 +2743,7 @@ export type UserCreateWithoutOrdersInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -2694,6 +2773,7 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -2739,6 +2819,7 @@ export type UserUpdateWithoutOrdersInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -2768,6 +2849,7 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -2797,6 +2879,7 @@ export type UserCreateWithoutPaymentsInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -2826,6 +2909,7 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -2871,6 +2955,7 @@ export type UserUpdateWithoutPaymentsInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -2900,6 +2985,7 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -2929,6 +3015,7 @@ export type UserCreateWithoutSubscriptionsInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyCreateNestedManyWithoutUserInput
@@ -2958,6 +3045,7 @@ export type UserUncheckedCreateWithoutSubscriptionsInput = {
   lastLogin?: Date | string | null
   pushToken?: string | null
   healthReportEnabled?: boolean
+  termsAcceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allergies?: Prisma.AllergyUncheckedCreateNestedManyWithoutUserInput
@@ -3003,6 +3091,7 @@ export type UserUpdateWithoutSubscriptionsInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUpdateManyWithoutUserNestedInput
@@ -3032,6 +3121,7 @@ export type UserUncheckedUpdateWithoutSubscriptionsInput = {
   lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pushToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   healthReportEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allergies?: Prisma.AllergyUncheckedUpdateManyWithoutUserNestedInput
@@ -3209,6 +3299,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   lastLogin?: boolean
   pushToken?: boolean
   healthReportEnabled?: boolean
+  termsAcceptedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   allergies?: boolean | Prisma.User$allergiesArgs<ExtArgs>
@@ -3240,6 +3331,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   lastLogin?: boolean
   pushToken?: boolean
   healthReportEnabled?: boolean
+  termsAcceptedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -3253,6 +3345,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   lastLogin?: boolean
   pushToken?: boolean
   healthReportEnabled?: boolean
+  termsAcceptedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -3266,11 +3359,12 @@ export type UserSelectScalar = {
   lastLogin?: boolean
   pushToken?: boolean
   healthReportEnabled?: boolean
+  termsAcceptedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "nfcTagId" | "accountStatus" | "lastLogin" | "pushToken" | "healthReportEnabled" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "nfcTagId" | "accountStatus" | "lastLogin" | "pushToken" | "healthReportEnabled" | "termsAcceptedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   allergies?: boolean | Prisma.User$allergiesArgs<ExtArgs>
   chronicConditions?: boolean | Prisma.User$chronicConditionsArgs<ExtArgs>
@@ -3324,6 +3418,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     lastLogin: Date | null
     pushToken: string | null
     healthReportEnabled: boolean
+    termsAcceptedAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -3774,6 +3869,7 @@ export interface UserFieldRefs {
   readonly lastLogin: Prisma.FieldRef<"User", 'DateTime'>
   readonly pushToken: Prisma.FieldRef<"User", 'String'>
   readonly healthReportEnabled: Prisma.FieldRef<"User", 'Boolean'>
+  readonly termsAcceptedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }

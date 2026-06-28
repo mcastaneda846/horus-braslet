@@ -1,27 +1,23 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import FloatingSidebar from "@/src/components/FloatingSidebar";
+import { formatBloodType } from "@/src/shared/lib/blood-type.lib";
 
 const DISPLAY = "var(--font-space-grotesk), system-ui, sans-serif";
 const SANS = "var(--font-dm-sans), system-ui, sans-serif";
 
 const C = {
-  bg: "#F2F1EC",
-  card: "#FFFFFF",
-  primary: "#1A1512",
-  muted: "#8D99AE",
-  mutedBg: "#F0EBE3",
-  border: "#E4E2DC",
+  bg: "var(--h-bg)",
+  card: "var(--h-card)",
+  primary: "var(--h-text)",
+  muted: "var(--h-muted)",
+  mutedBg: "var(--h-card2)",
+  border: "var(--h-border)",
   green: "#22C55E",
   red: "#EF4444",
 };
 
 // ── Enum maps ─────────────────────────────────────────────────────────────────
-const BLOOD_LABEL: Record<string, string> = {
-  A_POSITIVE: "A+", A_NEGATIVE: "A-", B_POSITIVE: "B+", B_NEGATIVE: "B-",
-  AB_POSITIVE: "AB+", AB_NEGATIVE: "AB-", O_POSITIVE: "O+", O_NEGATIVE: "O-",
-};
 const GENDER_LABEL: Record<string, string> = {
   MALE: "Masculino", FEMALE: "Femenino", OTHER: "Otro", PREFER_NOT_TO_SAY: "Prefiero no decir",
 };
@@ -44,6 +40,15 @@ const EVENT_TYPE_LABEL: Record<string, string> = {
   SURGERY: "Cirugía", HOSPITALIZATION: "Hospitalización", VACCINATION: "Vacunación",
   INJURY: "Lesión", OTHER: "Otro",
 };
+
+// ── Raw structured data from AI ───────────────────────────────────────────────
+interface RawMedicalData {
+  personalInfo?: { bloodType?: string; gender?: string } | null;
+  allergies?: Array<{ allergenName?: string; allergyType?: string; severity?: string; reactionDescription?: string }>;
+  chronicConditions?: Array<{ conditionName?: string; severity?: string; status?: string; notes?: string }>;
+  medications?: Array<{ customMedicationName?: string; dosage?: string; frequency?: string; route?: string; purpose?: string }>;
+  medicalHistory?: Array<{ eventType?: string; eventName?: string; location?: string; outcome?: string }>;
+}
 
 // ── Review types ──────────────────────────────────────────────────────────────
 interface ReviewAllergy {
@@ -74,7 +79,7 @@ interface ReviewState {
   history: ReviewHistory[];
 }
 
-function buildReviewState(raw: any): ReviewState {
+function buildReviewState(raw: RawMedicalData): ReviewState {
   let id = 0;
   const nextId = () => String(++id);
   const personalInfo: ReviewPersonalInfo | null =
@@ -88,21 +93,21 @@ function buildReviewState(raw: any): ReviewState {
       : null;
   return {
     personalInfo,
-    allergies: (raw?.allergies || []).map((a: any) => ({
+    allergies: (raw?.allergies || []).map((a) => ({
       _id: nextId(), _included: true, _expanded: false,
       allergenName: a.allergenName || "",
       allergyType: a.allergyType || "OTHER",
       severity: a.severity || "MILD",
       reactionDescription: a.reactionDescription || "",
     })),
-    conditions: (raw?.chronicConditions || []).map((c: any) => ({
+    conditions: (raw?.chronicConditions || []).map((c) => ({
       _id: nextId(), _included: true, _expanded: false,
       conditionName: c.conditionName || "",
       severity: c.severity || "MILD",
       status: c.status || "ACTIVE",
       notes: c.notes || "",
     })),
-    medications: (raw?.medications || []).map((m: any) => ({
+    medications: (raw?.medications || []).map((m) => ({
       _id: nextId(), _included: true, _expanded: false,
       customMedicationName: m.customMedicationName || "",
       dosage: m.dosage || "",
@@ -110,7 +115,7 @@ function buildReviewState(raw: any): ReviewState {
       route: m.route || "ORAL",
       purpose: m.purpose || "",
     })),
-    history: (raw?.medicalHistory || []).map((h: any) => ({
+    history: (raw?.medicalHistory || []).map((h) => ({
       _id: nextId(), _included: true, _expanded: false,
       eventType: h.eventType || "OTHER",
       eventName: h.eventName || "",
@@ -120,7 +125,7 @@ function buildReviewState(raw: any): ReviewState {
   };
 }
 
-function hasAnyData(raw: any): boolean {
+function hasAnyData(raw: RawMedicalData): boolean {
   return !!(
     raw?.personalInfo?.bloodType || raw?.personalInfo?.gender ||
     raw?.allergies?.length || raw?.chronicConditions?.length ||
@@ -369,7 +374,7 @@ function PersonalToggleRow({ included, onToggle, label, value, status }: {
 
 // ── MedicalReviewModal ────────────────────────────────────────────────────────
 function MedicalReviewModal({ structuredData, normalizedMedications, userId, onClose, onSaved }: {
-  structuredData: any;
+  structuredData: RawMedicalData;
   normalizedMedications: Record<string, string>;
   userId: string;
   onClose: () => void;
@@ -507,7 +512,7 @@ function MedicalReviewModal({ structuredData, normalizedMedications, userId, onC
                   included={state.personalInfo._includeBloodType}
                   onToggle={() => setState((s) => ({ ...s, personalInfo: s.personalInfo ? { ...s.personalInfo, _includeBloodType: !s.personalInfo._includeBloodType } : null }))}
                   label="Tipo de sangre"
-                  value={BLOOD_LABEL[state.personalInfo.bloodType] || state.personalInfo.bloodType}
+                  value={formatBloodType(state.personalInfo.bloodType)}
                   status={getFieldStatus(state.personalInfo.bloodType, existingProfile.bloodType)}
                 />
               )}
@@ -791,7 +796,7 @@ export default function ArchivosPage() {
   const [dragOver, setDragOver] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [reviewPayload, setReviewPayload] = useState<{
-    structuredData: any;
+    structuredData: RawMedicalData;
     normalizedMedications: Record<string, string>;
     publicId: string;
     resourceType: string;
@@ -917,27 +922,25 @@ export default function ArchivosPage() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: C.bg, color: C.primary }}>
-      <FloatingSidebar />
-
-      <main className="pl-20 px-5 pt-8 pb-16 max-w-[1400px] mx-auto">
+      <main className="pt-6 lg:pt-8 px-4 sm:px-5 lg:pl-24 pb-28 lg:pb-16 max-w-[1400px] mx-auto">
         {/* Header & Stats */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pl-2">
           <div>
-            <h1 style={{ fontFamily: DISPLAY, fontSize: 32, fontWeight: 700, color: C.primary, margin: 0, letterSpacing: "-0.02em" }}>
+            <h1 className="text-2xl sm:text-3xl font-black text-[var(--h-text)] tracking-tight">
               Mis archivos
             </h1>
-            <p style={{ fontFamily: SANS, fontSize: 14, color: C.muted, marginTop: 4, margin: 0 }}>
+            <p className="text-sm text-[var(--h-muted)] font-semibold mt-1">
               Gestiona tus documentos y reportes médicos
             </p>
           </div>
 
           {docs.length > 0 && (
-            <div className="flex items-center gap-6 mt-6 md:mt-0 bg-[#F8F7F4] border border-[#E4E2DC] rounded-2xl px-6 py-3">
+            <div className="flex items-center gap-6 mt-6 md:mt-0 bg-[var(--h-card)] border border-[var(--h-border)] rounded-2xl px-6 py-3">
               <div>
                 <p style={{ fontFamily: SANS, fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 2px" }}>Total</p>
-                <p style={{ fontFamily: DISPLAY, fontSize: 20, fontWeight: 700, color: C.primary, margin: 0 }}>{docs.length} <span className="text-sm font-normal text-[#8D99AE]">archivos</span></p>
+                <p style={{ fontFamily: DISPLAY, fontSize: 20, fontWeight: 700, color: C.primary, margin: 0 }}>{docs.length} <span style={{ fontSize: 14, fontWeight: 400, color: C.muted }}>archivos</span></p>
               </div>
-              <div className="h-8 w-px bg-[#E4E2DC]" />
+              <div className="h-8 w-px bg-[var(--h-border)]" />
               <div>
                 <p style={{ fontFamily: SANS, fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 2px" }}>Último subido</p>
                 <p style={{ fontFamily: SANS, fontSize: 14, fontWeight: 600, color: C.primary, margin: 0 }}>{safeDate(lastUploaded)}</p>
@@ -1010,8 +1013,8 @@ export default function ArchivosPage() {
             }}>
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                  <svg className="w-4 h-4 text-[#FAD957]" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2l2.4 7.6H22l-6.2 4.5 2.4 7.6-6.2-4.5-6.2 4.5 2.4-7.6L2 9.6h7.6L12 2z"/>
+                  <svg className="w-4 h-4" fill="#FAD957" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2.5 L13.91 8.36 L20.08 8.36 L15.09 11.95 L17 17.82 L12 14.22 L7 17.82 L8.91 11.95 L3.92 8.36 L10.09 8.36 Z"/>
                   </svg>
                 </div>
                 <p style={{ fontFamily: DISPLAY, fontSize: 13, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", margin: 0 }}>

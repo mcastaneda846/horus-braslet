@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
+import { formatBloodType } from "@/src/shared/lib/blood-type.lib";
 
 // ── Fonts ─────────────────────────────────────────────────────────────────────
 // DISPLAY (Space Grotesk) → títulos de sección, modal, nombre usuario
@@ -12,21 +13,17 @@ const SANS    = "var(--font-dm-sans), system-ui, sans-serif";
 
 // ── Design tokens ─────────────────────────────────────────────────────────────
 const C = {
-  bg:      "#F2F1EC",
-  card:    "#FFFFFF",
-  primary: "#1A1512",
-  muted:   "#8D99AE",
-  mutedBg: "#F0EBE3",
+  bg:      "var(--h-bg)",
+  card:    "var(--h-card)",
+  primary: "var(--h-text)",
+  muted:   "var(--h-muted)",
+  mutedBg: "var(--h-card2)",
   green:   "#22C55E",
   red:     "#EF4444",
   pink:    "#FAB2D3",
 };
 
 // ── Lookup labels ─────────────────────────────────────────────────────────────
-const BLOOD: Record<string, string> = {
-  A_POSITIVE:"A+", A_NEGATIVE:"A-", B_POSITIVE:"B+", B_NEGATIVE:"B-",
-  AB_POSITIVE:"AB+", AB_NEGATIVE:"AB-", O_POSITIVE:"O+", O_NEGATIVE:"O-",
-};
 const GENDER: Record<string, string> = {
   MALE:"Masculino", FEMALE:"Femenino", OTHER:"Otro", PREFER_NOT_TO_SAY:"Prefiero no decir",
 };
@@ -313,7 +310,7 @@ function SelectField({ label, value, onChange, options, locked }: {
         <div style={{
           position: "absolute", top: "calc(100% + 6px)", left: 0, right: 0, zIndex: 50,
           background: C.card, borderRadius: 16, overflow: "hidden",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.10)", border: `1px solid #E4E2DC`,
+          boxShadow: "0 8px 24px rgba(0,0,0,0.10)", border: `1px solid var(--h-border)`,
         }}>
           {options.map((o, i) => (
             <div
@@ -325,10 +322,10 @@ function SelectField({ label, value, onChange, options, locked }: {
                 background: o.value === value ? C.mutedBg : "transparent",
                 fontWeight: o.value === value ? 600 : 400,
                 cursor: "pointer",
-                borderBottom: i < options.length - 1 ? `1px solid #F0EBE3` : "none",
+                borderBottom: i < options.length - 1 ? `1px solid var(--h-border)` : "none",
                 transition: "background 0.1s",
               }}
-              onMouseEnter={e => { if (o.value !== value) (e.currentTarget as HTMLDivElement).style.background = "#F8F7F4"; }}
+              onMouseEnter={e => { if (o.value !== value) (e.currentTarget as HTMLDivElement).style.background = "var(--h-card2)"; }}
               onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = o.value === value ? C.mutedBg : "transparent"; }}
             >
               {o.label}
@@ -357,7 +354,7 @@ function SheetBtns({ onCancel, onSave, saving }: { onCancel: () => void; onSave:
       </button>
       <button onClick={onSave} disabled={saving}
         style={{ flex: 1, background: C.primary, border: "none", borderRadius: 16, padding: "14px 0",
-          fontSize: 14, fontFamily: SANS, fontWeight: 700, color: "#fff", cursor: "pointer",
+          fontSize: 14, fontFamily: SANS, fontWeight: 700, color: "var(--h-bg)", cursor: "pointer",
           opacity: saving ? 0.7 : 1 }}>
         {saving ? "Guardando…" : "Guardar"}
       </button>
@@ -739,10 +736,10 @@ export default function ProfileClient() {
         </p>
         <p style={{ margin: 0, fontSize: 13, fontFamily: SANS, color: C.muted }}>{profile?.email}</p>
         <button onClick={openEdit}
-          style={{ display: "flex", alignItems: "center", gap: 8, background: C.primary, color: "#fff",
+          style={{ display: "flex", alignItems: "center", gap: 8, background: C.primary, color: "var(--h-bg)",
             border: "none", borderRadius: 20, padding: "10px 18px", fontSize: 13,
             fontFamily: SANS, fontWeight: 700, cursor: "pointer", marginTop: 4 }}>
-          <PencilIcon color="#fff" size={14} /> Editar perfil
+          <PencilIcon color="var(--h-bg)" size={14} /> Editar perfil
         </button>
       </div>
 
@@ -763,7 +760,7 @@ export default function ProfileClient() {
       {/* ── Datos médicos ─────────────────────────────────────────────────────── */}
       <Accordion title="Datos médicos" icon={<HeartIcon color={C.muted} size={16} />}
         open={open.medical} onToggle={() => toggle("medical")}>
-        <InfoRow icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.muted} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>} label="Tipo de sangre" value={BLOOD[profile?.bloodType ?? ""] || "—"} />
+        <InfoRow icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.muted} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>} label="Tipo de sangre" value={formatBloodType(profile?.bloodType)} />
         {divider}
         <InfoRow icon={<UserIcon color={C.muted} size={14} />} label="Altura" value={medProfile.heightCm != null ? `${medProfile.heightCm} cm` : "—"} />
         {divider}

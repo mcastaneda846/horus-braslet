@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAuthCookies } from "@/src/shared/lib/cookie.lib";
 import { verifyAccessToken } from "@/src/shared/lib/jwt.lib";
 import { prisma } from "@/src/infrastructure/database/prisma/client";
+import { z } from "zod";
+
+const contactSchema = z.object({
+    name:     z.string().min(2).max(100),
+    phone:    z.string().regex(/^[\d\s+()-]{7,20}$/, "Formato de teléfono inválido"),
+    relation: z.string().max(50).optional(),
+});
 
 export const dynamic = "force-dynamic";
 
@@ -44,10 +51,12 @@ export async function POST(req: NextRequest) {
     if (!userId) return NextResponse.json({ error: "Tu sesión ha expirado o no has iniciado sesión. Por favor, vuelve a ingresar." }, { status: 401 });
 
     try {
-        const { name, relation, phone } = await req.json();
-        if (!name?.trim() || !phone?.trim()) {
-            return NextResponse.json({ error: "Nombre y teléfono son requeridos" }, { status: 400 });
+        const body = await req.json();
+        const parsed = contactSchema.safeParse(body);
+        if (!parsed.success) {
+            return NextResponse.json({ error: "Datos inválidos", details: parsed.error.flatten().fieldErrors }, { status: 400 });
         }
+        const { name, relation, phone } = parsed.data;
 
         const lastContact = await prisma.emergencyContact.findFirst({
             where: { userId },

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
+import { formatBloodType } from "@/src/shared/lib/blood-type.lib";
 
 // ── Privacy toggles — exact match from horus-mobile qr-medico.tsx ──────────────
 const TOGGLES = [
@@ -19,10 +20,6 @@ const DEFAULTS: PrivacyMap = {
     conditions: true, contacts: true, notes: false,
 };
 
-const BLOOD_LABELS: Record<string, string> = {
-    A_POSITIVE: "A+", A_NEGATIVE: "A-", B_POSITIVE: "B+", B_NEGATIVE: "B-",
-    AB_POSITIVE: "AB+", AB_NEGATIVE: "AB-", O_POSITIVE: "O+", O_NEGATIVE: "O-",
-};
 
 function calcAge(dob: string): string {
     if (!dob) return "—";
@@ -67,7 +64,7 @@ function Toggle({ value, onToggle }: { value: boolean; onToggle: () => void }) {
     return (
         <button
             onClick={onToggle}
-            className={`relative w-11 h-6 rounded-full shrink-0 transition-colors duration-200 ${value ? "bg-[#22C55E]" : "bg-[#E4E2DC]"}`}
+            className={`relative w-11 h-6 rounded-full shrink-0 transition-colors duration-200 ${value ? "bg-[#22C55E]" : "bg-[var(--h-border)]"}`}
         >
             <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-all duration-200 ${value ? "left-[22px]" : "left-0.5"}`} />
         </button>
@@ -84,8 +81,7 @@ export default function QrPermissionsCard({ userId }: { userId: string }) {
     const [saved, setSaved]       = useState(false);
     const [mounted, setMounted]   = useState(false);
 
-    const appBase     = process.env.NEXT_PUBLIC_APP_URL ?? "https://app.horus.health";
-    const emergencyUrl = `${appBase}/emergency/${userId}`;
+    const emergencyUrl = `${process.env.NEXT_PUBLIC_EMERGENCY_URL ?? "https://horus-emergency-2eum.vercel.app"}/emergency/${userId}`;
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(emergencyUrl)}&color=1A1512&bgcolor=FFFFFF&margin=6&qzone=2`;
 
     const load = useCallback(async () => {
@@ -100,7 +96,7 @@ export default function QrPermissionsCard({ userId }: { userId: string }) {
                 const { firstName, lastName, dateOfBirth, bloodType: bt } = data.personalInfo;
                 if (firstName || lastName) setFullName(`${firstName ?? ""} ${lastName ?? ""}`.trim());
                 if (dateOfBirth) setAgeLabel(calcAge(dateOfBirth));
-                if (bt) setBloodType(BLOOD_LABELS[bt] ?? bt);
+                if (bt) setBloodType(formatBloodType(bt));
             }
             if (data.privacySettings) {
                 setPrivacy(prev => {
@@ -143,16 +139,16 @@ export default function QrPermissionsCard({ userId }: { userId: string }) {
     };
 
     return (
-        <div className="bg-white rounded-[24px] p-5 shadow-sm border border-[#E4E2DC]">
+        <div className="bg-[var(--h-card)] rounded-[24px] p-5 shadow-sm border border-[var(--h-border)]">
             {/* Header */}
             <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-xl bg-[#F0EBE3] flex items-center justify-center shrink-0">
-                    <svg className="w-4 h-4 text-[#1A1512]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+                <div className="w-8 h-8 rounded-xl bg-[var(--h-card2)] flex items-center justify-center shrink-0">
+                    <svg className="w-4 h-4 text-[var(--h-text)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
                         <path d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z"/>
                         <path d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z"/>
                     </svg>
                 </div>
-                <h2 className="text-xs font-extrabold text-[#1A1512] uppercase tracking-wide flex-1">QR de Emergencia</h2>
+                <h2 className="text-xs font-extrabold text-[var(--h-text)] uppercase tracking-wide flex-1">QR de Emergencia</h2>
                 {saved && (
                     <div className="flex items-center gap-1">
                         <svg className="w-3.5 h-3.5 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
@@ -164,12 +160,12 @@ export default function QrPermissionsCard({ userId }: { userId: string }) {
             </div>
 
             {/* QR Card (expand/collapse like mobile) */}
-            <div className="bg-[#F2F1EC] rounded-[20px] px-5 pt-4 pb-3 mb-4 flex flex-col items-center">
+            <div className="bg-[var(--h-bg)] rounded-[20px] px-5 pt-4 pb-3 mb-4 flex flex-col items-center">
 
                 {/* Expanded: name + meta + QR + buttons */}
                 {expanded && (
                     <div className="flex flex-col items-center w-full mb-5">
-                        <p className="text-xl font-extrabold text-[#1A1512] tracking-tight">{fullName}</p>
+                        <p className="text-xl font-extrabold text-[var(--h-text)] tracking-tight">{fullName}</p>
                         <div className="flex items-center gap-2.5 mt-1.5 mb-4">
                             <span className="text-sm text-[#8D99AE]">{ageLabel}</span>
                             <span className="w-1 h-1 rounded-full bg-[#8D99AE]/50" />
@@ -209,10 +205,10 @@ export default function QrPermissionsCard({ userId }: { userId: string }) {
 
                 {/* Collapse/expand toggle */}
                 <button onClick={() => setExpanded(v => !v)}
-                    className="flex items-center justify-between w-full text-sm font-semibold text-[#8D99AE] hover:text-[#1A1512] transition-colors"
+                    className="flex items-center justify-between w-full text-sm font-semibold text-[var(--h-muted)] hover:text-[var(--h-text)] transition-colors"
                     style={{ marginTop: expanded ? 4 : 0 }}>
                     <span>{expanded ? "Ocultar QR" : "Ver mi QR de emergencia"}</span>
-                    <div className="w-7 h-7 rounded-full bg-[#E4E2DC] flex items-center justify-center transition-transform"
+                    <div className="w-7 h-7 rounded-full bg-[var(--h-border)] flex items-center justify-center transition-transform"
                         style={{ transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}>
                         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                             <path d="m19 9-7 7-7-7"/>
@@ -223,19 +219,19 @@ export default function QrPermissionsCard({ userId }: { userId: string }) {
 
             {/* Privacy section title */}
             <div className="flex items-center justify-between mb-3">
-                <p className="text-sm font-bold text-[#1A1512]">Privacidad</p>
+                <p className="text-sm font-bold text-[var(--h-text)]">Privacidad</p>
                 <p className="text-[10px] text-[#8D99AE] font-medium">Datos visibles en el QR</p>
             </div>
 
             {/* Toggle cards — exact match to mobile toggleCard style */}
             <div className="space-y-2">
                 {TOGGLES.map(t => (
-                    <div key={t.key} className="flex items-center gap-3 bg-[#F2F1EC] rounded-[20px] px-3.5 py-3">
-                        <div className="w-9 h-9 rounded-xl bg-[#E4E2DC] flex items-center justify-center shrink-0 text-[#1A1512]">
+                    <div key={t.key} className="flex items-center gap-3 bg-[var(--h-bg)] rounded-[20px] px-3.5 py-3">
+                        <div className="w-9 h-9 rounded-xl bg-[var(--h-border)] flex items-center justify-center shrink-0 text-[var(--h-text)]">
                             <ToggleIcon icon={t.icon} />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold text-[#1A1512] leading-tight">{t.label}</p>
+                            <p className="text-sm font-bold text-[var(--h-text)] leading-tight">{t.label}</p>
                             <p className="text-[11px] text-[#8D99AE] mt-0.5">{t.desc}</p>
                         </div>
                         <Toggle value={mounted ? privacy[t.key] : DEFAULTS[t.key]} onToggle={() => flip(t.key)} />

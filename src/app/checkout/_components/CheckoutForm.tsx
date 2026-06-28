@@ -35,11 +35,11 @@ interface CheckoutFormProps {
 interface ColombiaOption { id: number; name: string }
 
 const INPUT =
-    "w-full rounded-xl border border-[#E4E2DC] bg-[#FAFAF8] px-4 py-3 text-sm text-[#1A1512] placeholder:text-[#C4BDB7] focus:outline-none focus:border-[#1A1512] focus:ring-2 focus:ring-[#1A1512]/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed";
+    "w-full rounded-xl border border-[var(--h-border)] bg-[var(--h-card2)] px-4 py-3 text-sm text-[var(--h-text)] placeholder:text-[var(--h-muted)] focus:outline-none focus:border-[var(--h-text)] focus:ring-2 focus:ring-[var(--h-text)]/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed";
 const SELECT =
-    "w-full rounded-xl border border-[#E4E2DC] bg-[#FAFAF8] px-4 py-3 text-sm text-[#1A1512] focus:outline-none focus:border-[#1A1512] focus:ring-2 focus:ring-[#1A1512]/10 transition-all appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
-const LABEL = "block text-[10px] font-bold text-[#1A1512] uppercase tracking-[0.1em] mb-1.5";
-const SECTION_TITLE = "text-[10px] font-bold text-[#8D99AE] uppercase tracking-[0.12em] mb-5 flex items-center gap-2";
+    "w-full rounded-xl border border-[var(--h-border)] bg-[var(--h-card2)] px-4 py-3 text-sm text-[var(--h-text)] focus:outline-none focus:border-[var(--h-text)] focus:ring-2 focus:ring-[var(--h-text)]/10 transition-all appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
+const LABEL = "block text-[10px] font-bold text-[var(--h-text)] uppercase tracking-[0.1em] mb-1.5";
+const SECTION_TITLE = "text-[10px] font-bold text-[var(--h-muted)] uppercase tracking-[0.12em] mb-5 flex items-center gap-2";
 
 export default function CheckoutForm({ productId, userId: _userId, createOrder }: CheckoutFormProps) {
     const [form, setForm] = useState<ShippingAddress>({
@@ -160,7 +160,7 @@ export default function CheckoutForm({ productId, userId: _userId, createOrder }
 
             {/* Customization preview */}
             {(hasImages || hasColor) && (
-                <div className="bg-white rounded-2xl border border-[#E4E2DC] p-5 shadow-sm">
+                <div className="bg-[var(--h-card)] rounded-2xl border border-[var(--h-border)] p-5 shadow-sm">
                     <p className={SECTION_TITLE}>
                         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" />
@@ -170,20 +170,20 @@ export default function CheckoutForm({ productId, userId: _userId, createOrder }
                     {hasColor && (
                         <div className="flex items-center gap-2.5 mb-3">
                             <span className="w-5 h-5 rounded-full border-2 border-white shadow" style={{ backgroundColor: customization!.braceletColor }} />
-                            <span className="text-sm font-semibold text-[#1A1512]">Color: {customization!.braceletColor}</span>
+                            <span className="text-sm font-semibold text-[var(--h-text)]">Color: {customization!.braceletColor}</span>
                         </div>
                     )}
                     {hasImages && (
                         <div className="flex items-center gap-3 flex-wrap">
                             {customization?.cardFrontB64 && (
                                 <div className="relative">
-                                    <img src={customization.cardFrontB64} alt="Frontal" className="w-16 h-10 rounded-lg object-cover border border-[#E4E2DC]" />
+                                    <img src={customization.cardFrontB64} alt="Frontal" className="w-16 h-10 rounded-lg object-cover border border-[var(--h-border)]" />
                                     <span className="absolute -bottom-1 -right-1 text-[9px] bg-[#1A1512] text-white px-1.5 py-0.5 rounded-full font-bold">F</span>
                                 </div>
                             )}
                             {customization?.cardBackB64 && (
                                 <div className="relative">
-                                    <img src={customization.cardBackB64} alt="Trasero" className="w-16 h-10 rounded-lg object-cover border border-[#E4E2DC]" />
+                                    <img src={customization.cardBackB64} alt="Trasero" className="w-16 h-10 rounded-lg object-cover border border-[var(--h-border)]" />
                                     <span className="absolute -bottom-1 -right-1 text-[9px] bg-[#1A1512] text-white px-1.5 py-0.5 rounded-full font-bold">T</span>
                                 </div>
                             )}
@@ -194,7 +194,7 @@ export default function CheckoutForm({ productId, userId: _userId, createOrder }
             )}
 
             {/* Contact */}
-            <div className="bg-white rounded-2xl border border-[#E4E2DC] p-6 shadow-sm">
+            <div className="bg-[var(--h-card)] rounded-2xl border border-[var(--h-border)] p-6 shadow-sm">
                 <p className={SECTION_TITLE}>
                     <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
@@ -219,7 +219,7 @@ export default function CheckoutForm({ productId, userId: _userId, createOrder }
             </div>
 
             {/* Address */}
-            <div className="bg-white rounded-2xl border border-[#E4E2DC] p-6 shadow-sm">
+            <div className="bg-[var(--h-card)] rounded-2xl border border-[var(--h-border)] p-6 shadow-sm">
                 <p className={SECTION_TITLE}>
                     <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />

@@ -6,6 +6,7 @@ export interface RegisterDto {
     confirmPassword: string;
     firstName: string;
     lastName: string;
+    termsAccepted: boolean;
 }
 
 export const registerSchema = z
@@ -36,6 +37,10 @@ export const registerSchema = z
             .min(2, "El apellido debe tener al menos 2 caracteres")
             .max(50, "El apellido no puede superar los 50 caracteres")
             .trim(),
+
+        termsAccepted: z.literal(true, {
+            error: "Debes aceptar los términos y condiciones para continuar",
+        }),
     })
     .refine((data) => data.password === data.confirmPassword, {
         message: "Las contraseñas no coinciden",

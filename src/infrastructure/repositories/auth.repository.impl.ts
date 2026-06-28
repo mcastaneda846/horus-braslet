@@ -57,15 +57,15 @@ export class AuthRepositoryImpl implements AuthRepository {
     async create(data: CreateUserData): Promise<AuthUser> {
         const user = await prisma.user.create({
             data: {
-                email:        data.email,
-                passwordHash: data.passwordHash,
+                email:           data.email,
+                passwordHash:    data.passwordHash,
+                termsAcceptedAt: data.termsAcceptedAt,
                 personalInfo: {
                     create: {
                         firstName: data.firstName,
                         lastName:  data.lastName,
                     },
                 },
-                // Crea configuración de privacidad por defecto al registrarse
                 privacySettings: {
                     create: {},
                 },

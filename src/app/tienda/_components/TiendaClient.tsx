@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import FloatingSidebar from "@/src/components/FloatingSidebar";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import OrderHistoryModal from "./OrderHistoryModal";
@@ -60,11 +59,26 @@ export default function TiendaClient({
 
   const activeProduct = products.find((p) => p.productType === activeTab);
 
-  // Build card front texture: bg image (optional) + info overlay bottom-right
+  // Build card front texture: bg image + glassmorphism info box + QR + NFC icon
   function buildCardFrontTexture(bgDataUrl: string | null): Promise<string> {
-    // Wait for DM Sans / Space Grotesk to be ready in the browser
-    return (typeof document !== "undefined" ? document.fonts.ready : Promise.resolve()).then(() =>
-      new Promise((resolve) => {
+    const emergencyUrl = `${process.env.NEXT_PUBLIC_EMERGENCY_URL ?? "https://horus-emergency-2eum.vercel.app"}/emergency/${userData.id}`;
+    const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(emergencyUrl)}&color=1A1512&bgcolor=FFFFFF&margin=4&qzone=1&format=png`;
+
+    const loadImg = (src: string, crossOrigin = false): Promise<HTMLImageElement | null> =>
+      new Promise(res => {
+        const img = new Image();
+        if (crossOrigin) img.crossOrigin = "anonymous";
+        img.onload  = () => res(img);
+        img.onerror = () => res(null);
+        img.src = src;
+      });
+
+    const bgPromise = bgDataUrl ? loadImg(bgDataUrl) : Promise.resolve(null);
+    const qrPromise = loadImg(qrApiUrl, true);
+
+    return (typeof document !== "undefined" ? document.fonts.ready : Promise.resolve())
+      .then(() => Promise.all([bgPromise, qrPromise]))
+      .then(([bgImg, qrImg]) => new Promise<string>(resolve => {
         const W = 1686, H = 1063;
         const canvas = document.createElement("canvas");
         canvas.width = W; canvas.height = H;
@@ -72,8 +86,7 @@ export default function TiendaClient({
 
         if (!ctx.roundRect) {
           (ctx as any).roundRect = function(x: number, y: number, w: number, h: number, r: number) {
-            this.moveTo(x + r, y);
-            this.lineTo(x + w - r, y);
+            this.moveTo(x + r, y); this.lineTo(x + w - r, y);
             this.quadraticCurveTo(x + w, y, x + w, y + r);
             this.lineTo(x + w, y + h - r);
             this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
@@ -93,80 +106,146 @@ export default function TiendaClient({
           return { sx, sy, sw, sh };
         };
 
-        const draw = (bgImg: HTMLImageElement | null) => {
-          // 1. Background
-          if (bgImg) {
-            const { sx, sy, sw, sh } = drawCover(bgImg);
-            ctx.drawImage(bgImg, sx, sy, sw, sh, 0, 0, W, H);
-          } else {
-            ctx.fillStyle = "#F2F1EC";
-            ctx.fillRect(0, 0, W, H);
-          }
+        // ── 1. Background ──────────────────────────────────────────────────
+        if (bgImg) {
+          const { sx, sy, sw, sh } = drawCover(bgImg);
+          ctx.drawImage(bgImg, sx, sy, sw, sh, 0, 0, W, H);
+        } else {
+          ctx.fillStyle = "#F2F1EC";
+          ctx.fillRect(0, 0, W, H);
+        }
 
-          // 2. Info box — bottom-right, bigger, glassmorphism
-          const boxW = 510, boxH = 162, boxX = W - boxW - 36, boxY = H - boxH - 36, bR = 16;
+        // ── 2. NFC icon — top-left corner, glass pill background ──────────────
+        const NFC_PW = 154, NFC_PH = 154, NFC_PX = 28, NFC_PY = 28, NFC_PR = 24;
 
-          // Blurred region (simulates backdrop-filter: blur)
-          if (bgImg) {
-            ctx.save();
-            ctx.beginPath();
-            ctx.roundRect(boxX, boxY, boxW, boxH, bR);
-            ctx.clip();
-            ctx.filter = "blur(18px)";
-            const { sx, sy, sw, sh } = drawCover(bgImg);
-            // draw oversized to avoid blur edge artifact
-            ctx.drawImage(bgImg, sx, sy, sw, sh, -20, -20, W + 40, H + 40);
-            ctx.filter = "none";
-            ctx.restore();
-          }
+        // Clip everything (blur + tint + arcs) to the pill shape
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(NFC_PX, NFC_PY, NFC_PW, NFC_PH, NFC_PR);
+        ctx.clip();
 
-          // Frosted glass tint — very subtle, adapts to image brightness
+        // Blur background
+        if (bgImg) {
+          ctx.save();
+          ctx.filter = "blur(18px)";
+          const { sx, sy, sw, sh } = drawCover(bgImg);
+          ctx.drawImage(bgImg, sx, sy, sw, sh, -24, -24, W + 48, H + 48);
+          ctx.filter = "none";
+          ctx.restore();
+        }
+
+        // Dark tint fill
+        ctx.fillStyle = "rgba(18,13,10,0.82)";
+        ctx.fillRect(NFC_PX, NFC_PY, NFC_PW, NFC_PH);
+
+        // NFC waves — icon at 60% scale, centered in the pill
+        {
+          ctx.save();
+          const iconScale = 0.60;
+          const sc = (NFC_PW / 24) * iconScale;
+          const iconW = 24 * sc;
+          const iconH = 24 * sc;
+          const offsetX = NFC_PX + (NFC_PW - iconW) / 2;
+          const offsetY = NFC_PY + (NFC_PH - iconH) / 2;
+          ctx.translate(offsetX, offsetY);
+          ctx.scale(sc, sc);
+          ctx.strokeStyle = "#FFFFFF";
+          ctx.lineCap = "round";
+          ctx.lineWidth = 10 / sc;
+          [
+            "M 6 7 A 8 8 0 0 1 6 17",
+            "M 10 5 A 12 12 0 0 1 10 19",
+            "M 14 3 A 16 16 0 0 1 14 21",
+            "M 18 1 A 20 20 0 0 1 18 23",
+          ].forEach(d => ctx.stroke(new Path2D(d)));
+          ctx.restore();
+        }
+
+        ctx.restore(); // end pill clip
+
+        // Pill border (drawn outside clip so it sits on top)
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(NFC_PX, NFC_PY, NFC_PW, NFC_PH, NFC_PR);
+        ctx.strokeStyle = "rgba(255,255,255,0.20)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+
+        // ── 3. Info box — bottom-right, glassmorphism ──────────────────────
+        const QR_SIZE = 190;
+        const boxH = 270;
+        const boxW = 880;
+        const boxX = W - boxW - 30;
+        const boxY = H - boxH - 30;
+        const bR   = 20;
+
+        // Blur simulation
+        if (bgImg) {
           ctx.save();
           ctx.beginPath();
           ctx.roundRect(boxX, boxY, boxW, boxH, bR);
           ctx.clip();
-          ctx.fillStyle = bgImg ? "rgba(255,255,255,0.14)" : "rgba(26,21,18,0.55)";
-          ctx.fillRect(boxX, boxY, boxW, boxH);
-          // Gold left accent bar
-          ctx.fillStyle = "#FAD957";
-          ctx.fillRect(boxX, boxY + 18, 3, boxH - 36);
+          ctx.filter = "blur(22px)";
+          const { sx, sy, sw, sh } = drawCover(bgImg);
+          ctx.drawImage(bgImg, sx, sy, sw, sh, -24, -24, W + 48, H + 48);
+          ctx.filter = "none";
           ctx.restore();
-
-          // Thin border
-          ctx.save();
-          ctx.beginPath();
-          ctx.roundRect(boxX, boxY, boxW, boxH, bR);
-          ctx.strokeStyle = "rgba(255,255,255,0.22)";
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
-          ctx.restore();
-
-          // Text — DM Sans
-          const font = "'DM Sans', 'Space Grotesk', system-ui, sans-serif";
-          const tx = boxX + 24, pad = 34;
-
-          ctx.fillStyle = "#FFFFFF";
-          ctx.font = `700 30px ${font}`;
-          ctx.fillText((userData.name || "—").toUpperCase(), tx, boxY + pad);
-
-          ctx.fillStyle = "rgba(255,255,255,0.65)";
-          ctx.font = `400 17px ${font}`;
-          ctx.fillText(`${userData.bloodType ?? "—"}  ·  ${userData.idNumber ?? "—"}`, tx, boxY + pad + 36);
-          ctx.fillText(`${userData.emergencyName ?? "—"}  ${userData.emergencyContact ?? ""}`, tx, boxY + pad + 62);
-
-          resolve(canvas.toDataURL("image/jpeg", 0.88));
-        };
-
-        if (bgDataUrl) {
-          const img = new Image();
-          img.onload = () => draw(img);
-          img.onerror = () => draw(null);
-          img.src = bgDataUrl;
-        } else {
-          draw(null);
         }
-      })
-    );
+
+        // Glass tint + gold left bar
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(boxX, boxY, boxW, boxH, bR);
+        ctx.clip();
+        ctx.fillStyle = "rgba(18,13,10,0.68)";
+        ctx.fillRect(boxX, boxY, boxW, boxH);
+        ctx.fillStyle = "#FAD957";
+        ctx.fillRect(boxX, boxY + 22, 5, boxH - 44);
+        ctx.restore();
+
+        // Border
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(boxX, boxY, boxW, boxH, bR);
+        ctx.strokeStyle = "rgba(255,255,255,0.16)";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.restore();
+
+        // ── 4. QR code (right side of box) ─────────────────────────────────
+        const qrX = boxX + boxW - QR_SIZE - 24;
+        const qrY = boxY + (boxH - QR_SIZE) / 2;
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(qrX - 10, qrY - 10, QR_SIZE + 20, QR_SIZE + 20, 14);
+        ctx.fillStyle = "rgba(255,255,255,0.96)";
+        ctx.fill();
+        ctx.restore();
+        if (qrImg) ctx.drawImage(qrImg, qrX, qrY, QR_SIZE, QR_SIZE);
+
+        // ── 5. Text (left portion of box) ──────────────────────────────────
+        const font = "'DM Sans', 'Space Grotesk', system-ui, sans-serif";
+        const tx = boxX + 26;
+        const maxTW = qrX - tx - 20;
+
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = `700 50px ${font}`;
+        ctx.fillText((userData.name || "—").toUpperCase(), tx, boxY + 72, maxTW);
+
+        ctx.fillStyle = "rgba(255,255,255,0.68)";
+        ctx.font = `400 27px ${font}`;
+        ctx.fillText(`${userData.bloodType ?? "—"}  ·  ${userData.idNumber ?? "—"}`, tx, boxY + 122, maxTW);
+
+        ctx.font = `400 25px ${font}`;
+        ctx.fillText(`${userData.emergencyName ?? "—"}`, tx, boxY + 165, maxTW);
+
+        ctx.fillStyle = "rgba(250,217,87,0.92)";
+        ctx.font = `600 25px ${font}`;
+        ctx.fillText(`${userData.emergencyContact ?? ""}`, tx, boxY + 200, maxTW);
+
+        resolve(canvas.toDataURL("image/jpeg", 0.88));
+      }));
   }
 
   // On mount: generate default composed texture + restore session
@@ -265,17 +344,16 @@ export default function TiendaClient({
   const paidOrders = orders.filter((o) => o.status === "PAID" || o.status === "DELIVERED" || o.status === "SHIPPED" || o.status === "PROCESSING");
 
   return (
-    <div className="min-h-screen bg-[#F2F1EC] flex">
-      <FloatingSidebar />
-      <main className="pl-20 px-5 pt-8 pb-16 w-full max-w-[1400px] mx-auto flex flex-col gap-8">
+    <div className="min-h-screen bg-[var(--h-bg)] flex">
+      <main className="pt-6 lg:pt-8 px-4 sm:px-5 lg:pl-24 pb-28 lg:pb-16 w-full max-w-[1400px] mx-auto flex flex-col gap-8">
 
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="font-display text-[32px] font-bold text-[#1C1917] tracking-tight m-0">
+            <h1 className="text-2xl sm:text-3xl font-black text-[var(--h-text)] tracking-tight">
               Tienda Horus
             </h1>
-            <p className="font-sans text-sm text-[#8D99AE] mt-1">
+            <p className="text-sm text-[var(--h-muted)] font-semibold mt-1">
               Personaliza tu dispositivo y continúa al checkout
             </p>
           </div>
@@ -283,14 +361,14 @@ export default function TiendaClient({
           {/* Botón historial */}
           <button
             onClick={() => setShowHistory(true)}
-            className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-white border border-[#E4E2DC] hover:border-[#1C1917] hover:shadow-sm transition-all text-sm font-semibold text-[#1C1917] shadow-sm relative"
+            className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[var(--h-card)] border border-[var(--h-border)] hover:border-[var(--h-text)] hover:shadow-sm transition-all text-sm font-semibold text-[var(--h-text)] shadow-sm relative whitespace-nowrap"
           >
             <svg className="w-4 h-4 text-[#8D99AE]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z" />
             </svg>
             Mis compras
             {orders.length > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#1C1917] text-white text-[10px] font-bold flex items-center justify-center">
+              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[var(--h-dark)] text-[var(--h-bg)] text-[10px] font-bold flex items-center justify-center">
                 {orders.length}
               </span>
             )}
@@ -300,12 +378,12 @@ export default function TiendaClient({
         {/* Store layout */}
         <div className="flex flex-col lg:flex-row gap-8 flex-1">
           {/* Left: 3D Viewer */}
-          <div className="lg:w-2/3 bg-white rounded-[32px] shadow-sm border border-[#E4E2DC] overflow-hidden relative flex flex-col min-h-[500px]">
-            <div className="absolute top-6 left-1/2 -translate-x-1/2 z-10 bg-white/80 backdrop-blur-md p-1.5 rounded-full flex gap-1 shadow-sm border border-[#E4E2DC]">
+          <div className="lg:w-2/3 bg-[var(--h-card)] rounded-[32px] shadow-sm border border-[var(--h-border)] overflow-hidden relative flex flex-col min-h-[500px]">
+            <div className="absolute top-6 left-1/2 -translate-x-1/2 z-10 bg-[var(--h-card)]/80 backdrop-blur-md p-1.5 rounded-full flex gap-1 shadow-sm border border-[var(--h-border)]">
               <button
                 onClick={() => setActiveTab("BRACELET")}
                 className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${
-                  activeTab === "BRACELET" ? "bg-[#1C1917] text-white shadow-md" : "text-[#8D99AE] hover:text-[#1C1917]"
+                  activeTab === "BRACELET" ? "bg-[var(--h-dark)] text-[var(--h-bg)] shadow-md" : "text-[var(--h-muted)] hover:text-[var(--h-text)]"
                 }`}
               >
                 Manilla
@@ -313,20 +391,20 @@ export default function TiendaClient({
               <button
                 onClick={() => setActiveTab("CARD")}
                 className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${
-                  activeTab === "CARD" ? "bg-[#1C1917] text-white shadow-md" : "text-[#8D99AE] hover:text-[#1C1917]"
+                  activeTab === "CARD" ? "bg-[var(--h-dark)] text-[var(--h-bg)] shadow-md" : "text-[var(--h-muted)] hover:text-[var(--h-text)]"
                 }`}
               >
                 Tarjeta
               </button>
             </div>
 
-            <div className="flex-1 w-full relative bg-[#F8F7F4] cursor-grab active:cursor-grabbing">
+            <div className="flex-1 w-full relative bg-[var(--h-card2)] cursor-grab active:cursor-grabbing">
               {activeTab === "BRACELET" ? (
                 <BraceletModel color={braceletColor} userData={userData} />
               ) : (
                 <CardModel frontUrl={cardFrontComposed} backUrl={cardBackPreview} />
               )}
-              <div className="absolute bottom-6 right-6 flex items-center gap-2 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full border border-[#E4E2DC] shadow-sm pointer-events-none">
+              <div className="absolute bottom-6 right-6 flex items-center gap-2 bg-[var(--h-card)]/80 backdrop-blur-md px-4 py-2 rounded-full border border-[var(--h-border)] shadow-sm pointer-events-none">
                 <svg className="w-4 h-4 text-[#8D99AE]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.671zM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" />
                 </svg>
@@ -337,12 +415,12 @@ export default function TiendaClient({
 
           {/* Right: Customization & Checkout */}
           <div className="lg:w-1/3 flex flex-col gap-6">
-            <div className="bg-white rounded-[24px] p-6 shadow-sm border border-[#E4E2DC]">
-              <h2 className="font-display text-xl font-bold text-[#1C1917] mb-6">Personalización</h2>
+            <div className="bg-[var(--h-card)] rounded-[24px] p-6 shadow-sm border border-[var(--h-border)]">
+              <h2 className="font-display text-xl font-bold text-[var(--h-text)] mb-6">Personalización</h2>
 
               {activeTab === "BRACELET" ? (
                 <div>
-                  <p className="text-sm font-bold text-[#1C1917] mb-3">Color de la correa</p>
+                  <p className="text-sm font-bold text-[var(--h-text)] mb-3">Color de la correa</p>
                   <div className="flex flex-wrap gap-3">
                     {BRACELET_COLORS.map((c) => (
                       <button
@@ -351,7 +429,7 @@ export default function TiendaClient({
                         title={c.name}
                         style={{ backgroundColor: c.hex }}
                         className={`w-10 h-10 rounded-full border-2 transition-all ${
-                          braceletColor === c.hex ? "border-[#FAD957] scale-110 shadow-md" : "border-[#E4E2DC] hover:scale-105"
+                          braceletColor === c.hex ? "border-[#FAD957] scale-110 shadow-md" : "border-[var(--h-border)] hover:scale-105"
                         }`}
                       />
                     ))}
@@ -363,8 +441,8 @@ export default function TiendaClient({
               ) : (
                 <div className="space-y-5">
                   <div>
-                    <p className="text-sm font-bold text-[#1C1917] mb-3">Diseño Frontal</p>
-                    <label className="flex items-center justify-center w-full h-12 rounded-xl border-2 border-dashed border-[#E4E2DC] bg-[#F8F7F4] text-[#8D99AE] hover:border-[#1C1917] hover:text-[#1C1917] transition-all cursor-pointer font-sans text-sm font-semibold relative overflow-hidden">
+                    <p className="text-sm font-bold text-[var(--h-text)] mb-3">Diseño Frontal</p>
+                    <label className="flex items-center justify-center w-full h-12 rounded-xl border-2 border-dashed border-[var(--h-border)] bg-[var(--h-card2)] text-[var(--h-muted)] hover:border-[var(--h-text)] hover:text-[var(--h-text)] transition-all cursor-pointer font-sans text-sm font-semibold relative overflow-hidden">
                       {cardFrontReady
                         ? <span className="text-green-600">✓ Frontal guardado</span>
                         : cardFrontPreview
@@ -375,8 +453,8 @@ export default function TiendaClient({
                     </label>
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-[#1C1917] mb-3">Diseño Trasero</p>
-                    <label className="flex items-center justify-center w-full h-12 rounded-xl border-2 border-dashed border-[#E4E2DC] bg-[#F8F7F4] text-[#8D99AE] hover:border-[#1C1917] hover:text-[#1C1917] transition-all cursor-pointer font-sans text-sm font-semibold relative overflow-hidden">
+                    <p className="text-sm font-bold text-[var(--h-text)] mb-3">Diseño Trasero</p>
+                    <label className="flex items-center justify-center w-full h-12 rounded-xl border-2 border-dashed border-[var(--h-border)] bg-[var(--h-card2)] text-[var(--h-muted)] hover:border-[var(--h-text)] hover:text-[var(--h-text)] transition-all cursor-pointer font-sans text-sm font-semibold relative overflow-hidden">
                       {cardBackReady
                         ? <span className="text-green-600">✓ Trasero guardado</span>
                         : cardBackPreview
@@ -455,7 +533,7 @@ export default function TiendaClient({
             })()}
 
             {!activeProduct && (
-              <div className="bg-white border border-[#E4E2DC] rounded-[24px] p-6 text-center text-sm text-[#8D99AE]">
+              <div className="bg-[var(--h-card)] border border-[var(--h-border)] rounded-[24px] p-6 text-center text-sm text-[var(--h-muted)]">
                 Producto no disponible en tienda en este momento.
               </div>
             )}

@@ -89,9 +89,10 @@ function useCoverTexture(texture: THREE.Texture | THREE.Texture[], targetAspect:
 }
 
 function CardFace({ url, side, w, h, r, d }: { url: string; side: "front" | "back"; w: number; h: number; r: number; d: number }) {
-  const tex = useTexture(url);
+  const tex = useTexture(url || CREAM_PIXEL);
   useCoverTexture(tex, w / h);
   const isFront = side === "front";
+  const hasImage = Boolean(url);
   return (
     <mesh
       position={[0, 0, isFront ? d / 2 + 0.006 : -d / 2 - 0.006]}
@@ -100,7 +101,12 @@ function CardFace({ url, side, w, h, r, d }: { url: string; side: "front" | "bac
       receiveShadow
     >
       <RoundedPlaneGeometry width={w} height={h} radius={r} />
-      <meshStandardMaterial map={tex} roughness={0.3} metalness={0.1} />
+      <meshStandardMaterial
+        map={hasImage ? tex : undefined}
+        color={hasImage ? "#ffffff" : "#F2F1EC"}
+        roughness={0.3}
+        metalness={0.1}
+      />
     </mesh>
   );
 }
@@ -115,8 +121,8 @@ function Card({ frontUrl, backUrl }: { frontUrl: string; backUrl: string }) {
     <group rotation={[0, -0.3, 0]}>
       <CardBase width={w} height={h} radius={r} depth={d} />
       {/* Solo renderiza la cara si hay imagen real o usamos el pixel crema por defecto */}
-      <CardFace url={frontUrl || CREAM_PIXEL} side="front" w={w} h={h} r={r} d={d} />
-      <CardFace url={backUrl || CREAM_PIXEL} side="back" w={w} h={h} r={r} d={d} />
+      <CardFace url={frontUrl} side="front" w={w} h={h} r={r} d={d} />
+      <CardFace url={backUrl} side="back" w={w} h={h} r={r} d={d} />
     </group>
   );
 }

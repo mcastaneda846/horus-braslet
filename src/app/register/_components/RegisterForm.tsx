@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Spinner from "@/src/components/Spinner";
 
 interface FormState {
     firstName: string;
@@ -9,6 +11,7 @@ interface FormState {
     email: string;
     password: string;
     confirmPassword: string;
+    termsAccepted: boolean;
 }
 type FormErrors = Partial<Record<keyof FormState | "general", string>>;
 
@@ -28,25 +31,30 @@ function getStrength(pw: string): { score: number; label: string; color: string 
 }
 
 function EyeIcon({ open }: { open: boolean }) {
-    return open ? (
-        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#B0A89F" strokeWidth={1.8}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-        </svg>
-    ) : (
-        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#B0A89F" strokeWidth={1.8}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
+    return (
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="#C4BDB7">
+            {open ? (
+                <>
+                    <ellipse cx="12" cy="12" rx="9" ry="5.5" stroke="#C4BDB7" />
+                    <circle cx="12" cy="12" r="2.5" fill="#C4BDB7" stroke="none" />
+                </>
+            ) : (
+                <>
+                    <ellipse cx="12" cy="12" rx="9" ry="5.5" stroke="#C4BDB7" />
+                    <circle cx="12" cy="12" r="2.5" fill="#C4BDB7" stroke="none" />
+                    <line x1="4" y1="20" x2="20" y2="4" stroke="#C4BDB7" strokeWidth={1.6} strokeLinecap="round" />
+                </>
+            )}
         </svg>
     );
 }
 
-// ── Estilos compartidos ───────────────────────────────────────────────────────
 const cardStyle: React.CSSProperties = {
-    background: "rgba(255,255,255,0.85)",
+    background: "var(--h-card)",
     backdropFilter: "blur(8px)",
     borderRadius: "16px",
     padding: "9px 16px 10px",
-    boxShadow: "0 2px 10px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04)",
+    boxShadow: "0 2px 10px rgba(0,0,0,0.07), 0 0 0 1px var(--h-border)",
     border: "none",
     display: "flex",
     flexDirection: "column",
@@ -65,13 +73,12 @@ const inputStyle: React.CSSProperties = {
     outline: "none",
     fontSize: "15px",
     fontWeight: 700,
-    color: "#1A1512",
+    color: "var(--h-text)",
     fontFamily: "inherit",
     padding: 0,
     width: "100%",
 };
 
-// ── Campo individual ──────────────────────────────────────────────────────────
 function Field({
     label, name, type, placeholder, value, onChange, onBlur, error, suffix, autoComplete,
 }: {
@@ -102,20 +109,18 @@ function Field({
     );
 }
 
-// ── Formulario principal ──────────────────────────────────────────────────────
 export default function RegisterForm() {
     const router = useRouter();
-    const [form, setForm] = useState<FormState>({ firstName: "", lastName: "", email: "", password: "", confirmPassword: "" });
+    const [form, setForm] = useState<FormState>({ firstName: "", lastName: "", email: "", password: "", confirmPassword: "", termsAccepted: false });
     const [errors, setErrors] = useState<FormErrors>({});
     const [emailTouched, setEmailTouched] = useState(false);
     const [showPw, setShowPw] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
-    const [accepted, setAccepted] = useState(false);
     const [loading, setLoading] = useState(false);
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const { name, value } = e.target;
-        setForm(p => ({ ...p, [name]: value }));
+        const { name, value, type, checked } = e.target;
+        setForm(p => ({ ...p, [name]: type === "checkbox" ? checked : value }));
         setErrors(p => ({ ...p, [name]: undefined }));
     }
 
@@ -129,6 +134,7 @@ export default function RegisterForm() {
         else if (form.password.length < 8) e.password = "Mínimo 8 caracteres";
         if (!form.confirmPassword) e.confirmPassword = "Confirma tu contraseña";
         else if (form.password !== form.confirmPassword) e.confirmPassword = "Las contraseñas no coinciden";
+        if (!form.termsAccepted) e.termsAccepted = "Debes aceptar los términos y condiciones";
         return e;
     }
 
@@ -143,7 +149,7 @@ export default function RegisterForm() {
             const res = await fetch("/api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(form),
+                body: JSON.stringify({ ...form, termsAccepted: form.termsAccepted }),
             });
             if (res.ok) router.push("/dashboard");
             else {
@@ -168,15 +174,13 @@ export default function RegisterForm() {
                 </div>
             )}
 
-            {/* Nombre + Apellido en grid */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-                <Field label="Nombre" name="firstName" type="text" placeholder="xxx"
+                <Field label="Nombre" name="firstName" type="text" placeholder="Tu nombre"
                     value={form.firstName} onChange={handleChange} error={errors.firstName} autoComplete="given-name" />
-                <Field label="Apellido" name="lastName" type="text" placeholder="xxx"
+                <Field label="Apellido" name="lastName" type="text" placeholder="Tu apellido"
                     value={form.lastName} onChange={handleChange} error={errors.lastName} autoComplete="family-name" />
             </div>
 
-            {/* Correo */}
             <Field
                 label="Correo" name="email" type="email" placeholder="tu@correo.com"
                 value={form.email} onChange={handleChange}
@@ -190,7 +194,6 @@ export default function RegisterForm() {
                 ) : undefined}
             />
 
-            {/* Contraseña */}
             <div>
                 <Field
                     label="Contraseña" name="password"
@@ -220,7 +223,6 @@ export default function RegisterForm() {
                 )}
             </div>
 
-            {/* Confirmar contraseña */}
             <Field
                 label="Confirmar contraseña" name="confirmPassword"
                 type={showConfirm ? "text" : "password"} placeholder="••••••••"
@@ -246,17 +248,58 @@ export default function RegisterForm() {
                 }
             />
 
-            {/* Espacio reservado para mantener el diseño limpio */}
-            <div style={{ height: "16px" }} />
+            {/* Terms checkbox */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                <label style={{ display: "flex", alignItems: "flex-start", gap: "10px", cursor: "pointer" }}>
+                    <div style={{ position: "relative", flexShrink: 0, marginTop: "1px" }}>
+                        <input
+                            type="checkbox"
+                            name="termsAccepted"
+                            checked={form.termsAccepted}
+                            onChange={handleChange}
+                            style={{ position: "absolute", opacity: 0, width: 0, height: 0 }}
+                        />
+                        <div style={{
+                            width: "18px", height: "18px", borderRadius: "5px",
+                            background: form.termsAccepted ? "#1A1512" : "var(--h-card)",
+                            border: errors.termsAccepted ? "1.5px solid #EF4444" : `1.5px solid ${form.termsAccepted ? "#1A1512" : "var(--h-border)"}`,
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            transition: "all 0.15s",
+                        }}>
+                            {form.termsAccepted && (
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FAD957" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M4.5 12.75l6 6 9-13.5" />
+                                </svg>
+                            )}
+                        </div>
+                    </div>
+                    <span style={{ fontSize: "13px", color: "var(--h-muted)", fontWeight: 500, lineHeight: "1.4" }}>
+                        He leído y acepto los{" "}
+                        <Link href="/terms" target="_blank" style={{ color: "var(--h-text)", fontWeight: 700, textDecoration: "underline", textUnderlineOffset: "2px" }}>
+                            Términos y Condiciones
+                        </Link>
+                        {" "}y la{" "}
+                        <Link href="/privacy" target="_blank" style={{ color: "var(--h-text)", fontWeight: 700, textDecoration: "underline", textUnderlineOffset: "2px" }}>
+                            Política de Privacidad
+                        </Link>
+                    </span>
+                </label>
+                {errors.termsAccepted && (
+                    <p style={{ color: "#EF4444", fontSize: "11px", fontWeight: 600, paddingLeft: "28px" }}>
+                        {errors.termsAccepted}
+                    </p>
+                )}
+            </div>
 
-            {/* Botón negro */}
+            <div style={{ height: "8px" }} />
+
             <button
                 type="submit"
                 disabled={loading}
                 style={{
                     width: "100%",
-                    background: "#1A1512",
-                    color: "white",
+                    background: "var(--h-dark)",
+                    color: "var(--h-bg)",
                     border: "none",
                     borderRadius: "100px",
                     padding: "15px 24px",
@@ -279,14 +322,8 @@ export default function RegisterForm() {
                 onMouseUp={e => (e.currentTarget.style.transform = "scale(1)")}
             >
                 {loading ? (
-                    <>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ animation: "spin 0.8s linear infinite" }}>
-                            <circle opacity={0.25} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={4} />
-                            <path opacity={0.75} fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                        </svg>
-                        Creando cuenta...
-                    </>
-                ) : "Crear cuenta →"}
+                    <><Spinner size={16} />&nbsp;Creando cuenta...</>
+                ) : "Crear cuenta"}
             </button>
         </form>
     );

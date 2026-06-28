@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { authGuard } from "@/src/shared/lib/auth.guard";
 import { prisma } from "@/src/infrastructure/database/prisma/client";
+import { formatBloodType } from "@/src/shared/lib/blood-type.lib";
 import TiendaClient from "./_components/TiendaClient";
 
 export const metadata = {
@@ -62,7 +63,7 @@ export default async function StorePage() {
         name: personalInfo
             ? `${personalInfo.firstName} ${personalInfo.lastName}`.trim().substring(0, 20)
             : "USUARIO DE PRUEBA",
-        bloodType: personalInfo?.bloodType || "N/A",
+        bloodType: formatBloodType(personalInfo?.bloodType),
         idNumber: personalInfo?.identificationNumber || "1234567890",
         emergencyContact: emergencyContacts[0]?.phonePrimary || "NO REGISTRADO",
         emergencyName: emergencyContacts[0]?.fullName || "CONTACTO",

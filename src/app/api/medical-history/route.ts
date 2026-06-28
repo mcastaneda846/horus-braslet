@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { medicalRecordsRepository } from '@/src/infrastructure/database/medicalRecordsRepository';
 import cloudinary from '@/src/infrastructure/cloudinary/cloudinary';
+import { authGuard } from '@/src/shared/lib/auth.guard';
 
 export async function POST() {
-  return NextResponse.json({ error: 'Creating histories is removed. Use /api/historyMedical/uploadDocuments to upload files.' }, { status: 405 });
+  return NextResponse.json({ error: 'Creating histories is removed. Use /api/medical-history/uploadDocuments to upload files.' }, { status: 405 });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -18,18 +19,26 @@ function resolveFileType(r: any): string {
   return fmt || 'other';
 }
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
-    if (!userId) {
-      return NextResponse.json({ error: 'userId query param is required' }, { status: 400 });
+    let tokenPayload;
+    try {
+      tokenPayload = await authGuard();
+    } catch {
+      return NextResponse.json({ error: 'Tu sesión ha expirado o no has iniciado sesión. Por favor, vuelve a ingresar.' }, { status: 401 });
+    }
+    const userId = tokenPayload.sub;
+
+    // Sanitize userId before using in Cloudinary expression
+    const safeUserId = userId.replace(/[^a-f0-9-]/gi, '');
+    if (!safeUserId) {
+      return NextResponse.json({ error: 'ID de usuario inválido' }, { status: 400 });
     }
 
     // Cloudinary is the source of truth for file existence.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = await (cloudinary.search as any)
-      .expression(`folder:medical-records/${userId}`)
+      .expression(`folder:medical-records/${safeUserId}`)
       .sort_by('created_at', 'desc')
       .max_results(200)
       .execute();
@@ -55,13 +64,20 @@ export async function GET(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    let tokenPayload;
+    try {
+      tokenPayload = await authGuard();
+    } catch {
+      return NextResponse.json({ error: 'Tu sesión ha expirado o no has iniciado sesión. Por favor, vuelve a ingresar.' }, { status: 401 });
+    }
+    const userId = tokenPayload.sub;
+
     const { searchParams } = new URL(request.url);
-    const userId     = searchParams.get('userId');
     const publicId   = searchParams.get('publicId');
     const resourceType = (searchParams.get('resourceType') || 'raw') as 'raw' | 'image' | 'video';
 
-    if (!userId || !publicId) {
-      return NextResponse.json({ error: 'userId and publicId are required' }, { status: 400 });
+    if (!publicId) {
+      return NextResponse.json({ error: 'publicId is required' }, { status: 400 });
     }
 
     // Try the known resource_type first, then fall back to the other two.

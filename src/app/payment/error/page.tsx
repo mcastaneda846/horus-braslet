@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { redirect } from "next/navigation";
 import EyeOfHorusIcon from "@/src/components/EyeOfHorusIcon";
 import { authGuard } from "@/src/shared/lib/auth.guard";
@@ -56,13 +56,13 @@ export default async function PaymentErrorPage({ searchParams }: PaymentStatusPa
     }
 
     return (
-        <div className="min-h-screen bg-[#EDF2F4] flex flex-col">
-            <header className="flex items-center justify-between px-6 md:px-10 py-6 bg-white border-b border-[#EDF2F4]">
+        <div className="min-h-screen bg-[var(--h-bg)] flex flex-col">
+            <header className="flex items-center justify-between px-6 md:px-10 py-6 bg-[var(--h-card)] border-b border-[var(--h-border)]">
                 <div className="flex items-center gap-3">
                     <EyeOfHorusIcon className="w-7 h-7" />
                     <div>
                         <p className="text-xs text-[#8D99AE] uppercase tracking-[0.2em]">Pago rechazado</p>
-                        <h1 className="text-lg font-bold text-[#2B2D42]">Horus Braslet</h1>
+                        <h1 className="text-lg font-bold text-[var(--h-text)]">Horus Braslet</h1>
                     </div>
                 </div>
                 <Link
@@ -75,25 +75,25 @@ export default async function PaymentErrorPage({ searchParams }: PaymentStatusPa
 
             <main className="flex-1 px-6 md:px-10 py-10">
                 <div className="max-w-3xl mx-auto">
-                    <div className="bg-white border border-[#EDF2F4] rounded-2xl p-8 shadow-sm text-center">
+                    <div className="bg-[var(--h-card)] border border-[var(--h-border)] rounded-2xl p-8 shadow-sm text-center">
                         <div className="w-16 h-16 rounded-full bg-[#FEE2E2] text-[#EF233C] flex items-center justify-center mx-auto">
                             <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                             </svg>
                         </div>
-                        <h2 className="text-2xl font-bold text-[#2B2D42] mt-4">Pago rechazado</h2>
+                        <h2 className="text-2xl font-bold text-[var(--h-text)] mt-4">Pago rechazado</h2>
                         <p className="text-sm text-[#8D99AE] mt-2">
                             No pudimos procesar tu pago. Puedes intentarlo de nuevo o usar otro metodo.
                         </p>
 
-                        <div className="mt-6 text-left border-t border-[#EDF2F4] pt-6 space-y-2 text-sm text-[#8D99AE]">
+                        <div className="mt-6 text-left border-t border-[var(--h-border)] pt-6 space-y-2 text-sm text-[var(--h-muted)]">
                             <div className="flex items-center justify-between">
                                 <span>Orden</span>
-                                <span className="text-[#2B2D42] font-semibold">{order?.reference ?? orderId}</span>
+                                <span className="text-[var(--h-text)] font-semibold">{order?.reference ?? orderId}</span>
                             </div>
                             <div className="flex items-center justify-between">
                                 <span>Producto</span>
-                                <span className="text-[#2B2D42] font-semibold">{order?.product?.name ?? "Horus"}</span>
+                                <span className="text-[var(--h-text)] font-semibold">{order?.product?.name ?? "Horus"}</span>
                             </div>
                             <div className="flex items-center justify-between">
                                 <span>Estado</span>
@@ -101,7 +101,7 @@ export default async function PaymentErrorPage({ searchParams }: PaymentStatusPa
                             </div>
                             <div className="flex items-center justify-between">
                                 <span>Total</span>
-                                <span className="text-[#2B2D42] font-semibold">
+                                <span className="text-[var(--h-text)] font-semibold">
                                     ${Number(order?.totalAmount ?? 0).toLocaleString("es-CO")}
                                     <span className="text-xs text-[#8D99AE]"> {order?.currency ?? "COP"}</span>
                                 </span>
@@ -111,7 +111,7 @@ export default async function PaymentErrorPage({ searchParams }: PaymentStatusPa
                         <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
                             <Link
                                 href="/tienda"
-                                className="px-5 py-2.5 rounded-xl border border-[#EDF2F4] text-[#2B2D42] text-sm font-semibold hover:bg-[#F8FAFC] transition-colors"
+                                className="px-5 py-2.5 rounded-xl border border-[var(--h-border)] text-[var(--h-text)] text-sm font-semibold hover:bg-[var(--h-card2)] transition-colors"
                             >
                                 Volver a la tienda
                             </Link>
@@ -128,3 +128,4 @@ export default async function PaymentErrorPage({ searchParams }: PaymentStatusPa
         </div>
     );
 }
+

@@ -5,6 +5,13 @@ import { OrbitControls, Environment, ContactShadows, Text } from "@react-three/d
 import * as THREE from "three";
 import { useMemo, useRef, useEffect } from "react";
 
+interface UserData {
+  name?: string;
+  idNumber?: string;
+  bloodType?: string;
+  emergencyContact?: string;
+}
+
 function ThickCurvedPlate({
   innerRadius, outerRadius, height, thetaStart, thetaLength, color
 }: {
@@ -38,7 +45,7 @@ function ThickCurvedPlate({
   );
 }
 
-function Bracelet({ color, userData }: { color: string; userData: any }) {
+function Bracelet({ color, userData }: { color: string; userData?: UserData }) {
   // Ref imperativo para actualizar el color sin depender del reconciler de R3F
   const strapRef = useRef<THREE.MeshStandardMaterial>(null!);
 
@@ -88,9 +95,9 @@ function Bracelet({ color, userData }: { color: string; userData: any }) {
   );
 }
 
-export default function BraceletModel({ color, userData }: { color: string; userData?: any }) {
+export default function BraceletModel({ color, userData }: { color: string; userData?: UserData }) {
   return (
-    <div className="w-full h-full absolute inset-0">
+    <div className="w-full h-full absolute inset-0" role="img" aria-label="Visualización 3D de la pulsera Horus">
       <Canvas shadows camera={{ position: [0, 3, 11], fov: 45 }}>
         <ambientLight intensity={0.5} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1.5} castShadow />

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
+import Image from "next/image";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 interface ChatMsg {
@@ -9,8 +10,9 @@ interface ChatMsg {
 }
 
 interface ConvLog {
-    id: string;
-    started_at?: { _seconds?: number };
+    id?: string;
+    session_id?: string;
+    started_at?: string | { _seconds?: number };
     summary?: string;
     main_topics?: string[];
     alert_level?: string;
@@ -18,14 +20,14 @@ interface ConvLog {
     requires_follow_up?: boolean;
 }
 
-// ── Design tokens ──────────────────────────────────────────────────────────────
-const BG      = "#F2F1EC";
-const CARD    = "#FFFFFF";
-const PRIMARY = "#1A1512";
-const MUTED   = "#8D99AE";
-const MBG     = "#F0EBE3";
-const BORDER  = "#E4E2DC";
-const GREEN   = "#22C55E";
+// ── Design tokens (CSS variables para soporte de tema) ────────────────────────
+const BG      = "var(--h-bg)";
+const CARD    = "var(--h-card)";
+const PRIMARY = "var(--h-text)";
+const MUTED   = "var(--h-muted)";
+const MBG     = "var(--h-card2)";
+const BORDER  = "var(--h-border)";
+const GREEN   = "var(--h-green)";
 const sw      = { strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
 
 const SUGGESTIONS = [
@@ -87,7 +89,7 @@ function WelcomeScreen({ onSuggest }: { onSuggest: (t: string) => void }) {
     return (
         <div className="flex flex-col items-center justify-center h-full gap-5 py-8 px-4">
             <div className="w-20 h-20 rounded-full flex items-center justify-center overflow-hidden" style={{ background: MBG }}>
-                <img src="/logos-horus-2.svg" alt="Horus" className="w-16 h-16 object-contain" />
+                <Image src="/logos-horus-2.svg" alt="Horus" width={64} height={64} className="object-contain" />
             </div>
             <div className="text-center">
                 <p className="text-base font-bold" style={{ color: PRIMARY }}>Hola, soy Horus</p>
@@ -138,16 +140,22 @@ const ALERT_STYLES: Record<string, { bg: string; color: string }> = {
 function HistoryOverlay({ onClose }: { onClose: () => void }) {
     const [logs, setLogs]       = useState<ConvLog[]>([]);
     const [loading, setLoading] = useState(true);
+    const [fetchError, setFetchError] = useState<string | null>(null);
 
     useEffect(() => {
         fetch("/api/chat/history", { cache: "no-store" })
             .then(r => r.json())
             .then(d => setLogs(d.logs ?? []))
-            .catch(() => {})
+            .catch(() => { setFetchError("No se pudo cargar el historial"); })
             .finally(() => setLoading(false));
     }, []);
 
     const fmtDate = (log: ConvLog) => {
+        if (typeof log.started_at === 'string') {
+            return new Date(log.started_at).toLocaleDateString("es-CO", {
+                day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit",
+            });
+        }
         const s = log.started_at?._seconds;
         if (!s) return "—";
         return new Date(s * 1000).toLocaleDateString("es-CO", {
@@ -173,11 +181,16 @@ function HistoryOverlay({ onClose }: { onClose: () => void }) {
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                {fetchError && (
+                    <div className="px-4 py-2.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-medium">
+                        {fetchError}
+                    </div>
+                )}
                 {loading ? (
                     <div className="flex justify-center py-10">
                         <div className="w-6 h-6 border-2 border-[#E4E2DC] border-t-[#8D99AE] rounded-full animate-spin" />
                     </div>
-                ) : logs.length === 0 ? (
+                ) : logs.length === 0 && !fetchError ? (
                     <div className="flex flex-col items-center justify-center h-full gap-3 text-center py-12">
                         <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke={MUTED} strokeWidth={1} {...sw}>
                             <path d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
@@ -188,8 +201,9 @@ function HistoryOverlay({ onClose }: { onClose: () => void }) {
                 ) : (
                     logs.map(log => {
                         const alert = ALERT_STYLES[log.alert_level ?? "Normal"] ?? ALERT_STYLES.Normal;
+                        const keyId = log.id || log.session_id || Math.random().toString();
                         return (
-                            <div key={log.id} className="rounded-[20px] p-4 border" style={{ background: CARD, borderColor: BORDER }}>
+                            <div key={keyId} className="rounded-[20px] p-4 border" style={{ background: CARD, borderColor: BORDER }}>
                                 <div className="flex items-center justify-between mb-2">
                                     <p className="text-[11px] font-semibold" style={{ color: MUTED }}>{fmtDate(log)}</p>
                                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
@@ -319,7 +333,7 @@ export default function ChatModal({ onClose, userId }: { onClose: () => void; us
                         style={{ background: CARD, borderColor: BORDER }}>
                         <div className="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden shrink-0"
                             style={{ background: MBG }}>
-                            <img src="/logos-horus-2.svg" alt="Horus" className="w-8 h-8 object-contain" />
+                            <Image src="/logos-horus-2.svg" alt="Horus" width={32} height={32} className="object-contain" />
                         </div>
                         <div className="flex-1 min-w-0">
                             <p className="text-sm font-bold leading-tight" style={{ color: PRIMARY }}>Horus · IA</p>
@@ -356,7 +370,7 @@ export default function ChatModal({ onClose, userId }: { onClose: () => void; us
                     )}
 
                     {/* Messages */}
-                    <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+                    <div className="flex-1 overflow-y-auto px-4 pt-4 pb-16 space-y-3">
                         {messages.length === 0 && !typing && (
                             <WelcomeScreen onSuggest={sendMessage} />
                         )}
@@ -376,11 +390,11 @@ export default function ChatModal({ onClose, userId }: { onClose: () => void; us
 
                     {/* End chat button */}
                     {sessionId && messages.length > 0 && (
-                        <div className="px-4 pt-2 shrink-0 flex justify-center">
+                        <div className="absolute bottom-[72px] left-0 right-0 flex justify-center z-20 pointer-events-none">
                             <button onClick={handleClose}
-                                className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-opacity hover:opacity-70"
-                                style={{ background: "#FEE2E2", color: "#B91C1C" }}>
-                                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} {...sw}>
+                                className="pointer-events-auto flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-bold shadow-lg border border-red-200 transition-transform hover:scale-105 active:scale-95"
+                                style={{ background: "#FEE2E2", color: "#B91C1C", boxShadow: "0 4px 14px rgba(220, 38, 38, 0.25)" }}>
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} {...sw}>
                                     <path d="M6 18 18 6M6 6l12 12"/>
                                 </svg>
                                 Terminar chat
