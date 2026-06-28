@@ -89,7 +89,7 @@ export async function POST(request: Request) {
       console.warn('[API Bridge] El documento se guardó pero no se detectó texto OCR.');
     }
 
-    return NextResponse.json({ ...updatedRecord, structuredData, normalizedMedications }, { status: 201 });
+    return NextResponse.json({ publicId: latestDocument?.publicId ?? null, ...updatedRecord, structuredData, normalizedMedications }, { status: 201 });
   } catch (error: Omit<Error, never> | unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json({ error: errorMessage }, { status: 400 });
