@@ -25,6 +25,11 @@ export default function PageTransition({ children }: { children: React.ReactNode
                 el.style.transition = "opacity 0.22s ease, transform 0.22s ease";
                 el.style.opacity = "1";
                 el.style.transform = "translateY(0)";
+
+                // Clear transform after animation completes to restore normal fixed positioning
+                setTimeout(() => {
+                    if (el) el.style.transform = "";
+                }, 250);
             });
         });
 

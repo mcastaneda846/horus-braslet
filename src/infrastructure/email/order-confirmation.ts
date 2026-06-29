@@ -108,12 +108,6 @@ export async function generateReceiptPdfBuffer(payload: OrderEmailPayload): Prom
 
         if (existsSync(LOGO_PATH)) {
             doc.image(LOGO_PATH, m, 20, { height: 52, fit: [52, 52] });
-        }
-
-        if (existsSync(LOGO_PATH)) {
-            // Logo already contains "HORUS" — only show subtitle, right of logo
-            doc.fillColor(BRAND.gold).font(fonts.r).fontSize(10)
-                .text("Confirmación de compra", m + 64, 42);
         } else {
             doc.fillColor(BRAND.white).font(fonts.b).fontSize(22).text("HORUS", m, 22);
             doc.fillColor(BRAND.gold).font(fonts.r).fontSize(10).text("Confirmación de compra", m, 50);
@@ -155,10 +149,10 @@ export async function generateReceiptPdfBuffer(payload: OrderEmailPayload): Prom
         const fy = doc.page.height - 72;
         doc.fillColor(BRAND.dark).rect(0, fy, pw, 72).fill();
         doc.fillColor(BRAND.gold).rect(0, fy, pw, 2).fill();
-        doc.fillColor(BRAND.white).font(fonts.b).fontSize(10).text("Gracias por confiar en HORUS", m, fy + 16);
+        doc.fillColor(BRAND.white).font(fonts.b).fontSize(10).text("Gracias por confiar en HORUS", m, fy + 16, { lineBreak: false });
         doc.fillColor(BRAND.muted).font(fonts.r).fontSize(9)
-            .text("Tu compra está confirmada. Pronto recibirás tu dispositivo.", m, fy + 32);
-        doc.fillColor(BRAND.muted).font(fonts.r).fontSize(8).text("horus.co  ·  soporte@horus.co", m, fy + 50);
+            .text("Tu compra está confirmada. Pronto recibirás tu dispositivo.", m, fy + 32, { lineBreak: false });
+        doc.fillColor(BRAND.muted).font(fonts.r).fontSize(8).text("horus.co  ·  soporte@horus.co", m, fy + 50, { lineBreak: false });
 
         doc.end();
     });
