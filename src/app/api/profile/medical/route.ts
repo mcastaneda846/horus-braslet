@@ -10,8 +10,8 @@ const BLOOD_TYPE_VALUES = [
 ] as const;
 
 const medicalProfileSchema = z.object({
-    heightCm:          z.number().positive().max(300).optional().nullable(),
-    weightKg:          z.number().positive().max(500).optional().nullable(),
+    heightCm:          z.coerce.number().positive().max(300).optional().nullable(),
+    weightKg:          z.coerce.number().positive().max(500).optional().nullable(),
     organDonor:        z.boolean().optional(),
     insuranceProvider: z.string().max(200).optional().nullable(),
     bloodType:         z.enum(BLOOD_TYPE_VALUES).optional().nullable(),

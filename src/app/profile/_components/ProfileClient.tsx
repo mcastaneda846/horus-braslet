@@ -502,37 +502,49 @@ export default function ProfileClient() {
   const handleSave = async () => {
     if (!draft.firstName.trim() || !draft.lastName.trim()) { showError("Nombre y apellido son requeridos."); return; }
     setSaving(true);
+    let profileOk = false;
+    let medOk = false;
     try {
-      await Promise.all([
-        axios.put("/api/profile", {
-          firstName: draft.firstName.trim(), lastName: draft.lastName.trim(),
-          dateOfBirth: draft.dateOfBirth || null,
-          gender: draft.gender || null,
-          ...(!bloodLocked && { bloodType: draft.bloodType || null }),
-          ...(!idLocked && { identificationType: draft.identificationType || null, identificationNumber: draft.identificationNumber.trim() || null }),
-        }),
-        axios.put("/api/profile/medical", {
-          heightCm: draft.heightCm || null, weightKg: draft.weightKg || null,
-          organDonor: draft.organDonor,
-          insuranceProvider: draft.insuranceProvider === "Otra" ? (draft.customInsuranceProvider || null) : (draft.insuranceProvider || null),
-        }),
-      ]);
+      await axios.put("/api/profile", {
+        firstName: draft.firstName.trim(), lastName: draft.lastName.trim(),
+        dateOfBirth: draft.dateOfBirth || null,
+        gender: draft.gender || null,
+        ...(!bloodLocked && { bloodType: draft.bloodType || null }),
+        ...(!idLocked && { identificationType: draft.identificationType || null, identificationNumber: draft.identificationNumber.trim() || null }),
+      });
+      profileOk = true;
+    } catch (err: any) {
+      showError(err.response?.data?.error || "Error al guardar datos personales.");
+    }
+    try {
+      await axios.put("/api/profile/medical", {
+        heightCm: draft.heightCm ? Number(draft.heightCm) : null,
+        weightKg: draft.weightKg ? Number(draft.weightKg) : null,
+        organDonor: draft.organDonor,
+        insuranceProvider: draft.insuranceProvider === "Otra" ? (draft.customInsuranceProvider || null) : (draft.insuranceProvider || null),
+      });
+      medOk = true;
+    } catch (err: any) {
+      showError(err.response?.data?.error || "Error al guardar datos médicos.");
+    }
+    if (profileOk) {
       setProfile(p => p ? { ...p, firstName: draft.firstName.trim(), lastName: draft.lastName.trim(),
         dateOfBirth: draft.dateOfBirth || null,
         gender: draft.gender || null,
         ...(!bloodLocked && { bloodType: draft.bloodType || null }),
         ...(!idLocked && { identificationType: draft.identificationType || null, identificationNumber: draft.identificationNumber.trim() || null }),
       } : p);
-      setMedProfile({ heightCm: draft.heightCm ? Number(draft.heightCm) : null,
-        weightKg: draft.weightKg ? Number(draft.weightKg) : null,
-        organDonor: draft.organDonor, 
-        insuranceProvider: draft.insuranceProvider === "Otra" ? (draft.customInsuranceProvider || null) : (draft.insuranceProvider || null)
-      });
-      setEditOpen(false);
-    } catch (err: any) { 
-      showError(err.response?.data?.error || "Error al guardar."); 
     }
-    finally { setSaving(false); }
+    if (medOk) {
+      setMedProfile({
+        heightCm: draft.heightCm ? Number(draft.heightCm) : null,
+        weightKg: draft.weightKg ? Number(draft.weightKg) : null,
+        organDonor: draft.organDonor,
+        insuranceProvider: draft.insuranceProvider === "Otra" ? (draft.customInsuranceProvider || null) : (draft.insuranceProvider || null),
+      });
+    }
+    if (profileOk && medOk) setEditOpen(false);
+    setSaving(false);
   };
 
   // ── Allergy CRUD ──────────────────────────────────────────────────────────
@@ -569,8 +581,10 @@ export default function ProfileClient() {
   };
   const handleDeleteAllergy = async (id: string) => {
     if (!confirm("¿Eliminar esta alergia?")) return;
-    await axios.delete(`/api/medical-profile/${id}?type=allergy`).catch(() => showError("Ocurrió un error al eliminar."));
-    setAllergies(p => p.filter(a => a.id !== id));
+    try {
+      await axios.delete(`/api/medical-profile/${id}?type=allergy`);
+      setAllergies(p => p.filter(a => a.id !== id));
+    } catch { showError("Ocurrió un error al eliminar."); }
   };
 
   // ── Condition CRUD ────────────────────────────────────────────────────────
@@ -605,8 +619,10 @@ export default function ProfileClient() {
   };
   const handleDeleteCond = async (id: string) => {
     if (!confirm("¿Eliminar esta condición?")) return;
-    await axios.delete(`/api/medical-profile/${id}?type=condition`).catch(() => showError("Ocurrió un error al eliminar."));
-    setConditions(p => p.filter(c => c.id !== id));
+    try {
+      await axios.delete(`/api/medical-profile/${id}?type=condition`);
+      setConditions(p => p.filter(c => c.id !== id));
+    } catch { showError("Ocurrió un error al eliminar."); }
   };
 
   // ── Medication CRUD ───────────────────────────────────────────────────────
@@ -640,8 +656,10 @@ export default function ProfileClient() {
   };
   const handleDeleteMed = async (id: string) => {
     if (!confirm("¿Eliminar este medicamento?")) return;
-    await axios.delete(`/api/medical-profile/${id}?type=medication`).catch(() => showError("Ocurrió un error al eliminar."));
-    setMeds(p => p.filter(m => m.id !== id));
+    try {
+      await axios.delete(`/api/medical-profile/${id}?type=medication`);
+      setMeds(p => p.filter(m => m.id !== id));
+    } catch { showError("Ocurrió un error al eliminar."); }
   };
 
   // ── Contact CRUD ──────────────────────────────────────────────────────────
@@ -676,18 +694,22 @@ export default function ProfileClient() {
   };
   const handleDeleteContact = async (id: string) => {
     if (!confirm("¿Eliminar este contacto?")) return;
-    await axios.delete(`/api/contacts/${id}`).catch(() => showError("Ocurrió un error al eliminar."));
-    setContacts(p => p.filter(c => c.id !== id));
+    try {
+      await axios.delete(`/api/contacts/${id}`);
+      setContacts(p => p.filter(c => c.id !== id));
+    } catch { showError("Ocurrió un error al eliminar."); }
   };
 
   // ── Derived ───────────────────────────────────────────────────────────────
   const calcAge = (dob: string | Date | null | undefined) => {
     if (!dob) return null;
-    const birthDate = new Date(dob);
+    const iso = typeof dob === "string" ? dob : dob.toISOString();
+    const parts = iso.split("T")[0].split("-");
+    const byear = Number(parts[0]), bmonth = Number(parts[1]) - 1, bday = Number(parts[2]);
     const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+    let age = today.getFullYear() - byear;
+    const m = today.getMonth() - bmonth;
+    if (m < 0 || (m === 0 && today.getDate() < bday)) age--;
     return age;
   };
   const ageDisplay = profile?.dateOfBirth ? (
