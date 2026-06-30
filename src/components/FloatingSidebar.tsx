@@ -4,7 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
+
 
 interface NavItem { label: string; href: string; icon: React.ReactNode }
 
@@ -30,24 +31,72 @@ function IconMoon() {
     return <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>;
 }
 
+const HIDDEN_ROUTES = ["/login", "/register", "/terms", "/privacy"];
+const INACTIVITY_MS = 15 * 60 * 1000; // 15 minutos
+const WARN_BEFORE_MS = 90 * 1000;       // avisar 90s antes
+
+
 export default function FloatingSidebar() {
     const pathname = usePathname();
-    const router   = useRouter();
+    const router = useRouter();
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const isDark = theme === "dark";
 
-    useEffect(() => setMounted(true), []);
+    // ── Inactivity state ────────────────────────────────────────────────────
+    const [showWarning, setShowWarning] = useState(false);
+    const resetRef = useRef<(() => void) | null>(null);
+
+    const isPublicRoute = HIDDEN_ROUTES.some(r => pathname.startsWith(r));
+
+    const doLogout = useCallback(async () => {
+        await fetch("/api/auth/logout", { method: "POST" });
+        router.push("/login");
+    }, [router]);
+
+    useEffect(() => {
+        if (isPublicRoute) return;
+
+        let logoutTimer: ReturnType<typeof setTimeout>;
+        let warnTimer: ReturnType<typeof setTimeout>;
+
+        const reset = () => {
+            clearTimeout(logoutTimer);
+            clearTimeout(warnTimer);
+            setShowWarning(false);
+
+            warnTimer = setTimeout(() => {
+                setShowWarning(true);
+            }, INACTIVITY_MS - WARN_BEFORE_MS);
+
+            logoutTimer = setTimeout(() => {
+                doLogout();
+            }, INACTIVITY_MS);
+        };
+
+        resetRef.current = reset;
+
+        const EVENTS = ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "click"] as const;
+        EVENTS.forEach(ev => window.addEventListener(ev, reset, { passive: true }));
+        reset();
+
+        return () => {
+            EVENTS.forEach(ev => window.removeEventListener(ev, reset));
+            clearTimeout(logoutTimer);
+            clearTimeout(warnTimer);
+        };
+    }, [isPublicRoute, doLogout]);
+
+    useEffect(() => { setMounted(true); }, []);
 
     const items: NavItem[] = useMemo(() => [
         { label: "Dashboard", href: "/dashboard", icon: <IconDashboard /> },
-        { label: "Perfil",    href: "/profile",   icon: <IconProfile />   },
-        { label: "Archivos",  href: "/archivos",  icon: <IconFiles />     },
-        { label: "Tienda",    href: "/tienda",    icon: <IconTienda />    },
+        { label: "Perfil", href: "/profile", icon: <IconProfile /> },
+        { label: "Archivos", href: "/archivos", icon: <IconFiles /> },
+        { label: "Tienda", href: "/tienda", icon: <IconTienda /> },
     ], []);
 
-    const HIDDEN_ROUTES = ["/login", "/register", "/terms", "/privacy"];
-    if (HIDDEN_ROUTES.includes(pathname)) return null;
+    if (isPublicRoute) return null;
 
     async function handleLogout() {
         await fetch("/api/auth/logout", { method: "POST" });
@@ -56,6 +105,54 @@ export default function FloatingSidebar() {
 
     return (
         <>
+            {/* ── Aviso de inactividad ──────────────────────────────────────── */}
+            {showWarning && (
+                <div style={{
+                    position: "fixed", inset: 0, zIndex: 9999,
+                    background: "rgba(0,0,0,0.65)", backdropFilter: "blur(4px)",
+                    display: "flex", alignItems: "center", justifyContent: "center", padding: 16,
+                }}>
+                    <div style={{
+                        background: "#191512", border: "1px solid rgba(255,255,255,0.12)",
+                        borderRadius: 24, padding: 32, maxWidth: 360, width: "100%",
+                        textAlign: "center", boxShadow: "0 16px 48px rgba(0,0,0,0.5)",
+                    }}>
+                        <div style={{
+                            width: 56, height: 56, borderRadius: "50%",
+                            background: "rgba(250,217,87,0.12)", border: "2px solid #FAD957",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            margin: "0 auto 16px", fontSize: 24,
+                        }}>⏱</div>
+                        <p style={{ color: "#FAD957", fontWeight: 700, fontSize: 18, margin: "0 0 8px" }}>
+                            Sesión por vencer
+                        </p>
+                        <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, margin: "0 0 24px", lineHeight: 1.5 }}>
+                            Tu sesión se cerrará automáticamente por inactividad. Haz clic en <strong style={{ color: "#FAD957" }}>Seguir activo</strong> para continuar.
+                        </p>
+                        <button
+                            onClick={() => resetRef.current?.()}
+                            style={{
+                                width: "100%", padding: "13px 0", borderRadius: 14,
+                                background: "#FAD957", color: "#1A1512",
+                                border: "none", fontSize: 15, fontWeight: 700, cursor: "pointer",
+                                marginBottom: 10,
+                            }}>
+                            Seguir activo
+                        </button>
+                        <button
+                            onClick={doLogout}
+                            style={{
+                                width: "100%", padding: "13px 0", borderRadius: 14,
+                                background: "transparent", color: "rgba(255,255,255,0.4)",
+                                border: "1px solid rgba(255,255,255,0.12)", fontSize: 14,
+                                fontWeight: 600, cursor: "pointer",
+                            }}>
+                            Cerrar sesión ahora
+                        </button>
+                    </div>
+                </div>
+            )}
+
             {/* ── Mobile: floating bottom pill bar ──────────────────────────── */}
             <nav className="lg:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 bg-[#191512] rounded-[28px] px-3 py-2.5 shadow-2xl border border-white/10">
                 {items.map((item) => {
@@ -136,7 +233,7 @@ export default function FloatingSidebar() {
                     <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                         <polyline points="14 2 14 8 20 8" />
-                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="13" x2="8" y2="17" />
                         <line x1="16" y1="17" x2="8" y2="17" />
                         <polyline points="10 9 9 9 8 9" />
                     </svg>

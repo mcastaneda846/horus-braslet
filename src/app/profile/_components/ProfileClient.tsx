@@ -416,6 +416,10 @@ export default function ProfileClient() {
   const [toast, setToast] = useState<{ msg: string, type: "error" | "success" } | null>(null);
   const showError = (msg: string) => { setToast({ msg, type: "error" }); setTimeout(() => setToast(null), 4500); };
 
+  // ── Confirm dialog ────────────────────────────────────────────────────────
+  const [confirmDialog, setConfirmDialog] = useState<{ message: string; onConfirm: () => void } | null>(null);
+  const showConfirm = (message: string, onConfirm: () => void) => setConfirmDialog({ message, onConfirm });
+
   // ── Organ donor disclaimer ────────────────────────────────────────────────
   const [organDonorDialog, setOrganDonorDialog] = useState<boolean | null>(null);
 
@@ -485,13 +489,33 @@ export default function ProfileClient() {
   }, []);
 
   // ── Photo ──────────────────────────────────────────────────────────────────
+  function compressPhoto(file: File): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new window.Image();
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const MAX = 1200;
+        const scale = img.width > MAX || img.height > MAX ? Math.min(MAX / img.width, MAX / img.height) : 1;
+        const canvas = document.createElement("canvas");
+        canvas.width  = Math.round(img.width  * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext("2d")!.drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("No blob")), "image/jpeg", 0.85);
+      };
+      img.onerror = reject;
+      img.src = url;
+    });
+  }
+
   const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploadingPhoto(true);
     try {
+      const compressed = await compressPhoto(file);
       const fd = new FormData();
-      fd.append("photo", file);
+      fd.append("photo", compressed, "photo.jpg");
       const { data } = await axios.post<{ photoUrl: string }>("/api/profile/photo", fd);
       setProfile(p => p ? { ...p, photoUrl: data.photoUrl } : p);
     } catch (err: any) { showError(err.response?.data?.error || "Error al subir la foto."); }
@@ -603,12 +627,13 @@ export default function ProfileClient() {
     } catch (err: any) { showError(err.response?.data?.error || "Error al guardar."); }
     finally { setSavingAllergy(false); }
   };
-  const handleDeleteAllergy = async (id: string) => {
-    if (!confirm("¿Eliminar esta alergia?")) return;
-    try {
-      await axios.delete(`/api/medical-profile/${id}?type=allergy`);
-      setAllergies(p => p.filter(a => a.id !== id));
-    } catch { showError("Ocurrió un error al eliminar."); }
+  const handleDeleteAllergy = (id: string) => {
+    showConfirm("¿Eliminar esta alergia?", async () => {
+      try {
+        await axios.delete(`/api/medical-profile/${id}?type=allergy`);
+        setAllergies(p => p.filter(a => a.id !== id));
+      } catch { showError("Ocurrió un error al eliminar."); }
+    });
   };
 
   // ── Condition CRUD ────────────────────────────────────────────────────────
@@ -641,12 +666,13 @@ export default function ProfileClient() {
     } catch (err: any) { showError(err.response?.data?.error || "Error al guardar."); }
     finally { setSavingCond(false); }
   };
-  const handleDeleteCond = async (id: string) => {
-    if (!confirm("¿Eliminar esta condición?")) return;
-    try {
-      await axios.delete(`/api/medical-profile/${id}?type=condition`);
-      setConditions(p => p.filter(c => c.id !== id));
-    } catch { showError("Ocurrió un error al eliminar."); }
+  const handleDeleteCond = (id: string) => {
+    showConfirm("¿Eliminar esta condición?", async () => {
+      try {
+        await axios.delete(`/api/medical-profile/${id}?type=condition`);
+        setConditions(p => p.filter(c => c.id !== id));
+      } catch { showError("Ocurrió un error al eliminar."); }
+    });
   };
 
   // ── Medication CRUD ───────────────────────────────────────────────────────
@@ -678,12 +704,13 @@ export default function ProfileClient() {
     } catch (err: any) { showError(err.response?.data?.error || "Error al guardar."); }
     finally { setSavingMed(false); }
   };
-  const handleDeleteMed = async (id: string) => {
-    if (!confirm("¿Eliminar este medicamento?")) return;
-    try {
-      await axios.delete(`/api/medical-profile/${id}?type=medication`);
-      setMeds(p => p.filter(m => m.id !== id));
-    } catch { showError("Ocurrió un error al eliminar."); }
+  const handleDeleteMed = (id: string) => {
+    showConfirm("¿Eliminar este medicamento?", async () => {
+      try {
+        await axios.delete(`/api/medical-profile/${id}?type=medication`);
+        setMeds(p => p.filter(m => m.id !== id));
+      } catch { showError("Ocurrió un error al eliminar."); }
+    });
   };
 
   // ── Contact CRUD ──────────────────────────────────────────────────────────
@@ -716,12 +743,13 @@ export default function ProfileClient() {
     } catch (err: any) { showError(err.response?.data?.error || "Error al guardar."); }
     finally { setSavingContact(false); }
   };
-  const handleDeleteContact = async (id: string) => {
-    if (!confirm("¿Eliminar este contacto?")) return;
-    try {
-      await axios.delete(`/api/contacts/${id}`);
-      setContacts(p => p.filter(c => c.id !== id));
-    } catch { showError("Ocurrió un error al eliminar."); }
+  const handleDeleteContact = (id: string) => {
+    showConfirm("¿Eliminar este contacto?", async () => {
+      try {
+        await axios.delete(`/api/contacts/${id}`);
+        setContacts(p => p.filter(c => c.id !== id));
+      } catch { showError("Ocurrió un error al eliminar."); }
+    });
   };
 
   // ── Derived ───────────────────────────────────────────────────────────────
@@ -958,6 +986,39 @@ export default function ProfileClient() {
             </div>
           )}
         </Modal>
+      )}
+
+      {/* ── Confirm dialog ───────────────────────────────────────────────────── */}
+      {confirmDialog && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 300,
+          display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+          <div style={{ background: C.card, borderRadius: 22, padding: "28px 24px", maxWidth: 360,
+            width: "100%", boxShadow: "0 8px 40px rgba(0,0,0,0.22)", textAlign: "center" }}>
+            <div style={{ width: 48, height: 48, borderRadius: "50%", background: "rgba(239,68,68,0.1)",
+              border: "2px solid #EF4444", display: "flex", alignItems: "center", justifyContent: "center",
+              margin: "0 auto 16px", fontSize: 20 }}>🗑</div>
+            <p style={{ margin: "0 0 6px", fontSize: 16, fontFamily: DISPLAY, fontWeight: 700, color: C.primary }}>
+              Confirmar eliminación
+            </p>
+            <p style={{ margin: "0 0 24px", fontSize: 14, fontFamily: SANS, color: C.muted, lineHeight: 1.5 }}>
+              {confirmDialog.message} Esta acción no se puede deshacer.
+            </p>
+            <div style={{ display: "flex", gap: 10 }}>
+              <button onClick={() => setConfirmDialog(null)}
+                style={{ flex: 1, padding: "11px 0", borderRadius: 13, border: `1px solid var(--h-border)`,
+                  background: "transparent", fontSize: 14, fontFamily: SANS, fontWeight: 600,
+                  color: C.muted, cursor: "pointer" }}>
+                Cancelar
+              </button>
+              <button onClick={() => { const fn = confirmDialog.onConfirm; setConfirmDialog(null); fn(); }}
+                style={{ flex: 1, padding: "11px 0", borderRadius: 13, border: "none",
+                  background: "#EF4444", fontSize: 14, fontFamily: SANS, fontWeight: 700,
+                  color: "#fff", cursor: "pointer" }}>
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* ── Aviso legal donante de órganos ───────────────────────────────────── */}

@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
                 overwrite: true,
                 invalidate: true,
                 resource_type: "image",
-                transformation: [{ width: 400, height: 400, crop: "fill", gravity: "face" }],
+                transformation: [{ width: 400, height: 400, crop: "fill", gravity: "auto" }],
             },
             (error, result) => {
                 if (error || !result) return reject(error || new Error("Sin respuesta de Cloudinary"));
