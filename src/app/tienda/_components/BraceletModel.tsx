@@ -3,7 +3,7 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment, ContactShadows, Text } from "@react-three/drei";
 import * as THREE from "three";
-import { useMemo, useRef, useEffect } from "react";
+import { useMemo, useRef, useEffect, Suspense } from "react";
 
 interface UserData {
   name?: string;
@@ -102,7 +102,9 @@ export default function BraceletModel({ color, userData }: { color: string; user
         <ambientLight intensity={0.5} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1.5} castShadow />
         <spotLight position={[-10, -10, -10]} angle={0.15} penumbra={1} intensity={0.5} />
-        <Bracelet color={color} userData={userData} />
+        <Suspense fallback={null}>
+          <Bracelet color={color} userData={userData} />
+        </Suspense>
         <ContactShadows position={[0, -1.8, 0]} opacity={0.4} scale={10} blur={2} far={4} />
         <OrbitControls enableZoom={true} enablePan={false} />
         <Environment preset="city" />
