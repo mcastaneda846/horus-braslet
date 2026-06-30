@@ -2,20 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAuthCookies } from "@/src/shared/lib/cookie.lib";
 import { verifyAccessToken } from "@/src/shared/lib/jwt.lib";
 import { prisma } from "@/src/infrastructure/database/prisma/client";
-import fs from "fs/promises";
-import path from "path";
+import cloudinary from "@/src/infrastructure/cloudinary/cloudinary";
 
 async function getSessionUserId(): Promise<string | null> {
     const { accessToken } = await getAuthCookies();
     if (!accessToken) return null;
-    try {
-        return verifyAccessToken(accessToken).sub;
-    } catch {
-        return null;
-    }
+    try { return verifyAccessToken(accessToken).sub; }
+    catch { return null; }
 }
 
-const ALLOWED_EXTS = new Set(["jpg", "jpeg", "png", "webp", "gif"]);
+const ALLOWED_TYPES = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"]);
 
 export async function POST(req: NextRequest) {
     const userId = await getSessionUserId();
@@ -25,25 +21,36 @@ export async function POST(req: NextRequest) {
     const file = formData.get("photo") as File | null;
 
     if (!file) return NextResponse.json({ error: "Archivo requerido" }, { status: 400 });
-    if (!file.type.startsWith("image/")) {
-        return NextResponse.json({ error: "Solo se permiten imágenes" }, { status: 400 });
+    if (!ALLOWED_TYPES.has(file.type)) {
+        return NextResponse.json({ error: "Solo se permiten imágenes (jpg, png, webp, gif)" }, { status: 400 });
     }
-
-    const rawExt = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
-    const ext = ALLOWED_EXTS.has(rawExt) ? rawExt : "jpg";
-    const filename = `${userId}.${ext}`;
-
-    const uploadDir = path.join(process.cwd(), "public", "uploads", "profiles");
-    await fs.mkdir(uploadDir, { recursive: true });
 
     const buffer = Buffer.from(await file.arrayBuffer());
     if (buffer.length > 5 * 1024 * 1024) {
         return NextResponse.json({ error: "Imagen muy grande (máx 5MB)" }, { status: 413 });
     }
-    await fs.writeFile(path.join(uploadDir, filename), buffer);
 
-    // Cachebuster para forzar recarga en el cliente cuando el nombre del archivo no cambia
-    const photoUrl = `/uploads/profiles/${filename}?v=${Date.now()}`;
+    const result = await new Promise<{ secure_url: string }>((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+            {
+                folder: "horus/profiles",
+                public_id: userId,
+                overwrite: true,
+                invalidate: true,
+                resource_type: "image",
+                transformation: [{ width: 400, height: 400, crop: "fill", gravity: "face" }],
+            },
+            (error, result) => {
+                if (error || !result) return reject(error || new Error("Sin respuesta de Cloudinary"));
+                resolve(result);
+            }
+        );
+        stream.on("error", reject);
+        stream.end(buffer);
+    });
+
+    // Cachebuster para forzar recarga cuando se sobreescribe la misma public_id
+    const photoUrl = `${result.secure_url}?v=${Date.now()}`;
 
     await prisma.personalInformation.upsert({
         where: { userId },
