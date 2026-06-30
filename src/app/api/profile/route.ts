@@ -77,6 +77,22 @@ export async function PUT(req: Request) {
         location?: string;
     };
 
+    if (body.dateOfBirth) {
+        const parsed = new Date(body.dateOfBirth);
+        const now = new Date();
+        const minDate = new Date();
+        minDate.setFullYear(minDate.getFullYear() - 120);
+        if (isNaN(parsed.getTime())) {
+            return NextResponse.json({ error: "La fecha de nacimiento no es válida." }, { status: 400 });
+        }
+        if (parsed > now) {
+            return NextResponse.json({ error: "La fecha de nacimiento no puede ser una fecha futura." }, { status: 400 });
+        }
+        if (parsed < minDate) {
+            return NextResponse.json({ error: "La fecha de nacimiento supera los 120 años. Verifica que sea correcta." }, { status: 400 });
+        }
+    }
+
     try {
         await prisma.personalInformation.upsert({
             where: { userId },

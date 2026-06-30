@@ -519,7 +519,7 @@ export default function TiendaClient({
                         Ya tienes ambos
                       </button>
                     ) : !profileComplete ? (
-                      <a href="/perfil" className="px-5 py-3 rounded-xl bg-white/10 text-white text-sm font-bold hover:bg-white/20 transition-colors border border-white/20 text-center">
+                      <a href="/profile" className="px-5 py-3 rounded-xl bg-white/10 text-white text-sm font-bold hover:bg-white/20 transition-colors border border-white/20 text-center">
                         Completar perfil
                       </a>
                     ) : (

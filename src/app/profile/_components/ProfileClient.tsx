@@ -248,15 +248,15 @@ function Modal({ title, onClose, children, footer }: {
 }
 
 // ── Field ─────────────────────────────────────────────────────────────────────
-function Field({ label, value, onChange, type = "text", placeholder, locked }: {
+function Field({ label, value, onChange, type = "text", placeholder, locked, min, max }: {
   label: string; value: string; onChange?: (v: string) => void; type?: string;
-  placeholder?: string; locked?: boolean;
+  placeholder?: string; locked?: boolean; min?: string; max?: string;
 }) {
   return (
     <div style={{ background: C.card, borderRadius: 16, padding: "10px 16px 12px", opacity: locked ? 0.5 : 1 }}>
       <p style={{ margin: "0 0 2px", fontSize: 11, fontFamily: SANS, color: C.muted }}>{label}</p>
       <input type={type} value={value} onChange={e => onChange?.(e.target.value)} placeholder={placeholder ?? "—"}
-        disabled={locked}
+        disabled={locked} min={min} max={max}
         style={{ display: "block", width: "100%", border: "none", background: "transparent",
           color: C.primary, fontSize: 15, fontFamily: SANS, outline: "none", boxSizing: "border-box", padding: 0 }} />
     </div>
@@ -383,6 +383,22 @@ const iconBtnStyle: React.CSSProperties = {
 // ── Divider ───────────────────────────────────────────────────────────────────
 const divider = <div style={{ height: 1, background: C.mutedBg, margin: "0 0" }} />;
 
+// ── Date constraints ──────────────────────────────────────────────────────────
+const TODAY_ISO    = new Date().toISOString().split("T")[0];
+const MIN_DOB_ISO  = (() => { const d = new Date(); d.setFullYear(d.getFullYear() - 120); return d.toISOString().split("T")[0]; })();
+
+function isValidDate(iso: string): boolean {
+  if (!iso) return true;
+  const [y, m, d] = iso.split("-").map(Number);
+  const parsed = new Date(y, m - 1, d);
+  return (
+    !isNaN(parsed.getTime()) &&
+    parsed.getFullYear() === y &&
+    parsed.getMonth() === m - 1 &&
+    parsed.getDate() === d
+  );
+}
+
 // ════════════════════════════════════════════════════════════════════════════════
 // Main component
 // ════════════════════════════════════════════════════════════════════════════════
@@ -399,6 +415,9 @@ export default function ProfileClient() {
   const [loading,    setLoading]    = useState(true);
   const [toast, setToast] = useState<{ msg: string, type: "error" | "success" } | null>(null);
   const showError = (msg: string) => { setToast({ msg, type: "error" }); setTimeout(() => setToast(null), 4500); };
+
+  // ── Organ donor disclaimer ────────────────────────────────────────────────
+  const [organDonorDialog, setOrganDonorDialog] = useState<boolean | null>(null);
 
   // ── Accordion ─────────────────────────────────────────────────────────────
   const [open, setOpen] = useState({ personal: true, medical: false, allergies: false, conditions: false, meds: false, contacts: false });
@@ -501,6 +520,11 @@ export default function ProfileClient() {
   // ── Save profile ──────────────────────────────────────────────────────────
   const handleSave = async () => {
     if (!draft.firstName.trim() || !draft.lastName.trim()) { showError("Nombre y apellido son requeridos."); return; }
+    if (draft.dateOfBirth) {
+      if (!isValidDate(draft.dateOfBirth)) { showError("La fecha de nacimiento no es válida."); return; }
+      if (draft.dateOfBirth > TODAY_ISO) { showError("La fecha de nacimiento no puede ser una fecha futura."); return; }
+      if (draft.dateOfBirth < MIN_DOB_ISO) { showError("La fecha de nacimiento supera los 120 años. Verifica que sea correcta."); return; }
+    }
     setSaving(true);
     let profileOk = false;
     let medOk = false;
@@ -741,7 +765,7 @@ export default function ProfileClient() {
           <div style={{ width: 96, height: 96, borderRadius: "50%", background: C.pink,
             display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
             {profile?.photoUrl
-              ? <Image src={profile.photoUrl} alt="avatar" width={96} height={96} style={{ objectFit: "cover", borderRadius: "50%" }} unoptimized />
+              ? <Image key={profile.photoUrl} src={profile.photoUrl} alt="avatar" width={96} height={96} style={{ objectFit: "cover", borderRadius: "50%" }} unoptimized />
               : <span style={{ fontSize: 32, fontFamily: DISPLAY, fontWeight: 700, color: "#7A1A3A" }}>{initials}</span>
             }
           </div>
@@ -909,7 +933,7 @@ export default function ProfileClient() {
           <Field label="Correo electrónico" value={draft.email} locked />
 
           <SectionLabel>Información personal</SectionLabel>
-          <Field type="date" label="Fecha de nacimiento" value={draft.dateOfBirth} onChange={v => setDraft(d => ({ ...d, dateOfBirth: v }))} />
+          <Field type="date" label="Fecha de nacimiento" value={draft.dateOfBirth} onChange={v => setDraft(d => ({ ...d, dateOfBirth: v }))} min={MIN_DOB_ISO} max={TODAY_ISO} />
           <SelectField label="Género" value={draft.gender} onChange={v => setDraft(d => ({ ...d, gender: v }))} options={GENDERS} />
           <SectionLabel>Documento {idLocked && "(bloqueado — ya registrado)"}</SectionLabel>
           <SelectField label="Tipo de documento" value={draft.identificationType} onChange={v => setDraft(d => ({ ...d, identificationType: v }))} options={ID_TYPES} locked={idLocked} />
@@ -923,7 +947,8 @@ export default function ProfileClient() {
           </div>
           <div style={{ background: C.card, borderRadius: 16, padding: "10px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <p style={{ margin: 0, fontSize: 14, fontFamily: SANS, color: C.primary }}>Donante de órganos</p>
-            <input type="checkbox" checked={draft.organDonor} onChange={e => setDraft(d => ({ ...d, organDonor: e.target.checked }))}
+            <input type="checkbox" checked={draft.organDonor}
+              onChange={e => setOrganDonorDialog(e.target.checked)}
               style={{ width: 18, height: 18, accentColor: C.primary, cursor: "pointer" }} />
           </div>
           <SelectField label="Aseguradora" value={draft.insuranceProvider} onChange={v => setDraft(d => ({ ...d, insuranceProvider: v }))} options={EPS_OPTIONS} />
@@ -933,6 +958,52 @@ export default function ProfileClient() {
             </div>
           )}
         </Modal>
+      )}
+
+      {/* ── Aviso legal donante de órganos ───────────────────────────────────── */}
+      {organDonorDialog !== null && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+          <div style={{ background: C.card, borderRadius: 24, padding: 28, maxWidth: 440, width: "100%", boxShadow: "0 8px 40px rgba(0,0,0,0.25)" }}>
+            <p style={{ margin: "0 0 4px", fontSize: 18, fontFamily: DISPLAY, fontWeight: 700, color: C.primary }}>
+              {organDonorDialog ? "Registrarse como donante" : "Retirar condición de donante"}
+            </p>
+            <p style={{ margin: "0 0 16px", fontSize: 12, fontFamily: SANS, color: C.muted }}>Aviso legal · Colombia</p>
+            <div style={{ background: "var(--h-bg)", borderRadius: 14, padding: "14px 16px", marginBottom: 20, fontSize: 13, fontFamily: SANS, color: C.primary, lineHeight: 1.6 }}>
+              {organDonorDialog ? (
+                <>
+                  <p style={{ margin: "0 0 10px" }}>
+                    Al marcar esta opción, manifiestas tu <strong>voluntad expresa de donar órganos y tejidos</strong> en caso de muerte encefálica o paro cardiorrespiratorio irreversible, de conformidad con la <strong>Ley 1805 de 2016</strong> y sus decretos reglamentarios.
+                  </p>
+                  <p style={{ margin: "0 0 10px" }}>
+                    Esta información quedará registrada en tu perfil de emergencia Horus y podrá ser consultada por <strong>personal médico autorizado</strong> a través del código QR de tu pulsera o tarjeta en situaciones de emergencia.
+                  </p>
+                  <p style={{ margin: 0, color: C.muted }}>
+                    Para que tu decisión tenga plena validez legal en Colombia, te recomendamos también registrarla en el <strong>Instituto Nacional de Salud (INS)</strong> a través de <em>ins.gov.co</em> o en tu EPS.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p style={{ margin: "0 0 10px" }}>
+                    Al desmarcar esta opción, expresas tu <strong>voluntad de no donar órganos y tejidos</strong>, en ejercicio del derecho reconocido por la <strong>Ley 1805 de 2016</strong>.
+                  </p>
+                  <p style={{ margin: 0, color: C.muted }}>
+                    Si deseas que esta decisión quede registrada formalmente ante el sistema de salud colombiano, comunícala también a tu <strong>EPS</strong> o al <strong>Instituto Nacional de Salud (INS)</strong>.
+                  </p>
+                </>
+              )}
+            </div>
+            <div style={{ display: "flex", gap: 10 }}>
+              <button onClick={() => setOrganDonorDialog(null)}
+                style={{ flex: 1, padding: "11px 0", borderRadius: 14, border: `1px solid var(--h-border)`, background: "transparent", fontSize: 13, fontFamily: SANS, fontWeight: 600, color: C.muted, cursor: "pointer" }}>
+                Cancelar
+              </button>
+              <button onClick={() => { setDraft(d => ({ ...d, organDonor: organDonorDialog! })); setOrganDonorDialog(null); }}
+                style={{ flex: 1, padding: "11px 0", borderRadius: 14, border: "none", background: C.primary, fontSize: 13, fontFamily: SANS, fontWeight: 700, color: "var(--h-bg)", cursor: "pointer" }}>
+                Confirmar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* ── Agregar alergia ───────────────────────────────────────────────────── */}

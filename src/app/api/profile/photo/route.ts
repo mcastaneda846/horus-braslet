@@ -45,9 +45,10 @@ export async function POST(req: NextRequest) {
     // Cachebuster para forzar recarga en el cliente cuando el nombre del archivo no cambia
     const photoUrl = `/uploads/profiles/${filename}?v=${Date.now()}`;
 
-    await prisma.personalInformation.update({
+    await prisma.personalInformation.upsert({
         where: { userId },
-        data: { photoUrl },
+        create: { userId, firstName: "", lastName: "", photoUrl },
+        update: { photoUrl },
     });
 
     return NextResponse.json({ photoUrl });
