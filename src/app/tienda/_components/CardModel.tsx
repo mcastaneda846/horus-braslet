@@ -111,7 +111,7 @@ function CardFace({ url, side, w, h, r, d }: { url: string; side: "front" | "bac
   );
 }
 
-function Card({ frontUrl, backUrl }: { frontUrl: string; backUrl: string }) {
+function Card({ frontUrl, backUrl, backVersion }: { frontUrl: string; backUrl: string; backVersion: number }) {
   const w = 3.375 * 1.2;
   const h = 2.125 * 1.2;
   const d = 0.03;
@@ -122,19 +122,19 @@ function Card({ frontUrl, backUrl }: { frontUrl: string; backUrl: string }) {
       <CardBase width={w} height={h} radius={r} depth={d} />
       {/* Solo renderiza la cara si hay imagen real o usamos el pixel crema por defecto */}
       <CardFace url={frontUrl} side="front" w={w} h={h} r={r} d={d} />
-      <CardFace url={backUrl} side="back" w={w} h={h} r={r} d={d} />
+      <CardFace key={`back-${backVersion}`} url={backUrl} side="back" w={w} h={h} r={r} d={d} />
     </group>
   );
 }
 
-export default function CardModel({ frontUrl, backUrl }: { frontUrl: string; backUrl: string }) {
+export default function CardModel({ frontUrl, backUrl, backVersion = 0 }: { frontUrl: string; backUrl: string; backVersion?: number }) {
   return (
     <div className="w-full h-full absolute inset-0">
       <Canvas shadows camera={{ position: [0, 0, 7.5], fov: 45 }}>
         <ambientLight intensity={0.6} />
         <spotLight position={[5, 5, 5]} angle={0.2} penumbra={1} intensity={1} castShadow />
         <Suspense fallback={null}>
-          <Card frontUrl={frontUrl} backUrl={backUrl} />
+          <Card frontUrl={frontUrl} backUrl={backUrl} backVersion={backVersion} />
         </Suspense>
         <ContactShadows position={[0, -1.8, 0]} opacity={0.5} scale={10} blur={2} far={4} />
         <OrbitControls enableZoom={true} enablePan={false} />

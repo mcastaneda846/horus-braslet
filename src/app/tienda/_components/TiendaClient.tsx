@@ -56,6 +56,7 @@ export default function TiendaClient({
   const [cardBackPreview, setCardBackPreview]   = useState<string>("");
   const [cardFrontReady, setCardFrontReady]     = useState(false);
   const [cardBackReady, setCardBackReady]       = useState(false);
+  const [backVersion, setBackVersion]           = useState(0);
 
   const activeProduct = products.find((p) => p.productType === activeTab);
 
@@ -255,7 +256,7 @@ export default function TiendaClient({
         const raw = sessionStorage.getItem("horus_customization");
         const parsed = raw ? JSON.parse(raw) : {};
         if (parsed.braceletColor) setBraceletColor(parsed.braceletColor);
-        if (parsed.cardBackB64)   { setCardBackPreview(parsed.cardBackB64); setCardBackReady(true); }
+        if (parsed.cardBackB64)   { setCardBackPreview(parsed.cardBackB64); setCardBackReady(true); setBackVersion(v => v + 1); }
         if (parsed.cardFrontB64) {
           setCardFrontPreview(parsed.cardFrontB64);
           const composed = await buildCardFrontTexture(parsed.cardFrontB64);
@@ -293,6 +294,7 @@ export default function TiendaClient({
       } else {
         setCardBackPreview(b64);
         setCardBackReady(true);
+        setBackVersion(v => v + 1);
       }
     } catch (err) {
       console.error("[Imagen]", err);
@@ -402,7 +404,7 @@ export default function TiendaClient({
               {activeTab === "BRACELET" ? (
                 <BraceletModel color={braceletColor} userData={userData} />
               ) : (
-                <CardModel frontUrl={cardFrontComposed} backUrl={cardBackPreview} />
+                <CardModel frontUrl={cardFrontComposed} backUrl={cardBackPreview} backVersion={backVersion} />
               )}
               <div className="absolute bottom-6 right-6 flex items-center gap-2 bg-[var(--h-card)]/80 backdrop-blur-md px-4 py-2 rounded-full border border-[var(--h-border)] shadow-sm pointer-events-none">
                 <svg className="w-4 h-4 text-[#8D99AE]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
